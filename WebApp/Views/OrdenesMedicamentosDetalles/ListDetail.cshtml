@@ -1,0 +1,99 @@
+@*  Remplazar FATHERModel por el modelo del padre al que pertenece   *@ 
+ 
+@model OrdenesMedicamentosModel 
+@{ 
+    string Prefix = "OrdenesMedicamentosDetalles"; 
+    string UrlOnClick = Url.Action("EditDetail", "OrdenesMedicamentosDetalles"); 
+    string UrlNew = Url.Action("NewDetail", "OrdenesMedicamentosDetalles", new { IdFather = Model.Entity.Id }); 
+
+    var DataGridDetailConfig = new DataGridConfiguration<OrdenesMedicamentosDetalles>(Prefix) 
+        .OnClick(UrlOnClick, new { Id = "Id" }, Prefix + "MainPanelForm") 
+        .New(UrlNew,Model.Entity.IsNew,Prefix + "MainPanelForm") 
+        .Exports(true,true); 
+} 
+ 
+
+
+@* ------------ Descomentar el siguiente codigo si es una edicion en maestro --------------- *@
+ 
+
+<div class="card cardDeatil"> 
+    <div class="card-body">
+        <div class="box-body table-responsive no-padding"> 
+        @(Html.DControls().DataGridSimple<OrdenesMedicamentosDetalles>(DataGridDetailConfig)
+            .ID("OrdenesMedicamentosDetallesDetalleDataGrid")
+            .DataSource(d => d.Mvc().LoadMethod("POST").Controller("OrdenesMedicamentosDetalles").LoadAction("Get").Key("Id"))
+            .DataSourceOptions(x=>x.Filter("['OrdenesMedicamentosId','=','" + @Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+            .Columns(columns =>
+            {
+                columns.AddFor(m => m.Medicamentos.Nombre);
+                columns.AddFor(m => m.Dosis);
+                columns.AddFor(m => m.Frecuencia);
+                columns.AddFor(m => m.DiasTratamiento);
+                columns.AddFor(m => m.Cantidad);
+                columns.AddFor(m => m.Observaciones);
+            })
+        ) 
+        </div> 
+        <div id="OrdenesMedicamentosDetallesMainPanelForm"></div> 
+    </div> 
+</div> 
+ 
+
+
+@* ------------ Descomentar el siguiente codigo si es una edicion en grilla y COMENTAR LOS METODOS OnClick y New del DataGridDetailConfig --------------- *@
+@* 
+<script> 
+     function @(Prefix)OnInitNewRowDetalleDataGrid(model) { 
+         model = GetAuditoryData(model); 
+         model.data.IdFather = "@Model.Entity.Id"; // Cambiar IdFather por el campo foraneo hacia el padre 
+     } 
+</script> 
+<div class="card cardDeatil"> 
+    <div class="card-body">
+        <div class="box-body table-responsive no-padding"> 
+             @(Html.DControls().DataGridSimple<OrdenesMedicamentosDetalles>(DataGridDetailConfig) 
+                 .ID("OrdenesMedicamentosDetallesDetalleDataGrid") 
+                 .DataSource(d => d.Mvc().LoadMethod("POST").Controller("OrdenesMedicamentosDetalles").LoadAction("Get").Key("Id") 
+                     .InsertAction("AddInGrid").InsertMethod("POST").UpdateAction("ModifyInGrid").UpdateMethod("POST").DeleteAction("DeleteInGrid").DeleteMethod("POST") 
+                 ) 
+                 .DataSourceOptions(x=>x.Filter("['IdFather','=','"+@Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+                 .Editing(editing => editing.Mode(GridEditMode.Batch).AllowAdding(!Model.Entity.IsNew).AllowUpdating(true).AllowDeleting(true)) 
+                 .OnInitNewRow(Prefix + "OnInitNewRowDetalleDataGrid") 
+                 .OnRowInserted("OnRowInsertedDetalleDataGrid").OnRowUpdated("OnRowUpdatedDetalleDataGrid").OnRowRemoved("OnRowRemovedDetalleDataGrid").OnDataErrorOccurred("OnDataErrorOccurredDetalleDataGrid") 
+                 .Columns(columns => 
+                 { 
+                     columns.AddFor(m => m.MedicamentosId) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("OrdenesMedicamentosDetalles.MedicamentosId"))) 
+                         .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("OrdenesMedicamentosDetalles.MedicamentosId"))) 
+                             .Lookup(lookup => lookup 
+                             .DataSource(d => d.Mvc().LoadMethod("POST").Controller("OrdenesMedicamentosDetalles").LoadAction("GetMedicamentosId").Key("Id")) 
+                             .DataSourceOptions(o => o.Paginate(true).PageSize(10)) 
+                             .ValueExpr("Id").DisplayExpr("Id")); 
+                     columns.AddFor(m => m.Dosis) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("OrdenesMedicamentosDetalles.Dosis"))) 
+                         .ValidationRules(rules => rules.AddStringLength().Min(0).Max(50).Message(DApp.GetStringLengthResource("OrdenesMedicamentosDetalles.Dosis", 50))) 
+                     ; 
+                     columns.AddFor(m => m.Frecuencia) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("OrdenesMedicamentosDetalles.Frecuencia"))); 
+                     columns.AddFor(m => m.DiasTratamiento) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("OrdenesMedicamentosDetalles.DiasTratamiento"))); 
+                     columns.AddFor(m => m.Cantidad).Format("#,##0.##") 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("OrdenesMedicamentosDetalles.Cantidad"))); 
+                     columns.AddFor(m => m.Recomendaciones) 
+                     ; 
+                     columns.AddFor(m => m.Observaciones) 
+                     ; 
+                     columns.AddFor(m => m.OrdenesMedicamentosId) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("OrdenesMedicamentosDetalles.OrdenesMedicamentosId"))) 
+                         .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("OrdenesMedicamentosDetalles.OrdenesMedicamentosId"))) 
+                             .Lookup(lookup => lookup 
+                             .DataSource(d => d.Mvc().LoadMethod("POST").Controller("OrdenesMedicamentosDetalles").LoadAction("GetOrdenesMedicamentosId").Key("Id")) 
+                             .DataSourceOptions(o => o.Paginate(true).PageSize(10)) 
+                             .ValueExpr("Id").DisplayExpr("Id")); 
+             }) 
+         ) 
+        </div> 
+    </div> 
+</div> 
+*@ 

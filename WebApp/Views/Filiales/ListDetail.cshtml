@@ -1,0 +1,111 @@
+@*  Remplazar FATHERModel por el modelo del padre al que pertenece   *@ 
+ 
+@model EntidadesModel 
+@{ 
+    string Prefix = "Filiales"; 
+    string UrlOnClick = Url.Action("EditDetail", "Filiales"); 
+    string UrlNew = Url.Action("NewDetail", "Filiales", new { IdFather = Model.Entity.Id }); 
+
+    var DataGridDetailConfig = new DataGridConfiguration<Filiales>(Prefix) 
+        .OnClick(UrlOnClick, new { Id = "Id" }, Prefix + "MainPanelForm") 
+        .New(UrlNew,Model.Entity.IsNew,Prefix + "MainPanelForm") 
+        .Exports(true,true); 
+} 
+ 
+
+
+@* ------------ Descomentar el siguiente codigo si es una edicion en maestro --------------- *@
+ 
+
+<div class="card cardDeatil"> 
+    <div class="card-body">
+        <div class="box-body table-responsive no-padding"> 
+        @(Html.DControls().DataGridSimple<Filiales>(DataGridDetailConfig) 
+            .ID("FilialesDetalleDataGrid") 
+            .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Filiales").LoadAction("Get").Key("Id")) 
+            .DataSourceOptions(x=>x.Filter("['EntidadesId','=','"+@Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+            .Columns(columns => 
+            { 
+             columns.AddFor(m => m.Nombre); 
+             columns.AddFor(m => m.CorreoElectronico); 
+             columns.AddFor(m => m.Fax); 
+             columns.AddFor(m => m.PaginaWeb); 
+             columns.AddFor(m => m.Direccion); 
+             columns.AddFor(m => m.CiudadesId)
+                 .Lookup(lookup => lookup
+                            .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Filiales").LoadAction("GetCiudadesId").Key("Id"))
+                            .DisplayExpr("Nombre")
+                            .ValueExpr("Id")
+                        );
+             columns.AddFor(m => m.EstadosId)
+                 .Lookup(lookup => lookup
+                            .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Filiales").LoadAction("GetEstadosId").Key("Id"))
+                            .DataSourceOptions(o => o.Filter("['Tipo','=','FILIALES']"))
+                            .DisplayExpr("Nombre")
+                            .ValueExpr("Id")
+                        ); 
+
+            }) 
+        ) 
+        </div> 
+        <div id="FilialesMainPanelForm"></div> 
+    </div> 
+</div> 
+ 
+
+
+@* ------------ Descomentar el siguiente codigo si es una edicion en grilla y COMENTAR LOS METODOS OnClick y New del DataGridDetailConfig --------------- *@
+@* 
+<script> 
+     function @(Prefix)OnInitNewRowDetalleDataGrid(model) { 
+         model = GetAuditoryData(model); 
+         model.data.IdFather = "@Model.Entity.Id"; // Cambiar IdFather por el campo foraneo hacia el padre 
+     } 
+</script> 
+<div class="card cardDeatil"> 
+    <div class="card-body">
+        <div class="box-body table-responsive no-padding"> 
+             @(Html.DControls().DataGridSimple<Filiales>(DataGridDetailConfig) 
+                 .ID("FilialesDetalleDataGrid") 
+                 .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Filiales").LoadAction("Get").Key("Id") 
+                     .InsertAction("AddInGrid").InsertMethod("POST").UpdateAction("ModifyInGrid").UpdateMethod("POST").DeleteAction("DeleteInGrid").DeleteMethod("POST") 
+                 ) 
+                 .DataSourceOptions(x=>x.Filter("['IdFather','=','"+@Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+                 .Editing(editing => editing.Mode(GridEditMode.Batch).AllowAdding(!Model.Entity.IsNew).AllowUpdating(true).AllowDeleting(true)) 
+                 .OnInitNewRow(Prefix + "OnInitNewRowDetalleDataGrid") 
+                 .OnRowInserted("OnRowInsertedDetalleDataGrid").OnRowUpdated("OnRowUpdatedDetalleDataGrid").OnRowRemoved("OnRowRemovedDetalleDataGrid").OnDataErrorOccurred("OnDataErrorOccurredDetalleDataGrid") 
+                 .Columns(columns => 
+                 { 
+                     columns.AddFor(m => m.EntidadesId) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Filiales.EntidadesId"))) 
+                         .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Filiales.EntidadesId"))) 
+                             .Lookup(lookup => lookup 
+                             .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Filiales").LoadAction("GetEntidadesId").Key("Id")) 
+                             .DataSourceOptions(o => o.Paginate(true).PageSize(10)) 
+                             .ValueExpr("Id").DisplayExpr("Id")); 
+                     columns.AddFor(m => m.Nombre) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Filiales.Nombre"))) 
+                         .ValidationRules(rules => rules.AddStringLength().Min(0).Max(250).Message(DApp.GetStringLengthResource("Filiales.Nombre", 250))) 
+                     ; 
+                     columns.AddFor(m => m.CorreoElectronico) 
+                         .ValidationRules(rules => rules.AddStringLength().Min(0).Max(200).Message(DApp.GetStringLengthResource("Filiales.CorreoElectronico", 200))) 
+                     ; 
+                     columns.AddFor(m => m.Fax) 
+                         .ValidationRules(rules => rules.AddStringLength().Min(0).Max(100).Message(DApp.GetStringLengthResource("Filiales.Fax", 100))) 
+                     ; 
+                     columns.AddFor(m => m.PaginaWeb) 
+                         .ValidationRules(rules => rules.AddStringLength().Min(0).Max(255).Message(DApp.GetStringLengthResource("Filiales.PaginaWeb", 255))) 
+                     ; 
+                     columns.AddFor(m => m.Direccion) 
+                         .ValidationRules(rules => rules.AddStringLength().Min(0).Max(255).Message(DApp.GetStringLengthResource("Filiales.Direccion", 255))) 
+                     ; 
+                     columns.AddFor(m => m.EstadosId).Format("#,##0.##") 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Filiales.EstadosId"))); 
+                     columns.AddFor(m => m.CiudadesId).Format("#,##0.##") 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Filiales.CiudadesId"))); 
+             }) 
+         ) 
+        </div> 
+    </div> 
+</div> 
+*@ 

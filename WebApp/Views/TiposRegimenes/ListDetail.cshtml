@@ -1,0 +1,33 @@
+@*  Remplazar FATHERModel por el modelo del padre al que pertenece   *@ 
+ 
+@model TiposSangreModel 
+@{ 
+    string Prefix = "TiposRegimenes"; 
+    string UrlOnClick = Url.Action("EditDetail", "TiposRegimenes"); 
+    string UrlNew = Url.Action("NewDetail", "TiposRegimenes", new { IdFather = Model.Entity.Id }); 
+
+    var DataGridDetailConfig = new DataGridConfiguration<TiposRegimenes>(Prefix) 
+        .OnClick(UrlOnClick, new { Id = "Id" }, Prefix + "MainPanelForm") 
+        .New(UrlNew,Model.Entity.IsNew,Prefix + "MainPanelForm") 
+        .Exports(true,true); 
+} 
+
+<div class="card cardDeatil"> 
+    <div class="card-body">
+        <div class="box-body table-responsive no-padding"> 
+        @(Html.DControls().DataGridSimple<TiposRegimenes>(DataGridDetailConfig) 
+            .ID("TiposRegimenesDetalleDataGrid") 
+            .DataSource(d => d.Mvc().LoadMethod("POST").Controller("TiposRegimenes").LoadAction("Get").Key("Id")) 
+
+            .Columns(columns => 
+            { 
+        columns.AddFor(m => m.Nombre); 
+            }) 
+        ) 
+        </div> 
+        <div> 
+            <div id="TiposRegimenesMainPanelForm"></div> 
+        </div> 
+    </div> 
+</div> 
+

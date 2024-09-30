@@ -1,0 +1,151 @@
+@model AtencionesModel
+@{
+    string Prefix = "Atenciones";
+    string UrlReport = Url.Action("ImprimirNotaProcedimiento", Prefix, new { id = Model.Entity.Id });
+}
+
+<script>
+
+    function @(Prefix)ImprimirNotaProcedimiento() {
+        showLoadIndicator();
+        $.ajax({
+            url: "@UrlReport",
+            type: 'GET',
+            success: function (data) {
+                $("#VisorReporteria").dxPopup("instance").show();
+                $("#ContenidoReporte").html(data);
+                hideLoadIndicator();
+            },
+            error: function (xhr) {
+                console.log(xhr);
+                hideLoadIndicator();
+                DevExpress.ui.notify("Error inesperado " + xhr.statusText, "error");
+            }
+        });
+    }
+
+    function @(Prefix)OnValueChangedFechaNacimiento() {
+        var fechaNacimiento = $("#@(Prefix)PacienteFechaNacimiento").dxDateBox("instance").option("value");
+        var fechaAtencion = $("#@(Prefix)CreationDate").dxDateBox("instance").option("value");
+        var edadCompleta = ObtenerEdadCompleta(fechaNacimiento, fechaAtencion);
+        $("#PacientesCalculoEdad").text("Edad: " + edadCompleta.textoEdad);
+    }
+
+    function @(Prefix)PopupAbrirHC(data)
+    {
+        var CausasExternasId = $("#@(Prefix)CausasExternasId").dxSelectBox("instance").option("value");
+        var FinalidadConsultaId = $("#@(Prefix)FinalidadConsultaId").dxSelectBox("instance").option("value");
+
+        if (CausasExternasId == null || CausasExternasId == "" || CausasExternasId == 0 ||
+        FinalidadConsultaId == null || FinalidadConsultaId == "" || FinalidadConsultaId == 0) {
+            DevExpress.ui.notify("La causa externa y la finalidad son obligatorias para abrir la historia clinica.", "error");
+            return false;
+        }
+
+        $("#PopupAbrirHC").dxPopup("instance").show();
+    }
+
+    function @(Prefix)AbrirHC() {
+
+        var hcTipoId = $("#@(Prefix)TipoHC").dxSelectBox("instance").option("value");
+        var causaExternaId = $("#@(Prefix)CausasExternasId").dxSelectBox("instance").option("value");
+        var finalidadconsultaId = $("#@(Prefix)FinalidadConsultaId").dxSelectBox("instance").option("value");
+
+        if (hcTipoId == null || hcTipoId == "" || hcTipoId == 0) {
+            DevExpress.ui.notify("El tipo de historia clinica es obligatorio.", "error");
+            return false;
+        }
+
+        GetViewOnContainer("@Url.Action("OpenHC", "HistoriasClinicas")", "mainPanel",
+            {
+                atentionId: @Model.Entity.Id,
+                hcTipoId: hcTipoId,
+                causaExternaId: causaExternaId,
+                finalidadconsultaId: finalidadconsultaId
+            }
+        );
+
+        @*window.open("/HistoriasClinicas/OpenHC?atentionId=" + @Model.Entity.Id
+            + "&hcTipoId=" + hcTipoId
+            + "&isControl=" + isControl
+            + "&causaExternaId=" + CausasExternasId
+            + "&finalidadconsultaId=" + FinalidadConsultaId
+            , "_top");*@
+    }
+
+    function ConfirmarAnularAtencion() {
+
+        var Detalle = $("#@(Prefix)DetalleAnulacion").dxTextArea("instance").option("value");
+
+        if (Detalle == null || Detalle == "") {
+            DevExpress.ui.notify("El detalle para la aunlacion es obligatorio.", "error", 5000);
+            return false;
+        }
+
+        showLoadIndicator();
+        $.ajax({
+            url: '@Url.Action("AnularAtencion", "Atenciones")',
+            data: { Id:@Model.Entity.Id, DetalleAnulacion : Detalle},
+            type: 'POST',
+                success: function (data) {
+                    hideLoadIndicator();
+                    $("#mainPanel").html(data);
+                    DevExpress.ui.notify("Anulación satisfactoria.", "info");
+                },
+            error: function (xhr) {
+                hideLoadIndicator();
+                DevExpress.ui.notify("Error: " + xhr.status + " | " + xhr.responseText, "error");
+            }
+        });
+    }
+
+    function AnularAtencion() {
+        $("#PopupAnularAtencion").dxPopup("instance").show();
+    }
+
+    function @(Prefix)FormSuccess(data)
+    {
+        hideLoadIndicator();
+        if ('@ViewData.ModelState.IsValid' == 'True')
+        {
+            if ("@ViewBag.Accion" == "Delete") {
+                DevExpress.ui.notify("Registro eliminado correctamente.","info");
+            } else if ("@ViewBag.Accion" == "Save") {
+                DevExpress.ui.notify("Registro guardado correctamente.","info");
+            }
+            //else {
+            //    DevExpress.ui.notify("Error no accion en submit.","info");
+            //}
+        }
+    }
+
+    function @(Prefix)FormFailure(data)
+    {
+        hideLoadIndicator();
+        DevExpress.ui.notify("Error en el formulario","error");
+    }
+
+    function @(Prefix)FormSuccessDetail(data)
+    {
+        hideLoadIndicator();
+        if ('@ViewData.ModelState.IsValid' == 'True')
+        {
+            $("#AtencionesDetalleDataGrid").dxDataGrid("instance").refresh();
+            if ("@ViewBag.Accion" == "Delete") {
+                DevExpress.ui.notify("Registro eliminado correctamente.","info");
+            } else if ("@ViewBag.Accion" == "Save") {
+                DevExpress.ui.notify("Registro guardado correctamente.","info");
+            }
+            //else {
+            //    DevExpress.ui.notify("Error no accion en submit.","info");
+            //}
+        }
+    }
+
+    function @(Prefix)FormFailureDetail(data)
+    {
+        hideLoadIndicator();
+        DevExpress.ui.notify("Error en el formulario","error");
+    }
+
+</script>

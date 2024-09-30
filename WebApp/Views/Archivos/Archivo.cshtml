@@ -1,0 +1,7 @@
+@model Archivos
+
+@using (Html.DevExtreme().NamedTemplate($"{Model.Maestro}{Model.NombreCampoForanea}Archivo"))
+{
+    <partial name="DataArchivo.cshtml" model=Model view-data="ViewData" />
+    <partial name="Template.cshtml" model=Model view-data="ViewData" />
+}

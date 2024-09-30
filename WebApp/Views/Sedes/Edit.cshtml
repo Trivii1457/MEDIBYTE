@@ -1,0 +1,155 @@
+@model SedesModel
+@{
+    string Prefix = "Sedes";
+
+    string UrlSave = Url.Action("Edit", "Sedes");
+    string UrlNew = Url.Action("New", "Sedes");
+    string UrlDelete = Url.Action("Delete", "Sedes", new { Id = Model.Entity.Id });
+    string UrlBack = Url.Action("ListPartial", "Sedes");
+
+    var ToolbarConfig = new ToolbarConfiguration(Prefix)
+        .Title(DApp.DefaultLanguage.GetResource("Sedes"))
+        .Save(DApp.ActionViewSecurity(Context, UrlSave), Model.Entity.IsNew)
+        .New(UrlNew, DApp.ActionViewSecurity(Context, UrlNew))
+        .Delete(UrlDelete, DApp.ActionViewSecurity(Context, UrlDelete), UrlBack, Model.Entity.IsNew)
+        .Back(UrlBack);
+}
+
+<partial name="ViewJS.cshtml" model="Model" view-data="ViewData" />
+
+@(Html.DControls().Toolbar(ToolbarConfig))
+
+<div>
+    <div id="SedesMainPanelForm">
+        <form id="@(Prefix)Form" asp-controller="Sedes" asp-action="Edit" class="form-horizontal" data-ajax-mode="replace" data-ajax-update="#mainPanel" data-ajax-success="@(Prefix)FormSuccess" data-ajax-failure="@(Prefix)FormFailure" data-ajax="true">
+            @(Html.DControls().ValidationSummary().ValidationGroup(Prefix + "ValidationGroup").ElementAttr("class", "ErrorValidationSummary"))
+            @using (Html.DevExtreme().ValidationGroup(Prefix + "ValidationGroup"))
+            {
+                @(Html.DControls().CheckBoxFor(m => m.Entity.IsNew).ID(Prefix + "IsNew").Visible(false))
+                @(Html.DControls().NumberBoxFor(m => m.Entity.Id).ID(Prefix + "Id").Visible(false))
+                @(Html.DControls().TextBoxFor(m => m.Entity.UpdatedBy).ID(Prefix + "UpdatedBy").Visible(false))
+                @(Html.DControls().DateBoxFor(m => m.Entity.LastUpdate).ID(Prefix + "LastUpdate").Type(DateBoxType.DateTime).Visible(false))
+                @(Html.DControls().TextBoxFor(m => m.Entity.CreatedBy).ID(Prefix + "CreatedBy").Visible(false))
+                @(Html.DControls().DateBoxFor(m => m.Entity.CreationDate).ID(Prefix + "CreationDate").Type(DateBoxType.DateTime).Visible(false))
+
+                @(Html.DControls().NumberBoxFor(m => m.Entity.EmpresasId).ID(Prefix + "EmpresasId").Visible(false))
+
+                @(Html.DControls().Form<SedesModel>()
+                    .LabelLocation(FormLabelLocation.Top).ShowValidationSummary(false).FormData(Model)
+                    .Items(items =>
+                    {
+                        items.AddGroup().ColCount(12).Caption(DApp.DefaultLanguage.GetResource("DEFAULT.INFORMATIONGENERAL"))
+                            .Items(groupItems =>
+                            {
+                                groupItems.AddSimpleFor(m => m.Entity.Nombre).ColSpan(3)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Sedes.Nombre")))
+                                 .ValidationRules(rules => rules.AddStringLength().Min(0).Max(250).Message(DApp.GetStringLengthResource("Sedes.Nombre", 250)))
+                                      .Editor(e => e.TextBox().ID(Prefix + "Nombre").ShowClearButton(true));
+                                groupItems.AddSimpleFor(m => m.Entity.CorreoElectronico).ColSpan(3)
+                                 .ValidationRules(rules => rules.AddStringLength().Min(0).Max(200).Message(DApp.GetStringLengthResource("Sedes.CorreoElectronico", 200)))
+                                      .Editor(e => e.TextBox().ID(Prefix + "CorreoElectronico").Mode(TextBoxMode.Email).ShowClearButton(true));
+                                groupItems.AddSimpleFor(m => m.Entity.PaginaWeb).ColSpan(3)
+                                 .ValidationRules(rules => rules.AddStringLength().Min(0).Max(255).Message(DApp.GetStringLengthResource("Sedes.PaginaWeb", 255)))
+                                      .Editor(e => e.TextBox().ID(Prefix + "PaginaWeb").Mode(TextBoxMode.Url).ShowClearButton(true));
+
+                                groupItems.AddSimpleFor(m => m.Entity.Fax).ColSpan(3)
+                                 .ValidationRules(rules => rules.AddStringLength().Min(0).Max(100).Message(DApp.GetStringLengthResource("Sedes.Fax", 100)))
+                                      .Editor(e => e.TextBox().ID(Prefix + "Fax").Mode(TextBoxMode.Tel).ShowClearButton(true));
+                                groupItems.AddSimpleFor(m => m.Entity.Direccion).ColSpan(6)
+                                 .ValidationRules(rules => rules.AddStringLength().Min(0).Max(255).Message(DApp.GetStringLengthResource("Sedes.Direccion", 255)))
+                                      .Editor(e => e.TextBox().ID(Prefix + "Direccion").ShowClearButton(true));
+
+                                groupItems.AddSimpleFor(m => m.Entity.EstadosId).ColSpan(3)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Sedes.EstadosId")))
+                                 .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Sedes.EstadosId")))
+                                      .Editor(e => e.SelectBox().ID("EstadosId")
+                                      .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Sedes").LoadAction("GetEstadosId").Key("Id"))
+                                      .DataSourceOptions(o => o.Paginate(true).PageSize(10).Filter("['Tipo','=','SEDE DE ENTIDAD']"))
+                                      .ValueExpr("Id").DisplayExpr("Nombre")
+                                      .SearchEnabled(true).ShowClearButton(true)
+                                 );
+
+                                groupItems.AddSimpleFor(m => m.Entity.NroMatriculaMercantil).ColSpan(3)
+                                    .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Sedes.NroMatriculaMercantil")))
+                                    .ValidationRules(rules => rules.AddStringLength().Min(0).Max(20).Message(DApp.GetStringLengthResource("Sedes.NroMatriculaMercantil", 20)))
+                                      .Editor(e => e.TextBox().ID(Prefix + "NroMatriculaMercantil").Mode(TextBoxMode.Tel).ShowClearButton(true));
+
+                                groupItems.AddSimpleFor(m => m.PaisId).ColSpan(3).Label(x=>x.Text(DApp.DefaultLanguage.GetResource("Sedes.Paises")))
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Sedes.Paises")))
+                                 .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Sedes.Paises")))
+                                      .Editor(e => e.SelectBox().ID("Paises")
+                                      .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Sedes").LoadAction("GetPaisesId").Key("Id"))
+                                      .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                      .ValueExpr("Id").DisplayExpr("Nombre")
+                                      .SearchEnabled(true).ShowClearButton(true)
+                                      .OnValueChanged(Prefix + "OnValueChangedPaises")
+                                 );
+
+                                groupItems.AddSimpleFor(m => m.DepartamentoId).ColSpan(3).Label(x=>x.Text(DApp.DefaultLanguage.GetResource("Sedes.Departamentos")))
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Sedes.Departamentos")))
+                                 .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Sedes.Departamentos")))
+                                      .Editor(e => e.SelectBox().ID("Departamentos")
+                                      .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Sedes").LoadAction("GetDepartamentosId").Key("Id"))
+                                      .DataSourceOptions(o => o.Paginate(true).PageSize(10).Filter("['PaisesId','=','"+Model.PaisId+"']"))
+                                      .ValueExpr("Id").DisplayExpr("Nombre")
+                                      .SearchEnabled(true).ShowClearButton(true)
+                                      .OnValueChanged(Prefix + "OnValueChangedDepartamentos")
+                                 );
+
+                                groupItems.AddSimpleFor(m => m.Entity.CiudadesId).ColSpan(3)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Sedes.CiudadesId")))
+                                 .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Sedes.CiudadesId")))
+                                      .Editor(e => e.SelectBox().ID("CiudadesId")
+                                      .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Sedes").LoadAction("GetCiudadesId").Key("Id"))
+                                      .DataSourceOptions(o => o.Paginate(true).PageSize(10).Filter("['DepartamentosId','=','"+Model.DepartamentoId+"']"))
+                                      .ValueExpr("Id").DisplayExpr("Nombre")
+                                      .SearchEnabled(true).ShowClearButton(true)
+                                 );
+
+                                groupItems.AddSimpleFor(m => m.Entity.CodigoPostal).ColSpan(3)
+                                    .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Sedes.CodigoPostal")))
+                                    .ValidationRules(rules => rules.AddStringLength().Min(0).Max(20).Message(DApp.GetStringLengthResource("Sedes.CodigoPostal", 20)))
+                                      .Editor(e => e.TextBox().ID(Prefix + "CodigoPostal").Mode(TextBoxMode.Tel).ShowClearButton(true));
+                                groupItems.AddSimpleFor(m => m.Entity.Codigo).ColSpan(3)
+                                    .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Sedes.Codigo")))
+                                    .ValidationRules(rules => rules.AddStringLength().Min(0).Max(20).Message(DApp.GetStringLengthResource("Sedes.Codigo", 20)))
+                                      .Editor(e => e.TextBox().ID(Prefix + "Codigo").Mode(TextBoxMode.Tel).ShowClearButton(true));
+
+                                groupItems.AddSimpleFor(m => m.Entity.CreatedBy).ColSpan(3)
+                                                .Editor(e => e.TextBox().ReadOnly(true));
+                                groupItems.AddSimpleFor(m => m.Entity.CreationDate).ColSpan(3)
+                                    .Editor(e => e.DateBox().ReadOnly(true)
+                                    .Type(DateBoxType.DateTime)
+                                    .DisplayFormat(DApp.DefaultLanguage.DateTimeFormat));
+
+                                groupItems.AddSimpleFor(m => m.Entity.UpdatedBy).ColSpan(3)
+                                    .Editor(e => e.TextBox().ReadOnly(true));
+                                groupItems.AddSimpleFor(m => m.Entity.LastUpdate).ColSpan(3)
+                                    .Editor(e => e.DateBox().ReadOnly(true)
+                                    .Type(DateBoxType.DateTime)
+                                    .DisplayFormat(DApp.DefaultLanguage.DateTimeFormat));
+
+                            });
+                    })
+                )
+            }
+            
+        </form>
+
+        @* Si el maestro maneja detalle descomentar el siguiente codigo y remplazar la palabra "VISTADETALLE" y "RECURSODETALLE" *@
+        @*<nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">
+                        @DApp.DefaultLanguage.GetResource("RECURSODETALLE")
+                    </a>
+                </div>
+            </nav>
+            <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                    <partial name="../VISTADETALLE/ListDetail.cshtml" model=Model view-data="ViewData" />
+                </div>
+            </div>*@
+
+    </div>
+</div>
+

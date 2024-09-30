@@ -1,0 +1,129 @@
+@model EventosDIANModel 
+@{
+    string Prefix = "EventosDIAN"; 
+
+    string UrlSave = Url.Action("Edit", "EventosDIAN"); 
+    string UrlNew = Url.Action("New", "EventosDIAN"); 
+    string UrlDelete = Url.Action("Delete", "EventosDIAN", new { Id = Model.Entity.Id }); 
+    string UrlBack = Url.Action("ListPartial", "EventosDIAN"); 
+
+    var ToolbarConfig = new ToolbarConfiguration(Prefix) 
+        .Title(DApp.DefaultLanguage.GetResource("EventosDIAN")) 
+        //.Save(DApp.ActionViewSecurity(Context, UrlSave),Model.Entity.IsNew) 
+        //.New(UrlNew, DApp.ActionViewSecurity(Context, UrlNew)) 
+        //.Delete(UrlDelete,DApp.ActionViewSecurity(Context,UrlDelete),UrlBack,Model.Entity.IsNew) 
+        .Back(UrlBack); 
+}
+
+<partial name="ViewJS.cshtml" model="Model" view-data="ViewData" /> 
+
+@(Html.DControls().Toolbar(ToolbarConfig)) 
+
+<div> 
+    <div id = "EventosDIANMainPanelForm"> 
+        <form id = "@(Prefix)Form" asp-controller="EventosDIAN" asp-action="Edit" class="form-horizontal" data-ajax-mode="replace" data-ajax-update="#mainPanel" data-ajax-success="@(Prefix)FormSuccess" data-ajax-failure="@(Prefix)FormFailure" data-ajax="true"> 
+            @(Html.DControls().ValidationSummary().ValidationGroup(Prefix + "ValidationGroup").ElementAttr("class","ErrorValidationSummary")) 
+            @using (Html.DevExtreme().ValidationGroup(Prefix + "ValidationGroup")) 
+            { 
+                @(Html.DControls().CheckBoxFor(m => m.Entity.IsNew).ID(Prefix + "IsNew").Visible(false)) 
+                @(Html.DControls().NumberBoxFor(m => m.Entity.Id).ID(Prefix + "Id").Visible(false)) 
+                @(Html.DControls().TextBoxFor(m => m.Entity.UpdatedBy).ID(Prefix + "UpdatedBy").Visible(false)) 
+                @(Html.DControls().DateBoxFor(m => m.Entity.LastUpdate).ID(Prefix + "LastUpdate").Type(DateBoxType.Time).Visible(false)) 
+                @(Html.DControls().TextBoxFor(m => m.Entity.CreatedBy).ID(Prefix + "CreatedBy").Visible(false)) 
+                @(Html.DControls().DateBoxFor(m => m.Entity.CreationDate).ID(Prefix + "CreationDate").Type(DateBoxType.Time).Visible(false)) 
+
+                @(Html.DControls().Form<EventosDIANModel>().ReadOnly(true)
+                    .ID("EventosDIANModelForm").LabelLocation(FormLabelLocation.Top).ShowValidationSummary(false).FormData(Model)
+                    .Items(items =>
+                    {
+                        items.AddGroup().ColCount(12).Caption(DApp.DefaultLanguage.GetResource("DEFAULT.INFORMATIONGENERAL"))
+                            .Items(groupItems =>{
+                                groupItems.AddSimpleFor(m => m.Entity.TipoEvento).ColSpan(4)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("EventosDIAN.TipoEvento")))
+                                 .ValidationRules(rules => rules.AddStringLength().Min(0).Max(10).Message(DApp.GetStringLengthResource("EventosDIAN.TipoEvento", 10)))
+                                      .Editor(e => e.TextBox().ID(Prefix + "TipoEvento").ShowClearButton(true));
+                                groupItems.AddSimpleFor(m => m.Entity.CodigoEvento).ColSpan(4)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("EventosDIAN.CodigoEvento")))
+                                 .ValidationRules(rules => rules.AddStringLength().Min(0).Max(10).Message(DApp.GetStringLengthResource("EventosDIAN.CodigoEvento", 10)))
+                                      .Editor(e => e.TextBox().ID(Prefix + "CodigoEvento").ShowClearButton(true));
+                                groupItems.AddSimpleFor(m => m.Entity.Descripcion).ColSpan(4)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("EventosDIAN.Descripcion")))
+                                 .ValidationRules(rules => rules.AddStringLength().Min(0).Max(128).Message(DApp.GetStringLengthResource("EventosDIAN.Descripcion", 128)))
+                                      .Editor(e => e.TextBox().ID(Prefix + "Descripcion").ShowClearButton(true));
+                                groupItems.AddSimpleFor(m => m.Entity.Uri).ColSpan(12)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("EventosDIAN.Uri")))
+                                 .ValidationRules(rules => rules.AddStringLength().Min(0).Max(1024).Message(DApp.GetStringLengthResource("EventosDIAN.Uri", 1024)))
+                                      .Editor(e => e.TextArea().ID(Prefix + "Uri"));
+                                groupItems.AddSimpleFor(m => m.Entity.NumDocEmisor).ColSpan(4)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("EventosDIAN.NumDocEmisor")))
+                                 .ValidationRules(rules => rules.AddStringLength().Min(0).Max(20).Message(DApp.GetStringLengthResource("EventosDIAN.NumDocEmisor", 20)))
+                                      .Editor(e => e.TextBox().ID(Prefix + "NumDocEmisor").ShowClearButton(true));
+                                groupItems.AddSimpleFor(m => m.Entity.NumDocReceptor).ColSpan(4)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("EventosDIAN.NumDocReceptor")))
+                                 .ValidationRules(rules => rules.AddStringLength().Min(0).Max(20).Message(DApp.GetStringLengthResource("EventosDIAN.NumDocReceptor", 20)))
+                                      .Editor(e => e.TextBox().ID(Prefix + "NumDocReceptor").ShowClearButton(true));
+                                groupItems.AddSimpleFor(m => m.Entity.TipoDoc).ColSpan(4)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("EventosDIAN.TipoDoc")))
+                                 .ValidationRules(rules => rules.AddStringLength().Min(0).Max(10).Message(DApp.GetStringLengthResource("EventosDIAN.TipoDoc", 10)))
+                                      .Editor(e => e.TextBox().ID(Prefix + "TipoDoc").ShowClearButton(true));
+                                groupItems.AddSimpleFor(m => m.Entity.SubtipoDoc).ColSpan(4)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("EventosDIAN.SubtipoDoc")))
+                                 .ValidationRules(rules => rules.AddStringLength().Min(0).Max(10).Message(DApp.GetStringLengthResource("EventosDIAN.SubtipoDoc", 10)))
+                                      .Editor(e => e.TextBox().ID(Prefix + "SubtipoDoc").ShowClearButton(true));
+                                groupItems.AddSimpleFor(m => m.Entity.NroId).ColSpan(4)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("EventosDIAN.NroId")))
+                                 .ValidationRules(rules => rules.AddStringLength().Min(0).Max(50).Message(DApp.GetStringLengthResource("EventosDIAN.NroId", 50)))
+                                      .Editor(e => e.TextBox().ID(Prefix + "NroId").ShowClearButton(true));
+                                groupItems.AddSimpleFor(m => m.Entity.Uuid).ColSpan(4)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("EventosDIAN.Uuid")))
+                                 .ValidationRules(rules => rules.AddStringLength().Min(0).Max(255).Message(DApp.GetStringLengthResource("EventosDIAN.Uuid", 255)))
+                                      .Editor(e => e.TextBox().ID(Prefix + "Uuid").ShowClearButton(true));
+                                groupItems.AddSimpleFor(m => m.Entity.FechaEmision).ColSpan(4)
+                                  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("EventosDIAN.FechaEmision")))
+                                      .Editor(e=>e.DateBox().ID(Prefix + "FechaEmision").Type(DateBoxType.Time)
+                                      .DisplayFormat(DApp.DefaultLanguage.DateFormat).Placeholder(DateTime.Now.ToString(DApp.DefaultLanguage.DateFormat)).ShowClearButton(true).UseMaskBehavior(true));
+                                groupItems.AddSimpleFor(m => m.Entity.FechaEvento).ColSpan(4)
+                                  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("EventosDIAN.FechaEvento")))
+                                      .Editor(e=>e.DateBox().ID(Prefix + "FechaEvento").Type(DateBoxType.Time)
+                                      .DisplayFormat(DApp.DefaultLanguage.DateFormat).Placeholder(DateTime.Now.ToString(DApp.DefaultLanguage.DateFormat)).ShowClearButton(true).UseMaskBehavior(true));
+
+                                groupItems.AddEmpty().ColSpan(4);
+
+                                groupItems.AddSimpleFor(m => m.Entity.Observacion).ColSpan(12)
+                               .ValidationRules(rules => rules.AddStringLength().Min(0).Max(1024).Message(DApp.GetStringLengthResource("EventosDIAN.Observacion", 1024)))
+                                    .Editor(e => e.TextArea().ID(Prefix + "Observacion"));
+                                groupItems.AddSimpleFor(m => m.Entity.XmlDoc).ColSpan(12)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("EventosDIAN.XmlDoc")))
+                                 .ValidationRules(rules => rules.AddStringLength().Min(0).Max(1024).Message(DApp.GetStringLengthResource("EventosDIAN.XmlDoc", 1024)))
+                                      .Editor(e => e.TextArea().ID(Prefix + "XmlDoc"));
+                                groupItems.AddSimpleFor(m => m.Entity.Pdf).ColSpan(12)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("EventosDIAN.Pdf")))
+                                 .ValidationRules(rules => rules.AddStringLength().Min(0).Max(1024).Message(DApp.GetStringLengthResource("EventosDIAN.Pdf", 1024)))
+                                      .Editor(e => e.TextArea().ID(Prefix + "Pdf"));
+                            });
+                    })
+                ) 
+            } 
+        </form> 
+
+        @* Si el maestro maneja detalle descomentar el siguiente codigo y remplazar la palabra "MAESTRODETALLE" *@
+        @* 
+        <div> 
+           <ul class="nav nav-tabs" role="tablist"> 
+               <li role="presentation" class="active"> 
+                   <a href="#MAESTRODETALLE" aria-controls="MAESTRODETALLE" role="tab" data-toggle="tab"> 
+                       @DApp.DefaultLanguage.GetResource("MAESTRODETALLE") 
+                   </a> 
+               </li> 
+           </ul> 
+           <div class="tab-content"> 
+               <div role="tabpanel" class="tab-pane active" id="MAESTRODETALLE">
+                   <partial name="../MAESTRODETALLE/ListDetail.cshtml" model=Model view-data="ViewData" />
+               </div>
+           </div>
+        </div>
+        *@
+
+    </div> 
+</div> 
+

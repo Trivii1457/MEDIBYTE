@@ -1,0 +1,76 @@
+@*  Remplazar FATHERModel por el modelo del padre al que pertenece   *@ 
+ 
+@model HistoriasClinicasModel 
+@{ 
+    string Prefix = "HistoriasClinicasDiagnosticos"; 
+    string UrlOnClick = Url.Action("EditDetail", "HistoriasClinicasDiagnosticos"); 
+    string UrlNew = Url.Action("NewDetail", "HistoriasClinicasDiagnosticos", new { IdFather = Model.Entity.Id }); 
+
+    var DataGridDetailConfig = new DataGridConfiguration<HistoriasClinicasDiagnosticos>(Prefix) 
+        .OnClick(UrlOnClick, new { Id = "Id" }, Prefix + "MainPanelForm") 
+        .New(UrlNew,Model.Entity.IsNew,Prefix + "MainPanelForm") 
+        .Exports(true,true); 
+} 
+ 
+
+
+@* ------------ Descomentar el siguiente codigo si es una edicion en maestro --------------- *@
+ 
+
+<div class="card cardDeatil"> 
+    <div class="card-body">
+        <div class="box-body table-responsive no-padding"> 
+        @(Html.DControls().DataGridSimple<HistoriasClinicasDiagnosticos>(DataGridDetailConfig)
+            .ID("HistoriasClinicasDiagnosticosDetalleDataGrid")
+            .DataSource(d => d.Mvc().LoadMethod("POST").Controller("HistoriasClinicasDiagnosticos").LoadAction("Get").Key("Id"))
+            .DataSourceOptions(x=>x.Filter("['HistoriasClinicasId','=','" + @Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+            .Columns(columns =>
+            {
+                columns.AddFor(m => m.Diagnosticos.Descripcion);
+                columns.AddFor(m => m.Principal);
+            })
+        ) 
+        </div> 
+        <div id="HistoriasClinicasDiagnosticosMainPanelForm"></div> 
+    </div> 
+</div> 
+ 
+
+
+@* ------------ Descomentar el siguiente codigo si es una edicion en grilla y COMENTAR LOS METODOS OnClick y New del DataGridDetailConfig --------------- *@
+ 
+@*<script> 
+     function @(Prefix)OnInitNewRowDetalleDataGrid(model) { 
+         model = GetAuditoryData(model); 
+         model.data.HistoriasClinicasId = "@Model.Entity.Id"; // Cambiar IdFather por el campo foraneo hacia el padre 
+     } 
+</script> 
+<div class="card cardDeatil"> 
+    <div class="card-body">
+        <div class="box-body table-responsive no-padding"> 
+             @(Html.DControls().DataGridSimple<HistoriasClinicasDiagnosticos>(DataGridDetailConfig)
+                 .ID("HistoriasClinicasDiagnosticosDetalleDataGrid")
+                 .DataSource(d => d.Mvc().LoadMethod("POST").Controller("HistoriasClinicasDiagnosticos").LoadAction("Get").Key("Id")
+                     .InsertAction("AddInGrid").InsertMethod("POST").UpdateAction("ModifyInGrid").UpdateMethod("POST").DeleteAction("DeleteInGrid").DeleteMethod("POST")
+                 )
+                 .DataSourceOptions(x=>x.Filter("['HistoriasClinicasId','=','" + @Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+                 .Editing(editing => editing.Mode(GridEditMode.Batch).AllowAdding(!Model.Entity.IsNew).AllowUpdating(true).AllowDeleting(true))
+                 .OnInitNewRow(Prefix + "OnInitNewRowDetalleDataGrid")
+                 .OnRowInserted("OnRowInsertedDetalleDataGrid").OnRowUpdated("OnRowUpdatedDetalleDataGrid").OnRowRemoved("OnRowRemovedDetalleDataGrid").OnDataErrorOccurred("OnDataErrorOccurredDetalleDataGrid")
+                 .Columns(columns =>
+                 {
+                     columns.AddFor(m => m.DiagnosticosId)
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("HistoriasClinicasDiagnosticos.DiagnosticosId")))
+                         .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("HistoriasClinicasDiagnosticos.DiagnosticosId")))
+                             .Lookup(lookup => lookup
+                             .DataSource(d => d.Mvc().LoadMethod("POST").Controller("HistoriasClinicasDiagnosticos").LoadAction("GetDiagnosticosId").Key("Id"))
+                             .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                             .ValueExpr("Id").DisplayExpr("Descripcion"));
+                     columns.AddFor(m => m.Principal)
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("HistoriasClinicasDiagnosticos.Principal")));
+                 })
+         ) 
+        </div> 
+    </div> 
+</div>*@ 
+ 

@@ -1,0 +1,127 @@
+@model AdmisionesModel 
+@{
+    string Prefix = "AdmisionesCorrecion"; 
+}
+
+<script>
+
+    function @(Prefix)OnValueChangedServiciosId() {
+
+        $("#@(Prefix)EntidadesId").dxSelectBox("instance").option("value",null);
+        $("#@(Prefix)ConveniosId").dxSelectBox("instance").option("value",null);
+        $("#@(Prefix)FilialesId").dxSelectBox("instance").option("value", null);
+        $("#@(Prefix)EntidadesId").dxSelectBox("instance").getDataSource().reload();
+        $("#@(Prefix)ConveniosId").dxSelectBox("instance").getDataSource().reload();
+        $("#@(Prefix)FilialesId").dxSelectBox("instance").getDataSource().reload();
+    }
+
+    function @(Prefix)ValidarNumeroPoliza(params) {
+
+        var tipoUsuario = $("#@(Prefix)TiposUsuariosId").dxSelectBox("instance").option("value");
+        var numeroPoliza = params.value;
+
+        if (tipoUsuario != null && tipoUsuario != "" && tipoUsuario != 0 && (tipoUsuario == 9 || tipoUsuario == 10)) {
+            if (numeroPoliza == null || numeroPoliza == "" || numeroPoliza == 0) {
+                params.rule.isValid = false;
+                params.rule.message = "La columna Número de poliza es requerida.";
+                params.validator.validate();
+                return false;
+            }
+        } else {
+            params.rule.isValid = true;
+            params.rule.message = "";
+            params.validator.validate();
+            return true;
+        }
+        return true;
+    }
+
+    function @(Prefix)OnChangeConvenio(item) {
+        var Filiales = $("#@(Prefix)FilialesId").dxSelectBox("instance");
+        Filiales.getDataSource().filter(["EntidadesId", "=", @(Prefix)GetEntidad(item)]);
+        Filiales.getDataSource().reload();
+        Filiales.option("value", null);
+    }
+
+    function @(Prefix)GetEntidad(item) {
+
+        var entidades = 0;
+        if (item.value!=null) {
+             $.ajax({
+                url: "@Url.Action("GetEntidadesConvenios","Admisiones")",
+                data: { id: item.value },
+                async:false,
+                type: 'POST',
+                success: function (data) {
+                    entidades = data;
+                }
+            });
+        }
+        return entidades;
+    }
+
+    function @(Prefix)OnValueChangedEntidadesConvenio() {
+        $("#@(Prefix)ConveniosId").dxSelectBox("instance").option("value",null);
+        $("#@(Prefix)FilialesId").dxSelectBox("instance").option("value", null);
+        $("#@(Prefix)ConveniosId").dxSelectBox("instance").getDataSource().reload();
+        $("#@(Prefix)FilialesId").dxSelectBox("instance").getDataSource().reload();
+    }
+
+    function @(Prefix)GetPacientesId() {
+        var pacienteId = $("#@(Prefix)PacientesId").dxSelectBox("instance").option("value");
+        return pacienteId;
+    }
+
+    function @(Prefix)GetServiciosId() {
+        var servicio = $("#@(Prefix)ServiciosId").dxSelectBox("instance").option("value");
+        return servicio;
+    }
+    function @(Prefix)GetEntidadesId() {
+        var entidad = $("#@(Prefix)EntidadesId").dxSelectBox("instance").option("value");
+        return entidad;
+    }
+
+    function @(Prefix)FormSuccess(data)
+    {
+        hideLoadIndicator();
+        if ('@ViewData.ModelState.IsValid' == 'True')
+        {
+            if ("@ViewBag.Accion" == "Delete") {
+                DevExpress.ui.notify("Registro eliminado correctamente.","info");
+            } else if ("@ViewBag.Accion" == "Save") {
+                DevExpress.ui.notify("Registro guardado correctamente.","info");
+            } else {
+                DevExpress.ui.notify("Error no accion en submit.","info");
+            }
+        }
+    }
+
+    function @(Prefix)FormFailure(data)
+    {
+        hideLoadIndicator();
+        DevExpress.ui.notify("Error en el formulario","error");
+    }
+
+    function @(Prefix)FormSuccessDetail(data)
+    {
+        hideLoadIndicator();
+        if ('@ViewData.ModelState.IsValid' == 'True')
+        {
+            $("#CajasDetalleDataGrid").dxDataGrid("instance").refresh();
+            if ("@ViewBag.Accion" == "Delete") {
+                DevExpress.ui.notify("Registro eliminado correctamente.","info");
+            } else if ("@ViewBag.Accion" == "Save") {
+                DevExpress.ui.notify("Registro guardado correctamente.","info");
+            } else {
+                DevExpress.ui.notify("Error no accion en submit.","info");
+            }
+        }
+    }
+
+    function @(Prefix)FormFailureDetail(data)
+    {
+        hideLoadIndicator();
+        DevExpress.ui.notify("Error en el formulario","error");
+    }
+
+</script>

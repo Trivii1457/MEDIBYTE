@@ -1,0 +1,28 @@
+﻿@{
+    string Prefix = "AdicionOrdenes";
+    string UrlClick = Url.Action("Edit", "AdicionOrdenes");
+
+    var DataGridConfig = new DataGridConfiguration<HistoriasClinicas>(Prefix)
+        .Exports(true, true)
+        .OnClick(UrlClick, new { Id = "Id" })
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("AdicionOrdenes"), "mainPanel");
+
+}
+
+<div asp-validation-summary="All" class="ErrorValidationSummary"></div>
+<div class="box-body table-responsive no-padding">
+    @(Html.DControls().DataGridSimple<HistoriasClinicas>(DataGridConfig)
+    .ID("AdicionOrdenesDataGrid")
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("AdicionOrdenes").LoadAction("Get").Key("Id"))
+    .Columns(columns =>
+    {
+        columns.AddFor(m => m.Pacientes.NumeroIdentificacion);
+        columns.AddFor(m => m.Pacientes.NombreCompleto).CalculateFilterExpression("CalculateFilterExpressionNombreCompleto");
+        columns.AddFor(m => m.FechaApertura).SortOrder(SortOrder.Desc);
+        columns.AddFor(m => m.Estados.Nombre);
+        columns.AddFor(m => m.Especialidad);
+        columns.AddFor(m => m.EsControl);
+        columns.AddFor(m => m.Profesional.NombreCompleto).CalculateFilterExpression("CalculateFilterExpressionNombreCompleto");
+    })
+)
+</div>

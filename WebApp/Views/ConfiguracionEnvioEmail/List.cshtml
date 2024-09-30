@@ -1,0 +1,27 @@
+@{ 
+    string Prefix = "ConfiguracionEnvioEmail"; 
+    string UrlClick = Url.Action("Edit", "ConfiguracionEnvioEmail"); 
+    string UrlNew = Url.Action("New", "ConfiguracionEnvioEmail"); 
+
+    var DataGridConfig = new DataGridConfiguration<ConfiguracionEnvioEmail>(Prefix) 
+        .OnClick(UrlClick, new { Id = "Id" }) 
+        //.New(UrlNew,DApp.ActionViewSecurity(Context,UrlNew)) 
+        .Exports(true,true) 
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("ConfiguracionEnvioEmail"), "mainPanel"); 
+} 
+
+<div class="box-body table-responsive no-padding"> 
+@(Html.DControls().DataGridSimple<ConfiguracionEnvioEmail>(DataGridConfig) 
+    .ID("ConfiguracionEnvioEmailDataGrid") 
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("ConfiguracionEnvioEmail").LoadAction("Get").Key("Id")) 
+    .Columns(columns => 
+    { 
+        columns.AddFor(m => m.Origen); 
+        columns.AddFor(m => m.CorreoElectronico); 
+        //columns.AddFor(m => m.Contraseña); 
+        columns.AddFor(m => m.ServidorSMTP); 
+        columns.AddFor(m => m.Puerto); 
+        columns.AddFor(m => m.UsaSSL); 
+    }) 
+) 
+</div> 

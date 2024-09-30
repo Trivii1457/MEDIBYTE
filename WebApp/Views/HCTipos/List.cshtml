@@ -1,0 +1,29 @@
+@{ 
+    string Prefix = "HCTipos"; 
+    string UrlClick = Url.Action("Edit", "HCTipos"); 
+    string UrlNew = Url.Action("New", "HCTipos"); 
+
+    var DataGridConfig = new DataGridConfiguration<HCTipos>(Prefix) 
+        .OnClick(UrlClick, new { Id = "Id" }) 
+        .New(UrlNew,DApp.ActionViewSecurity(Context,UrlNew)) 
+        .Exports(true,true) 
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("HCTipos"), "mainPanel"); 
+} 
+
+<div class="box-body table-responsive no-padding"> 
+@(Html.DControls().DataGridSimple<HCTipos>(DataGridConfig)
+    .ID("HCTiposDataGrid")
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("HCTipos").LoadAction("Get").Key("Id"))
+    .Columns(columns =>
+    {
+        columns.AddFor(m => m.Descripcion);
+        columns.AddFor(m => m.EspecialidadesId)
+                        .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("HCTipos.EspecialidadesId")))
+                        .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("HCTipos.EspecialidadesId")))
+                            .Lookup(lookup => lookup
+                            .DataSource(d => d.Mvc().LoadMethod("POST").Controller("HCTipos").LoadAction("GetEspecialidadesId").Key("Id"))
+                            .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                            .ValueExpr("Id").DisplayExpr("Nombre"));
+    })
+) 
+</div> 

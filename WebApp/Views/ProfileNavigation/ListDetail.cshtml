@@ -1,0 +1,42 @@
+﻿@*  Remplazar FATHERModel por el modelo del padre al que pertenece   *@ 
+@model ProfileModel 
+@{ 
+    string Prefix = "ProfileNavigation";
+    string UrlOnClick = Url.Action("EditDetail", "ProfileNavigation");
+    string UrlNew = Url.Action("NewProfileNavigation", "ProfileNavigation", new { IdFather = Model.Entity.Id });
+
+    var DataGridDetailConfig = new DataGridConfiguration<ProfileMethodModel>(Prefix)
+        //.OnClick(UrlOnClick, new { Id = "Id" }, Prefix + "MainPanelForm") 
+        .New(UrlNew,Model.Entity.IsNew,Prefix + "MainPanelForm") 
+        .Exports(true,true) ;
+} 
+
+<div class="card"> 
+    <div class="card-body">
+        <div class="box-body table-responsive no-padding"> 
+        @(Html.DControls().DataGridSimple<ProfileMethodModel>(DataGridDetailConfig)
+            .ID("ProfileNavigationDetalleDataGrid")
+            .Sorting(sorting => sorting.Mode(GridSortingMode.Multiple))
+            .RemoteOperations(false)
+            .DataSource(d => d.Mvc().LoadMethod("GET").Controller("ProfileNavigation").LoadAction("GetNavigationProfile").Key("ProfileNavigationId")
+                .LoadParams(new { ProfileId = Model.Entity.Id }))
+            //.DataSourceOptions(x=>x.Filter("['ProfileId','=','"+@Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+            .Columns(columns =>
+            {
+                columns.AddFor(m => m.ProfileNavigationId).Visible(false);
+                columns.AddFor(m => m.ProfileId).Visible(false);
+                columns.AddFor(m => m.Module).Caption(DApp.DefaultLanguage.GetResource("ProfileNavigation.Module")).GroupIndex(0).SortOrder(SortOrder.Asc).SortIndex(0);
+                columns.AddFor(m => m.ResourceKeyMaster).Caption(DApp.DefaultLanguage.GetResource("ProfileNavigation.ResourceKeyMaster")).SortOrder(SortOrder.Asc).SortIndex(1);
+                columns.AddFor(m => m.ResourceKeyMethod).Caption(DApp.DefaultLanguage.GetResource("ProfileNavigation.ResourceKeyMethod"));
+                columns.AddFor(m => m.MenuActionId).SortOrder(SortOrder.Asc).SortIndex(2).Visible(false);
+            })
+            .Grouping(grouping => grouping.AutoExpandAll(true))
+            .GroupPanel(groupPanel => groupPanel.Visible(false))
+            .Selection(s=>s.AllowSelectAll(false).Mode(SelectionMode.None))
+        ) 
+        </div> 
+        <div> 
+            <div id="ProfileNavigationMainPanelForm"></div> 
+        </div> 
+    </div> 
+</div> 

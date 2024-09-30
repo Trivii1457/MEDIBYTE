@@ -1,0 +1,106 @@
+@*  Remplazar FATHERModel por el modelo del padre al que pertenece   *@
+
+@model PacientesModel
+@{
+    string Prefix = "PacientesEntidades";
+    string UrlOnClick = Url.Action("EditDetail", "PacientesEntidades");
+    string UrlNew = Url.Action("NewDetail", "PacientesEntidades", new { IdFather = Model.Entity.Id });
+
+    var DataGridDetailConfig = new DataGridConfiguration<PacientesEntidades>(Prefix)
+        //.OnClick(UrlOnClick, new { Id = "Id" }, Prefix + "MainPanelForm")
+        //.New(UrlNew,Model.Entity.IsNew,Prefix + "MainPanelForm")
+        .Exports(true, true);
+
+    bool permitirEditar = false;
+    if (Model.DesdeCitas)
+    {
+        if (Model.CitaNueva && !Model.Entity.IsNew)
+            permitirEditar = true;
+    }
+    else
+        permitirEditar = !Model.Entity.IsNew;
+
+
+}
+
+
+
+@* ------------ Descomentar el siguiente codigo si es una edicion en maestro --------------- *@
+@*
+
+    <div class="card cardDeatil">
+        <div class="card-body">
+            <div class="box-body table-responsive no-padding">
+            @(Html.DControls().DataGridSimple<PacientesEntidades>(DataGridDetailConfig)
+                .ID("PacientesEntidadesDetalleDataGrid")
+                .DataSource(d => d.Mvc().LoadMethod("POST").Controller("PacientesEntidades").LoadAction("Get").Key("Id"))
+                .DataSourceOptions(x=>x.Filter("['IdFather','=','"+@Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+                .Columns(columns =>
+                {
+                 columns.AddFor(m => m.Pacientes.Id);
+                 columns.AddFor(m => m.Entidades.Id);
+                })
+            )
+            </div>
+            <div id="PacientesEntidadesMainPanelForm"></div>
+        </div>
+    </div>
+*@
+
+
+@* ------------ Descomentar el siguiente codigo si es una edicion en grilla y COMENTAR LOS METODOS OnClick y New del DataGridDetailConfig --------------- *@
+
+<script>
+
+     function @(Prefix)OnInitNewRowDetalleDataGrid(model) {
+         model = GetAuditoryData(model);
+         model.data.PacientesId = "@Model.Entity.Id"; // Cambiar IdFather por el campo foraneo hacia el padre
+     }
+
+    function @(Prefix)OnRowInsertedDetalleDataGrid(data) {
+
+        @if (Model.DesdeCitas && Model.CitaNueva && Model.Entity.Id != 0)
+        {
+            <text>
+            $("#ProgramacionCitasPacientesId").dxSelectBox("getDataSource").reload().done(() => {
+                $("#ProgramacionCitasPacientesId").dxSelectBox("instance").option("value", null);
+                $("#ProgramacionCitasPacientesId").dxSelectBox("instance").option("value", @Model.Entity.Id);
+                $("#ProgramacionCitasEntidadesId").dxSelectBox("getDataSource").reload().done(() => {
+                    $("#ProgramacionCitasEntidadesId").dxSelectBox("instance").option("value", null);
+                });
+            });
+            </text>
+        }
+
+        DevExpress.ui.notify("Registro guardado correctamente.", "info");
+    }
+
+</script>
+
+<div class="card cardDeatil">
+    <div class="card-body">
+        <div class="box-body table-responsive no-padding">
+            @(Html.DControls().DataGridSimple<PacientesEntidades>(DataGridDetailConfig)
+                 .ID("PacientesEntidadesDetalleDataGrid")
+                 .DataSource(d => d.Mvc().LoadMethod("POST").Controller("PacientesEntidades").LoadAction("Get").Key("Id")
+                     .InsertAction("AddInGrid").InsertMethod("POST").UpdateAction("ModifyInGrid").UpdateMethod("POST").DeleteAction("DeleteInGrid").DeleteMethod("POST")
+                 )
+                 .DataSourceOptions(x=>x.Filter("['PacientesId','=','"+@Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+                 .Editing(editing => editing.Mode(GridEditMode.Batch).AllowAdding(permitirEditar).AllowUpdating(true).AllowDeleting(true))
+                 .OnInitNewRow(Prefix + "OnInitNewRowDetalleDataGrid")
+                 .OnRowInserted(Prefix +"OnRowInsertedDetalleDataGrid").OnRowUpdated("OnRowUpdatedDetalleDataGrid").OnRowRemoved("OnRowRemovedDetalleDataGrid").OnDataErrorOccurred("OnDataErrorOccurredDetalleDataGrid")
+                 .Columns(columns =>
+                 {
+                     columns.AddFor(m => m.EntidadesId)
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("PacientesEntidades.EntidadesId")))
+                         .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("PacientesEntidades.EntidadesId")))
+                             .Lookup(lookup => lookup
+                             .DataSource(d => d.Mvc().LoadMethod("POST").Controller("PacientesEntidades").LoadAction("GetEntidadesId").Key("Id"))
+                             .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                             .ValueExpr("Id").DisplayExpr("Nombre"));
+             })
+         )
+        </div>
+    </div>
+</div>
+

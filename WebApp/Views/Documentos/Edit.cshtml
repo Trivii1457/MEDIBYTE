@@ -1,0 +1,105 @@
+@model DocumentosModel 
+@{
+    string Prefix = "Documentos"; 
+
+    string UrlSave = Url.Action("Edit", "Documentos"); 
+    string UrlNew = Url.Action("New", "Documentos"); 
+    string UrlDelete = Url.Action("Delete", "Documentos", new { Id = Model.Entity.Id }); 
+    string UrlBack = Url.Action("ListPartial", "Documentos"); 
+
+    var ToolbarConfig = new ToolbarConfiguration(Prefix) 
+        .Title(DApp.DefaultLanguage.GetResource("Documentos")) 
+        .Save(DApp.ActionViewSecurity(Context, UrlSave),Model.Entity.IsNew) 
+        .New(UrlNew, DApp.ActionViewSecurity(Context, UrlNew)) 
+        .Delete(UrlDelete,DApp.ActionViewSecurity(Context,UrlDelete),UrlBack,Model.Entity.IsNew) 
+        .Back(UrlBack); 
+}
+
+<partial name="ViewJS.cshtml" model="Model" view-data="ViewData" /> 
+
+@(Html.DControls().Toolbar(ToolbarConfig)) 
+
+<div> 
+    <div id = "DocumentosMainPanelForm"> 
+        <form id = "@(Prefix)Form" asp-controller="Documentos" asp-action="Edit" class="form-horizontal" data-ajax-mode="replace" data-ajax-update="#mainPanel" data-ajax-success="@(Prefix)FormSuccess" data-ajax-failure="@(Prefix)FormFailure" data-ajax="true"> 
+            @(Html.DControls().ValidationSummary().ValidationGroup(Prefix + "ValidationGroup").ElementAttr("class","ErrorValidationSummary")) 
+            @using (Html.DevExtreme().ValidationGroup(Prefix + "ValidationGroup")) 
+            { 
+                @(Html.DControls().CheckBoxFor(m => m.Entity.IsNew).ID(Prefix + "IsNew").Visible(false)) 
+                @(Html.DControls().NumberBoxFor(m => m.Entity.Id).ID(Prefix + "Id").Visible(false)) 
+                @(Html.DControls().TextBoxFor(m => m.Entity.UpdatedBy).ID(Prefix + "UpdatedBy").Visible(false)) 
+                @(Html.DControls().DateBoxFor(m => m.Entity.LastUpdate).ID(Prefix + "LastUpdate").Type(DateBoxType.DateTime).Visible(false)) 
+                @(Html.DControls().TextBoxFor(m => m.Entity.CreatedBy).ID(Prefix + "CreatedBy").Visible(false)) 
+                @(Html.DControls().DateBoxFor(m => m.Entity.CreationDate).ID(Prefix + "CreationDate").Type(DateBoxType.DateTime).Visible(false)) 
+
+                @(Html.DControls().Form<DocumentosModel>()
+                    .ID("DocumentosModelForm").LabelLocation(FormLabelLocation.Top).ShowValidationSummary(false).FormData(Model)
+                    .Items(items =>
+                    {
+                        items.AddGroup().ColCount(12).Caption(DApp.DefaultLanguage.GetResource("DEFAULT.INFORMATIONGENERAL"))
+                            .Items(groupItems =>{
+                                groupItems.AddSimpleFor(m => m.Entity.Prefijo).ColSpan(2)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Documentos.Prefijo")))
+                                 .ValidationRules(rules => rules.AddStringLength().Min(0).Max(5).Message(DApp.GetStringLengthResource("Documentos.Prefijo", 5)))
+                                      .Editor(e => e.TextBox().ID(Prefix + "Prefijo").ShowClearButton(true));
+                                groupItems.AddSimpleFor(m => m.Entity.Descripcion).ColSpan(4)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Documentos.Descripcion")))
+                                 .ValidationRules(rules => rules.AddStringLength().Min(0).Max(250).Message(DApp.GetStringLengthResource("Documentos.Descripcion", 250)))
+                                      .Editor(e => e.TextBox().ID(Prefix + "Descripcion").ShowClearButton(true));
+
+                                groupItems.AddSimpleFor(m => m.Entity.Transaccion).ColSpan(4)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Documentos.Transaccion")))
+                                 .ValidationRules(rules => rules.AddRange().Min(0).Message(DApp.GetRequiredResource("Documentos.Transaccion")))
+                                      .Editor(e => e.SelectBox().ID(Prefix + "Transaccion")
+                                      .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Documentos").LoadAction("GetTransaccion").Key("Key"))
+                                      .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                      .ValueExpr("Key").DisplayExpr("Value").SearchExpr("Value")
+                                      .SearchEnabled(true).ShowClearButton(true)
+                                 );
+
+                                groupItems.AddSimpleFor(m => m.Entity.Activo).Label(x => x.Visible(false)).ColSpan(2)
+                                    .Editor(e => e.CheckBox().ID(Prefix + "Activo").Text(DApp.DefaultLanguage.GetResource("Documentos.Activo")));
+
+                                groupItems.AddSimpleFor(m => m.Entity.ResolucionDian).ColSpan(2)
+                               .ValidationRules(rules => rules.AddStringLength().Min(0).Max(100).Message(DApp.GetStringLengthResource("Documentos.ResolucionDian", 100)))
+                                    .Editor(e => e.TextBox().ID(Prefix + "ResolucionDian").ShowClearButton(true));
+                                groupItems.AddSimpleFor(m => m.Entity.ConsecutivoDesde).ColSpan(2)
+                                      .Editor(e=>e.NumberBox().ID(Prefix + "ConsecutivoDesde").Format("#,##0.##").ShowClearButton(true).ShowSpinButtons(true).Min(1));
+                                groupItems.AddSimpleFor(m => m.Entity.ConsecutivoHasta).ColSpan(2)
+                                      .Editor(e=>e.NumberBox().ID(Prefix + "ConsecutivoHasta").Format("#,##0.##").ShowClearButton(true).ShowSpinButtons(true).Min(1));
+                                groupItems.AddSimpleFor(m => m.Entity.FechaDesde).ColSpan(3)
+                                      .Editor(e=>e.DateBox().ID(Prefix + "FechaDesde")
+                                      .DisplayFormat(DApp.DefaultLanguage.DateFormat).Placeholder(DateTime.Now.ToString(DApp.DefaultLanguage.DateFormat)).ShowClearButton(true).UseMaskBehavior(true));
+                                groupItems.AddSimpleFor(m => m.Entity.FechaHasta).ColSpan(3)
+                                      .Editor(e=>e.DateBox().ID(Prefix + "FechaHasta")
+                                      .DisplayFormat(DApp.DefaultLanguage.DateFormat).Placeholder(DateTime.Now.ToString(DApp.DefaultLanguage.DateFormat)).ShowClearButton(true).UseMaskBehavior(true));
+                                groupItems.AddSimpleFor(m => m.Entity.LlaveUnica).ColSpan(4)
+                               .ValidationRules(rules => rules.AddStringLength().Min(0).Max(250).Message(DApp.GetStringLengthResource("Documentos.LlaveUnica", 250)))
+                                    .Editor(e => e.TextBox().ID(Prefix + "LlaveUnica").ShowClearButton(true));
+                            });
+                    })
+                ) 
+            } 
+        </form> 
+
+        @* Si el maestro maneja detalle descomentar el siguiente codigo y remplazar la palabra "MAESTRODETALLE" *@
+
+        <div> 
+           <ul class="nav nav-tabs" role="tablist"> 
+               <li role="presentation" class="active"> 
+                   <a href="#SedesDocumentos" aria-controls="SedesDocumentos" role="tab" data-toggle="tab"> 
+                       @DApp.DefaultLanguage.GetResource("SedesDocumentos") 
+                   </a> 
+               </li> 
+           </ul> 
+           <div class="tab-content"> 
+               <div role="tabpanel" class="tab-pane active" id="SedesDocumentos">
+                   <partial name="../SedesDocumentos/ListDetail.cshtml" model=Model view-data="ViewData" />
+               </div>
+           </div>
+        </div>
+
+
+    </div> 
+</div> 
+

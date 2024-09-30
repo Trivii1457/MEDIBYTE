@@ -1,0 +1,116 @@
+@*  Remplazar FATHERModel por el modelo del padre al que pertenece   *@
+
+@model RecaudosModel
+@{
+    string Prefix = "RecaudosDetalles";
+    string UrlOnClick = Url.Action("EditDetail", "RecaudosDetalles");
+    string UrlNew = Url.Action("NewDetail", "RecaudosDetalles", new { IdFather = Model.Entity.Id });
+
+    var DataGridDetailConfig = new DataGridConfiguration<RecaudosDetalles>(Prefix)
+        //.OnClick(UrlOnClick, new { Id = "Id" }, Prefix + "MainPanelForm")
+        //.New(UrlNew,Model.Entity.IsNew,Prefix + "MainPanelForm")
+        .Exports(true, true);
+    string filter = "['EmpresasId','=','" + @Model.Entity.EmpresasId + "','and','SedesId','=','" + @Model.Entity.SedesId + "','and','EntidadesId','=','" + @Model.Entity.EntidadesId + "']";
+
+}
+
+
+
+@* ------------ Descomentar el siguiente codigo si es una edicion en maestro --------------- *@
+@*
+
+    <div class="card cardDeatil">
+        <div class="card-body">
+            <div class="box-body table-responsive no-padding">
+            @(Html.DControls().DataGridSimple<RecaudosDetalles>(DataGridDetailConfig)
+                .ID("RecaudosDetallesDetalleDataGrid")
+                .DataSource(d => d.Mvc().LoadMethod("POST").Controller("RecaudosDetalles").LoadAction("Get").Key("Id"))
+                .DataSourceOptions(x=>x.Filter("['IdFather','=','"+@Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+                .Columns(columns =>
+                {
+                 columns.AddFor(m => m.Recaudos.Id);
+                 columns.AddFor(m => m.Facturas.Id);
+                 columns.AddFor(m => m.ValorAplicado);
+                 columns.AddFor(m => m.ValorRetencion);
+                })
+            )
+            </div>
+            <div id="RecaudosDetallesMainPanelForm"></div>
+        </div>
+    </div>
+*@
+
+
+@* ------------ Descomentar el siguiente codigo si es una edicion en grilla y COMENTAR LOS METODOS OnClick y New del DataGridDetailConfig --------------- *@
+
+    <script>
+
+    function @(Prefix)OnInitNewRowDetalleDataGrid(model) {
+        model = GetAuditoryData(model);
+        model.data.RecaudosId = "@Model.Entity.Id"; // Cambiar IdFather por el campo foraneo hacia el padre
+        var filter = [
+            ["EmpresasId", "=", "@Model.Entity.EmpresasId"],
+            "and",
+            ["SedesId", "=", "@Model.Entity.SedesId"],
+            "and",
+            ["EntidadesId", "=", "@Model.Entity.EntidadesId"],
+            "and",
+            ["Saldo", ">", "0"]
+        ];
+        $("#RecaudosDetallesDetalleDataGrid").dxDataGrid("columnOption", "FacturasId").lookup.dataSource.filter = filter;
+
+    }
+
+    function @(Prefix)DisplayExprFacturaId(data) {
+        if(data)
+            return (data.Documentos != undefined ? data.Documentos.Prefijo : "") + " - " + data.NroConsecutivo+" : Saldo = "+data.Saldo;
+    }
+
+    </script>
+<div class="card cardDeatil">
+    <div class="card-body">
+        <div class="box-body table-responsive no-padding">
+            @(Html.DControls().DataGridSimple<RecaudosDetalles>(DataGridDetailConfig)
+                 .ID("RecaudosDetallesDetalleDataGrid")
+                 .DataSource(d => d.Mvc().LoadMethod("POST").Controller("RecaudosDetalles").LoadAction("Get").Key("Id")
+                     .InsertAction("AddInGrid").InsertMethod("POST").UpdateAction("ModifyInGrid").UpdateMethod("POST").DeleteAction("DeleteInGrid").DeleteMethod("POST")
+                 )
+                 .DataSourceOptions(x=>x.Filter("['RecaudosId','=','"+@Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+                 .Editing(editing => editing.Mode(GridEditMode.Batch).AllowAdding(!Model.Entity.IsNew).AllowUpdating(false).AllowDeleting(true))
+                 .OnInitNewRow(Prefix + "OnInitNewRowDetalleDataGrid")
+                 .OnRowInserted("OnRowInsertedDetalleDataGrid").OnRowUpdated("OnRowUpdatedDetalleDataGrid").OnRowRemoved("OnRowRemovedDetalleDataGrid").OnDataErrorOccurred("OnDataErrorOccurredDetalleDataGrid")
+                 .Columns(columns =>
+                 {
+                     columns.AddFor(m => m.FacturasId)
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("RecaudosDetalles.FacturasId")))
+                         .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("RecaudosDetalles.FacturasId")))
+                             .Lookup(lookup => lookup
+                             .DataSource(d => d.Mvc().LoadMethod("POST").Controller("RecaudosDetalles").LoadAction("GetFacturasId").Key("Id"))
+                             .DataSourceOptions(o => o.Paginate(true).PageSize(10).Filter(filter))
+                             .ValueExpr("Id").DisplayExpr(new JS(Prefix + "DisplayExprFacturaId")) ).Width(300);
+                     columns.AddFor(m => m.ValorAplicado).Format("#,##0.##")
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("RecaudosDetalles.ValorAplicado")));
+                     columns.AddFor(m => m.ValorRetencion).Format("#,##0.##")
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("RecaudosDetalles.ValorRetencion")));
+                     columns.AddFor(m => m.ValorReteIca).Format("#,##0.##")
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("RecaudosDetalles.ValorReteIca")));
+                     //columns.AddFor(m => m.Total).AllowEditing(false).Format("#,##0.##")
+                     //    .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("RecaudosDetalles.Total")));
+                 }).Summary(s => s.TotalItems(items => {
+                     items.AddFor(m => m.Id)
+                         .SummaryType(SummaryType.Count);
+                     items.AddFor(m => m.ValorAplicado)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat(Format.Currency);
+                     items.AddFor(m => m.ValorRetencion)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat(Format.Currency);
+                     //items.AddFor(m => m.Total)
+                     //   .SummaryType(SummaryType.Sum)
+                     //   .ValueFormat(Format.Currency);
+                 }))
+         )
+        </div>
+    </div>
+</div>
+

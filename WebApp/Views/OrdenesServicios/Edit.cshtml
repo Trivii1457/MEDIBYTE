@@ -1,0 +1,131 @@
+@model OrdenesServiciosModel 
+@{
+    string Prefix = "OrdenesServicios"; 
+
+    string UrlSave = Url.Action("Edit", "OrdenesServicios"); 
+    string UrlNew = Url.Action("New", "OrdenesServicios"); 
+    string UrlDelete = Url.Action("Delete", "OrdenesServicios", new { Id = Model.Entity.Id }); 
+    string UrlBack = Url.Action("ListPartial", "OrdenesServicios"); 
+
+    var ToolbarConfig = new ToolbarConfiguration(Prefix) 
+        .Title(DApp.DefaultLanguage.GetResource("OrdenesServicios")) 
+        //.Save(DApp.ActionViewSecurity(Context, UrlSave),Model.Entity.IsNew) 
+        //.New(UrlNew, DApp.ActionViewSecurity(Context, UrlNew)) 
+        //.Delete(UrlDelete,DApp.ActionViewSecurity(Context,UrlDelete),UrlBack,Model.Entity.IsNew) 
+        .AddButtons(new List<ButtonToolbar>()
+        {
+            new ButtonToolbar
+            {
+                Action = "ImprimirOrdenServicioPorId",
+                Text = @DApp.DefaultLanguage.GetResource("DEFAULT.Imprimir"),
+                Disabled = (Model.Entity.IsNew),
+                Location = ToolbarItemLocation.After,
+                LocateInMenu = ToolbarItemLocateInMenuMode.Auto,
+                Icon = "print"
+            }
+        })
+        .Back(UrlBack); 
+}
+
+<partial name="ViewJS.cshtml" model="Model" view-data="ViewData" /> 
+
+@(Html.DControls().Toolbar(ToolbarConfig)) 
+
+<div> 
+    <div id = "OrdenesServiciosMainPanelForm"> 
+        <form id="@(Prefix)Form" asp-controller="OrdenesServicios" asp-action="Edit" class="form-horizontal" data-ajax-mode="replace" data-ajax-update="#mainPanel" data-ajax-success="@(Prefix)FormSuccess" data-ajax-failure="@(Prefix)FormFailure" data-ajax="true">
+            @(Html.DControls().ValidationSummary().ValidationGroup(Prefix + "ValidationGroup").ElementAttr("class","ErrorValidationSummary"))
+            @using (Html.DevExtreme().ValidationGroup(Prefix + "ValidationGroup"))
+            {
+                @(Html.DControls().CheckBoxFor(m => m.Entity.IsNew).ID(Prefix + "IsNew").Visible(false))
+                @(Html.DControls().NumberBoxFor(m => m.Entity.Id).ID(Prefix + "Id").Visible(false))
+                @(Html.DControls().TextBoxFor(m => m.Entity.UpdatedBy).ID(Prefix + "UpdatedBy").Visible(false))
+                @(Html.DControls().DateBoxFor(m => m.Entity.LastUpdate).ID(Prefix + "LastUpdate").Type(DateBoxType.DateTime).Visible(false))
+                @(Html.DControls().TextBoxFor(m => m.Entity.CreatedBy).ID(Prefix + "CreatedBy").Visible(false))
+                @(Html.DControls().DateBoxFor(m => m.Entity.CreationDate).ID(Prefix + "CreationDate").Type(DateBoxType.DateTime).Visible(false))
+
+                @(Html.DControls().DateBoxFor(m => m.Entity.FechaVencimiento).ID(Prefix + "FechaVencimiento").Visible(false))
+
+                @(Html.DControls().Form<OrdenesServiciosModel>()
+                    .ID("OrdenesServiciosModelForm").LabelLocation(FormLabelLocation.Top).ShowValidationSummary(false).FormData(Model)
+                    .Items(items =>
+                    {
+                        items.AddGroup().ColCount(12).Caption(DApp.DefaultLanguage.GetResource("DEFAULT.INFORMATIONGENERAL"))
+                            .Items(groupItems =>{
+
+                                groupItems.AddSimpleFor(m => m.Entity.NroOrden).ColSpan(3)
+                                  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("OrdenesServicios.NroOrden")))
+                                      .Editor(e => e.NumberBox().ID(Prefix + "NroOrden").ShowClearButton(true).ShowSpinButtons(true));
+
+                                groupItems.AddEmpty().ColSpan(9);
+
+                                groupItems.AddSimpleFor(m => m.Entity.ProfesionalId).ColSpan(6)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("OrdenesServicios.ProfesionalId")))
+                                 .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("OrdenesServicios.ProfesionalId")))
+                                      .Editor(e => e.SelectBox().ID(Prefix + "ProfesionalId")
+                                      .DataSource(d => d.Mvc().LoadMethod("POST").Controller("OrdenesServicios").LoadAction("GetProfesionalId").Key("Id"))
+                                      .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                      .ValueExpr("Id").DisplayExpr("NombreCompleto").SearchExpr("NumeroIdentificacion", "PrimerNombre", "SegundoNombre", "PrimerApellido", "SegundoApellido")
+                                      .SearchEnabled(true).ShowClearButton(true)
+                                 );
+                                groupItems.AddSimpleFor(m => m.Entity.Fecha).ColSpan(3)
+                                  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("OrdenesServicios.Fecha")))
+                                      .Editor(e=>e.DateBox().ID(Prefix + "Fecha")
+                                      .DisplayFormat(DApp.DefaultLanguage.DateFormat).Placeholder(DateTime.Now.ToString(DApp.DefaultLanguage.DateFormat)).ShowClearButton(true).UseMaskBehavior(true));
+
+                                groupItems.AddEmpty().ColSpan(3);
+
+                                groupItems.AddSimpleFor(m => m.Entity.HIstoriasClinicasId).ColSpan(6)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("OrdenesServicios.HIstoriasClinicasId")))
+                                 .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("OrdenesServicios.HIstoriasClinicasId")))
+                                      .Editor(e => e.SelectBox().ID(Prefix + "HIstoriasClinicasId")
+                                      .DataSource(d => d.Mvc().LoadMethod("POST").Controller("OrdenesServicios").LoadAction("GetHIstoriasClinicasId").Key("Id"))
+                                      .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                      .ValueExpr("Id").DisplayExpr("EnfermedadActual").SearchExpr("EnfermedadActual")
+                                      .SearchEnabled(true).ShowClearButton(true)
+                                 );
+                                groupItems.AddSimpleFor(m => m.Entity.PacientesId).ColSpan(6)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("OrdenesServicios.PacientesId")))
+                                 .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("OrdenesServicios.PacientesId")))
+                                      .Editor(e => e.SelectBox().ID(Prefix + "PacientesId")
+                                      .DataSource(d => d.Mvc().LoadMethod("POST").Controller("OrdenesServicios").LoadAction("GetPacientesId").Key("Id"))
+                                      .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                      .ValueExpr("Id").DisplayExpr("NombreCompleto").SearchExpr("NumeroIdentificacion", "PrimerNombre", "SegundoNombre", "PrimerApellido", "SegundoApellido")
+                                      .SearchEnabled(true).ShowClearButton(true)
+                                 );
+
+                            });
+                    })
+                )
+            }
+        </form> 
+
+        @* Si el maestro maneja detalle descomentar el siguiente codigo y remplazar la palabra "MAESTRODETALLE" *@
+         
+        <div> 
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active">
+                    <a href="#OrdenesServiciosDetalles" aria-controls="OrdenesServiciosDetalles" role="tab" data-toggle="tab">
+                        @DApp.DefaultLanguage.GetResource("OrdenesServiciosDetalles")
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a href="#OrdenesServiciosDiagnosticos" aria-controls="OrdenesServiciosDiagnosticos" role="tab" data-toggle="tab">
+                        @DApp.DefaultLanguage.GetResource("OrdenesServiciosDiagnosticos")
+                    </a>
+                </li>
+            </ul> 
+           <div class="tab-content">
+               <div role="tabpanel" class="tab-pane active" id="OrdenesServiciosDetalles">
+                   <partial name="../OrdenesServiciosDetalles/ListDetail.cshtml" model=Model view-data="ViewData" />
+               </div>
+               <div role="tabpanel" class="tab-pane" id="OrdenesServiciosDiagnosticos">
+                   <partial name="../OrdenesServiciosDiagnosticos/ListDetail.cshtml" model=Model view-data="ViewData" />
+               </div>
+           </div>
+        </div>
+        
+
+    </div> 
+</div> 
+

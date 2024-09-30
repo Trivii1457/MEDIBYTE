@@ -1,0 +1,105 @@
+﻿@model AutorizacionAdmisionesDescuentosModel
+@{
+    string Prefix = "AutorizacionAdmisionesDescuentos";
+
+
+    var DataGridConfig = new DataGridConfiguration<Admisiones>(Prefix)
+
+        .Exports(true, true)
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("AutorizacionAdmisionesDescuentos"), "mainPanel")
+        .AddButtons(new List<ButtonToolbar>() {
+            new ButtonToolbar{
+                Icon = "check",
+                Text = DApp.DefaultLanguage.GetResource("AutorizacionAdmisionesDescuentos.Autorizar"),
+                Action = "Autorizar",
+                Visible = Model.AutorizaDes
+            }});
+
+}
+<script>
+
+    function Autorizar(){
+
+        var admisionesSelected = $("#AutorizacionAdmisionesDescuentosDataGrid").dxDataGrid("instance").getSelectedRowsData();
+
+        if (admisionesSelected.length <= 0) {
+            DevExpress.ui.notify("Debe seleccionar al menos una admisión.", "error");
+            return false;
+        }
+
+        var admisiones = JSON.stringify(admisionesSelected);
+
+        showLoadIndicator();
+        $.ajax({
+
+            url: '@Url.Action("AutorizarDescuento", "AutorizacionAdmisionesDescuentos")',
+            type: "POST",
+            data: { admisiones: admisiones } ,
+            success: function(data) {
+                hideLoadIndicator();
+
+                if (data.Result) {
+                    $("#AutorizacionAdmisionesDescuentosDataGrid").dxDataGrid("instance").option("dataSource", data.resultData);
+                    DevExpress.ui.notify(data.Result, "info");
+                }
+                if (data.Error) {
+                    DevExpress.ui.notify(data.Error, "error");
+                }
+
+            },
+            error: function (xhr) {
+                hideLoadIndicator();
+                DevExpress.ui.notify("Error: " + xhr.status + " | " + xhr.statusText, "error");
+            }
+        });
+    }
+
+    function ValorDescuentoAlServicio(rowData) {
+        if (rowData.ProgramacionCitas) {
+            var valorDescuento = (rowData.PorcDescAutorizado / 100) * (rowData.ProgramacionCitas.Servicios.TarifaPlena);
+            return valorDescuento;
+        }
+    }
+
+    function CalculateValorPagarParticular(rowData) {
+        if (rowData.ProgramacionCitas) {
+            var valorTarifa = rowData.ProgramacionCitas.Servicios.TarifaPlena;
+            var valorDescuento = (rowData.PorcDescAutorizado / 100) * (rowData.ProgramacionCitas.Servicios.TarifaPlena);
+            return valorTarifa - valorDescuento;
+        }
+    }
+
+</script>
+@if (!string.IsNullOrWhiteSpace(Model.Error))
+{
+    <div class="text-danger">@Model.Error</div>
+}
+
+<div class="box-body table-responsive no-padding">
+    @(Html.DControls().DataGridSimple<Admisiones>(DataGridConfig)
+    .ID("AutorizacionAdmisionesDescuentosDataGrid")
+    .DataSource(Model.ListAdmisiones)
+    .RemoteOperations(false)
+    .Editing(x=>x.AllowUpdating(true).AllowAdding(false).AllowDeleting(false).Mode(GridEditMode.Cell))
+    .Columns(columns =>
+    {
+        columns.AddFor(m => m.Pacientes.NumeroIdentificacion).AllowEditing(false);
+        columns.AddFor(m => m.Pacientes.NombreCompleto).AllowEditing(false);
+
+        columns.AddFor(m => m.ProgramacionCitas.Servicios.TarifaPlena).AllowEditing(false).Caption(DApp.DefaultLanguage.GetResource("AutorizacionAdmisionesDescuentos.ValorServicio"));
+        columns.AddFor(m => m.PorcDescAutorizado).AllowEditing(true);
+        columns.AddFor(m => m).AllowEditing(false).CalculateCellValue("ValorDescuentoAlServicio").Caption(DApp.DefaultLanguage.GetResource("AutorizacionAdmisionesDescuentos.ValorDescuento"));
+        columns.AddFor(m => m.ValorPagarParticular).AllowEditing(false).CalculateCellValue("CalculateValorPagarParticular").Caption(DApp.DefaultLanguage.GetResource("AutorizacionAdmisionesDescuentos.ValorTotal"));
+
+        columns.AddFor(m => m.ProgramacionCitas.Servicios.Nombre).AllowEditing(false);
+        columns.AddFor(m => m.ProgramacionCitas.FechaInicio).AllowEditing(false).Format("dd/MM/yyyy");
+        columns.AddFor(m => m.ProgramacionCitas.FechaInicio).AllowEditing(false).Caption(DApp.DefaultLanguage.GetResource("Admisiones.HoraInicio")).Format("HH:mm");
+
+        columns.AddFor(m => m.Estados.Nombre).AllowEditing(false);
+        columns.AddFor(m => m.NroAutorizacion).AllowEditing(false);
+        columns.AddFor(m => m.FechaAutorizacion).AllowEditing(false);
+        columns.AddFor(m => m.FechaAprobacion).AllowEditing(false);
+
+    })
+)
+</div>

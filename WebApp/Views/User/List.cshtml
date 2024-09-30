@@ -1,0 +1,40 @@
+﻿@{
+    string Prefix = "User";
+    string UrlClick = Url.Action("Edit", "User");
+    string UrlNew = Url.Action("New", "User");
+
+    var DataGridConfig = new DataGridConfiguration<User>(Prefix)
+        .OnClick(UrlClick, new { Id = "Id" })
+        .New(UrlNew, DApp.ActionViewSecurity(Context, UrlNew))
+        .Exports(true, true)
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("Users"), "mainPanel");
+}
+
+<div class="box-body table-responsive no-padding">
+    @(Html.DControls().DataGridSimple<User>(DataGridConfig)
+        .DataSource(d => d.Mvc().LoadMethod("POST").Controller("User").LoadAction("Get").Key("Id"))
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.Id).Visible(false);
+            columns.AddFor(m => m.UserName);
+            columns.AddFor(m => m.Password).Visible(false);
+            columns.AddFor(m => m.Email);
+            columns.AddFor(m => m.Names);
+            columns.AddFor(m => m.LastNames);
+            columns.AddFor(m => m.IdentificationNumber);
+            columns.AddFor(m => m.IdentificationTypeId).Lookup(lookup => lookup
+                        .DataSource(d => d.Mvc().LoadMethod("GET").Controller("User").LoadAction("GetIdentificationTypes").Key("Id"))
+                        .DisplayExpr("Value").ValueExpr("Id"));
+            columns.AddFor(m => m.GenderId).Lookup(lookup => lookup
+                        .DataSource(d => d.Mvc().LoadMethod("GET").Controller("User").LoadAction("GetGenders").Key("Id"))
+                        .DisplayExpr("Value").ValueExpr("Id"));
+            columns.AddFor(m => m.IsActive);
+            columns.AddFor(m => m.UpdatedBy).Visible(false);
+            columns.AddFor(m => m.LastUpdate).Visible(false);
+            columns.AddFor(m => m.CreatedBy).Visible(false);
+            columns.AddFor(m => m.CreationDate).Visible(false);
+        })
+    )
+</div>
+
+@*@(await Html.RenderComponentAsync<Component1>(RenderMode.Server))*@

@@ -1,0 +1,38 @@
+@*  Remplazar FATHERModel por el modelo del padre al que pertenece   *@ 
+@* 
+@model FATHERModel 
+@{ 
+    string Prefix = "Sedes"; 
+    string UrlOnClick = Url.Action("EditDetail", "Sedes"); 
+    string UrlNew = Url.Action("NewDetail", "Sedes", new { IdFather = Model.Entity.Id }); 
+
+    var DataGridDetailConfig = new DataGridConfiguration<Sedes>(Prefix) 
+        .OnClick(UrlOnClick, new { Id = "Id" }, Prefix + "MainPanelForm") 
+        .New(UrlNew,Model.Entity.IsNew,Prefix + "MainPanelForm") 
+        .Exports(true,true); 
+} 
+
+<div class="card"> 
+    <div class="card-body">
+        <div class="box-body table-responsive no-padding"> 
+        @(Html.DControls().DataGridSimple<Sedes>(DataGridDetailConfig) 
+            .ID("SedesDetalleDataGrid") 
+            .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Sedes").LoadAction("Get").Key("Id")) 
+            .DataSourceOptions(x=>x.Filter("['IdFather','=','"+@Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+            .Columns(columns => 
+            { 
+        columns.AddFor(m => m.Entidades.Id); 
+        columns.AddFor(m => m.Nombre); 
+        columns.AddFor(m => m.CorreoElectronico); 
+        columns.AddFor(m => m.Fax); 
+        columns.AddFor(m => m.PaginaWeb); 
+        columns.AddFor(m => m.Direccion); 
+        columns.AddFor(m => m.Estados.Id); 
+        columns.AddFor(m => m.Ciudades.Id); 
+            }) 
+        ) 
+        </div> 
+        <div id="SedesMainPanelForm"></div> 
+    </div> 
+</div> 
+*@ 

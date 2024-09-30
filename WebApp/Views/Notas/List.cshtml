@@ -1,0 +1,38 @@
+@{ 
+    string Prefix = "Notas";
+    string UrlClick = Url.Action("Edit", "Notas");
+    string UrlNew = Url.Action("New", "Notas");
+
+    var DataGridConfig = new DataGridConfiguration<Notas>(Prefix)
+        .OnClick(UrlClick, new { Id = "Id" })
+        .New(UrlNew,DApp.ActionViewSecurity(Context,UrlNew))
+        .Exports(true,true).SetStorage()
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("Notas"), "mainPanel");
+} 
+
+<div class="box-body table-responsive no-padding"> 
+@(Html.DControls().DataGridSimple<Notas>(DataGridConfig)
+    .ID("NotasDataGrid")
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Notas").LoadAction("Get").Key("Id"))
+    .Columns(columns =>
+    {
+        columns.AddFor(m => m.Documentos.Prefijo).SortIndex(1);
+        columns.AddFor(m => m.Consecutivo).SortIndex(2).SortOrder(SortOrder.Desc);
+        columns.AddFor(m => m.Documentos.Transaccion)
+        .Lookup(lookup => lookup
+                    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Documentos").LoadAction("GetTransaccion").Key("Key"))
+                    .DisplayExpr("Value")
+                    .ValueExpr("Key")
+                );
+        columns.AddFor(m => m.Fecha);
+        columns.AddFor(m => m.Estados.Nombre);
+        columns.AddFor(m => m.Facturas.Documentos.Prefijo).Caption(DApp.GetResource("Notas.FacturaPrefijo"));
+        columns.AddFor(m => m.Facturas.NroConsecutivo).Caption(DApp.GetResource("Notas.Cosecutivo"));
+        columns.AddFor(m => m.Saldo);
+        columns.AddFor(m => m.ValorSubtotal);
+        columns.AddFor(m => m.ValorDescuentos);
+        columns.AddFor(m => m.ValorImpuestos);
+        columns.AddFor(m => m.ValorTotal);
+    })
+) 
+</div> 

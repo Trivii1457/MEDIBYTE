@@ -1,0 +1,93 @@
+@model IndicacionesMedicasModel 
+@{
+    string Prefix = "IndicacionesMedicas"; 
+    string UrlDelete = Url.Action("DeleteDetail", "IndicacionesMedicas", new { Id = Model.Entity.Id }); 
+
+    var toolbarDetailconfig = new ToolbarDetailConfiguration(Prefix).Delete(UrlDelete,Model.Entity.IsNew,true).Save(true).Cancel(); 
+} 
+
+<partial name="ViewJS.cshtml" model="Model" view-data="ViewData" /> 
+
+<div>@(Html.DControls().Toolbar(toolbarDetailconfig))</div>
+
+<div>
+    <form id="@(Prefix)Form" asp-controller="IndicacionesMedicas" asp-action="EditDetail" class="form-horizontal" data-ajax-mode="replace" data-ajax-update="#IndicacionesMedicasMainPanelForm" data-ajax-success="@(Prefix)FormSuccessDetail" data-ajax-failure="@(Prefix)FormFailureDetail" data-ajax="true">
+        @(Html.DControls().ValidationSummary().ValidationGroup(Prefix + "ValidationGroup").ElementAttr("class","ErrorValidationSummary"))
+        @using (Html.DevExtreme().ValidationGroup(Prefix + "ValidationGroupDetail"))
+        {
+            @(Html.DControls().CheckBoxFor(m => m.Entity.IsNew).ID(Prefix + "IsNew").Visible(false))
+            @(Html.DControls().NumberBoxFor(m => m.Entity.Id).ID(Prefix + "Id").Visible(false))
+            @(Html.DControls().TextBoxFor(m => m.Entity.UpdatedBy).ID(Prefix + "UpdatedBy").Visible(false))
+            @(Html.DControls().DateBoxFor(m => m.Entity.LastUpdate).ID(Prefix + "LastUpdate").Type(DateBoxType.DateTime).Visible(false))
+            @(Html.DControls().TextBoxFor(m => m.Entity.CreatedBy).ID(Prefix + "CreatedBy").Visible(false))
+            @(Html.DControls().DateBoxFor(m => m.Entity.CreationDate).ID(Prefix + "CreationDate").Type(DateBoxType.DateTime).Visible(false))
+            @(Html.DControls().NumberBoxFor(m => m.Entity.HistoriasClinicasId).ID(Prefix + "HistoriasClinicasId").Visible(false))
+            @(Html.DControls().NumberBoxFor(m => m.Entity.ProfesionalId).ID(Prefix + "ProfesionalId").Visible(false))
+            @(Html.DControls().NumberBoxFor(m => m.Entity.PacientesId).ID(Prefix + "PacientesId").Visible(false))
+
+
+            @(Html.DControls().Form<IndicacionesMedicasModel>()
+                    .ID("IndicacionesMedicasModelForm").LabelLocation(FormLabelLocation.Top).ShowValidationSummary(false).FormData(Model)
+                    .Items(items =>
+                    {
+                        items.AddGroup().ColCount(2).Caption(DApp.DefaultLanguage.GetResource("DEFAULT.INFORMATIONGENERAL"))
+                            .Items(groupItems =>{
+                                //groupItems.AddSimpleFor(m => m.Entity.ProfesionalId).ColSpan(1)
+                                // .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("IndicacionesMedicas.ProfesionalId")))
+                                // .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("IndicacionesMedicas.ProfesionalId")))
+                                //     .Editor(e => e.SelectBox().ID(Prefix + "ProfesionalId")
+                                //     .DataSource(d => d.Mvc().LoadMethod("POST").Controller("IndicacionesMedicas").LoadAction("GetProfesionalId").Key("Id"))
+                                //     .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                //     .ValueExpr("Id").DisplayExpr("Id").SearchExpr("Id")
+                                //     .SearchEnabled(true).ShowClearButton(true)
+                                //);
+                                groupItems.AddSimpleFor(m => m.Entity.Fecha).ColSpan(1)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("IndicacionesMedicas.Fecha")))
+                                     .Editor(e=>e.DateBox().ID(Prefix + "Fecha")
+                                     .DisplayFormat(DApp.DefaultLanguage.DateFormat).Placeholder(DateTime.Now.ToString(DApp.DefaultLanguage.DateFormat)).ShowClearButton(true).UseMaskBehavior(true));
+                                //groupItems.AddSimpleFor(m => m.Entity.HistoriasClinicasId).ColSpan(1)
+                                //  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("IndicacionesMedicas.HistoriasClinicasId")))
+                                //  .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("IndicacionesMedicas.HistoriasClinicasId")))
+                                //      .Editor(e => e.SelectBox().ID(Prefix + "HistoriasClinicasId")
+                                //      .DataSource(d => d.Mvc().LoadMethod("POST").Controller("IndicacionesMedicas").LoadAction("GetHIstoriasClinicasId").Key("Id"))
+                                //      .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                //      .ValueExpr("Id").DisplayExpr("Id").SearchExpr("Id")
+                                //      .SearchEnabled(true).ShowClearButton(true)
+                                // );
+                                //groupItems.AddSimpleFor(m => m.Entity.PacientesId).ColSpan(1)
+                                //  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("IndicacionesMedicas.PacientesId")))
+                                //  .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("IndicacionesMedicas.PacientesId")))
+                                //      .Editor(e => e.SelectBox().ID(Prefix + "PacientesId")
+                                //      .DataSource(d => d.Mvc().LoadMethod("POST").Controller("IndicacionesMedicas").LoadAction("GetPacientesId").Key("Id"))
+                                //      .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                //      .ValueExpr("Id").DisplayExpr("Id").SearchExpr("Id")
+                                //      .SearchEnabled(true).ShowClearButton(true)
+                                // );
+                                groupItems.AddSimpleFor(m => m.Entity.NroOrden).ColSpan(1)
+                                  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("IndicacionesMedicas.NroOrden")))
+                                      .Editor(e=>e.NumberBox().ID(Prefix + "NroOrden").ShowClearButton(true).ShowSpinButtons(true));
+                            });
+                    })
+             )
+        }
+        <div asp-validation-summary="All" class="text-danger" id="@(Prefix)ListError"></div>
+    </form>
+
+    <div>
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active">
+                <a href="#IndicacionesMedicasDetalles" aria-controls="IndicacionesMedicasDetalles" role="tab" data-toggle="tab">
+                    @DApp.DefaultLanguage.GetResource("IndicacionesMedicasDetalles")
+                </a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="IndicacionesMedicasDetalles">
+                <partial name="../IndicacionesMedicasDetalles/ListDetail.cshtml" model=Model view-data="ViewData" />
+            </div>
+        </div>
+    </div>
+
+
+</div> 
+

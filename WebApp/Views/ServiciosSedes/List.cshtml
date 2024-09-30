@@ -1,0 +1,24 @@
+@{ 
+    string Prefix = "ServiciosSedes"; 
+    string UrlClick = Url.Action("Edit", "ServiciosSedes"); 
+    string UrlNew = Url.Action("New", "ServiciosSedes"); 
+
+    var DataGridConfig = new DataGridConfiguration<ServiciosSedes>(Prefix) 
+        .OnClick(UrlClick, new { Id = "Id" }) 
+        .New(UrlNew,DApp.ActionViewSecurity(Context,UrlNew)) 
+        .Exports(true,true) 
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("ServiciosSedes"), "mainPanel"); 
+} 
+
+<div class="box-body table-responsive no-padding"> 
+@(Html.DControls().DataGridSimple<ServiciosSedes>(DataGridConfig) 
+    .ID("ServiciosSedesDataGrid") 
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("ServiciosSedes").LoadAction("Get").Key("Id")) 
+    .Columns(columns => 
+    { 
+        columns.AddFor(m => m.Servicios.Id); 
+        columns.AddFor(m => m.Sedes.Id); 
+        columns.AddFor(m => m.Estados.Id); 
+    }) 
+) 
+</div> 

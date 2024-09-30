@@ -1,0 +1,4410 @@
+[
+  {
+    "Id": " HistoriasClinicasNotasAclaratorias.ProfesionalId",
+    "Description": "Profesional"
+  },
+  {
+    "Id": "\"ServiciosFacturar.SedesNombre",
+    "Description": "Sede"
+  },
+  {
+    "Id": "AdicionOrdenes",
+    "Description": "Adición Ordenes"
+  },
+  {
+    "Id": "AdicionOrdenes.ErrorEmpleadoUsuario",
+    "Description": "El usuario \"{0}\" no se encuentra asociado a un empleado. Por favor configurarlo en el maestro de empleados"
+  },
+  {
+    "Id": "AdministracionHonorarios",
+    "Description": "Administración de honorarios"
+  },
+  {
+    "Id": "AdministracionHonorarios.EmpleadosId",
+    "Description": "Profesional"
+  },
+  {
+    "Id": "AdministracionHonorariosLecturas",
+    "Description": "Servicios Lectura"
+  },
+  {
+    "Id": "AdministracionHonorariosLecturas.ServiciosId",
+    "Description": "Servicio"
+  },
+  {
+    "Id": "AdministracionHonorariosLecturas.TipoPagoLecturaEstadosId",
+    "Description": "Tipo Pago"
+  },
+  {
+    "Id": "AdministracionHonorariosLecturas.ValorHonorarioLectura",
+    "Description": "Valor"
+  },
+  {
+    "Id": "AdministracionHonorariosServicios",
+    "Description": "Servicios Antención"
+  },
+  {
+    "Id": "AdministracionHonorariosServicios.ServiciosId",
+    "Description": "Servicio"
+  },
+  {
+    "Id": "AdministracionHonorariosServicios.TipoPagoConvenioEstadosId",
+    "Description": "Tipo Pago Convenio"
+  },
+  {
+    "Id": "AdministracionHonorariosServicios.TipoPagoParticularEstadosId",
+    "Description": "Tipo Pago Particular"
+  },
+  {
+    "Id": "AdministracionHonorariosServicios.ValorHonorarioConvenio",
+    "Description": "Valor Convenio"
+  },
+  {
+    "Id": "AdministracionHonorariosServicios.ValorHonorarioParticular",
+    "Description": "Valor Particular"
+  },
+  {
+    "Id": "Admisiones",
+    "Description": "Admisiones"
+  },
+  {
+    "Id": "Admisiones.Anular",
+    "Description": "Anular"
+  },
+  {
+    "Id": "Admisiones.CausasExternasId",
+    "Description": "Causas Externas"
+  },
+  {
+    "Id": "Admisiones.Cita.Aceptar",
+    "Description": "Aceptar"
+  },
+  {
+    "Id": "Admisiones.Cita.Asignar",
+    "Description": "Asignar"
+  },
+  {
+    "Id": "Admisiones.Cita.Limpiar",
+    "Description": "Limpiar"
+  },
+  {
+    "Id": "Admisiones.CitaId.Ver",
+    "Description": "Ver Citas"
+  },
+  {
+    "Id": "Admisiones.CitasId",
+    "Description": "Cita"
+  },
+  {
+    "Id": "Admisiones.CoberturaPlanBeneficiosId",
+    "Description": "Cobertura o plan beneficios"
+  },
+  {
+    "Id": "Admisiones.Consecutivo",
+    "Description": "Consecutivo"
+  },
+  {
+    "Id": "Admisiones.ConsecutivoCita",
+    "Description": "Cita No."
+  },
+  {
+    "Id": "Admisiones.ConsultorioId",
+    "Description": "Consultorio"
+  },
+  {
+    "Id": "Admisiones.ConveniosId",
+    "Description": "Convenio"
+  },
+  {
+    "Id": "Admisiones.DescargarXLSXReporteEntregaProduccion",
+    "Description": "Excel Entrega Producción"
+  },
+  {
+    "Id": "Admisiones.DescuentoEstadosId",
+    "Description": "Descuento Estado"
+  },
+  {
+    "Id": "Admisiones.DiagnosticosId",
+    "Description": "Diagnóstico"
+  },
+  {
+    "Id": "Admisiones.DocumentosId",
+    "Description": "Documento"
+  },
+  {
+    "Id": "Admisiones.EmpleadosId",
+    "Description": "Empleado"
+  },
+  {
+    "Id": "Admisiones.EntidadesConvenio",
+    "Description": "Entidad"
+  },
+  {
+    "Id": "Admisiones.EsControl",
+    "Description": "¿Es Control?"
+  },
+  {
+    "Id": "Admisiones.EstadosId",
+    "Description": "Estado"
+  },
+  {
+    "Id": "Admisiones.Exoneracion",
+    "Description": "Exoneración"
+  },
+  {
+    "Id": "Admisiones.ExoneracionArchivo",
+    "Description": "Exoneración"
+  },
+  {
+    "Id": "Admisiones.ExoneracionArchivoId",
+    "Description": "Exoneración Archivo"
+  },
+  {
+    "Id": "Admisiones.Facturado",
+    "Description": "Facturado"
+  },
+  {
+    "Id": "Admisiones.Facturar",
+    "Description": "Generar Factura"
+  },
+  {
+    "Id": "Admisiones.FechaAprobacion",
+    "Description": "Fecha Aprobación"
+  },
+  {
+    "Id": "Admisiones.FechaAutorizacion",
+    "Description": "Fecha Autorización"
+  },
+  {
+    "Id": "Admisiones.FilialesId",
+    "Description": "Filiales"
+  },
+  {
+    "Id": "Admisiones.FinalidadConsultaId",
+    "Description": "Finalidad Consulta"
+  },
+  {
+    "Id": "Admisiones.FormasPagosId",
+    "Description": "Forma de Pago"
+  },
+  {
+    "Id": "Admisiones.HoraInicio",
+    "Description": "Hora de inicio"
+  },
+  {
+    "Id": "Admisiones.ImprimirReporteEntregaProduccion",
+    "Description": "Reporte Entrega Producción"
+  },
+  {
+    "Id": "Admisiones.MedioPagosId",
+    "Description": "Medio de pago"
+  },
+  {
+    "Id": "Admisiones.ModalidadesContratacionId",
+    "Description": "Modalidades contratación"
+  },
+  {
+    "Id": "Admisiones.NroAutorizacion",
+    "Description": "Nro. Autorización"
+  },
+  {
+    "Id": "Admisiones.NumeroPoliza",
+    "Description": "Número poliza"
+  },
+  {
+    "Id": "Admisiones.NumeroPrescripcion",
+    "Description": "Número prescripción"
+  },
+  {
+    "Id": "Admisiones.NumeroSuministroPrescripcion",
+    "Description": "Número suministro prescripcion"
+  },
+  {
+    "Id": "Admisiones.ObservacionFactura",
+    "Description": "Observación Factura"
+  },
+  {
+    "Id": "Admisiones.PacientesId",
+    "Description": "Paciente"
+  },
+  {
+    "Id": "Admisiones.PorcDescAutorizado",
+    "Description": "Porcentaje Desc Autorizado"
+  },
+  {
+    "Id": "Admisiones.ReporteFechaDesde",
+    "Description": "Fecha Desde"
+  },
+  {
+    "Id": "Admisiones.ReporteFechaHasta",
+    "Description": "Fecha Hasta"
+  },
+  {
+    "Id": "Admisiones.ReporteSedeId",
+    "Description": "Sede"
+  },
+  {
+    "Id": "Admisiones.TiposUsuariosId",
+    "Description": "Tipo usuarios"
+  },
+  {
+    "Id": "Admisiones.TotalPagarParticular",
+    "Description": "Total Particular"
+  },
+  {
+    "Id": "Admisiones.UserAproboId",
+    "Description": "Usuario Aprobo"
+  },
+  {
+    "Id": "Admisiones.ValorCopago",
+    "Description": "COP/MOD/REC/COM"
+  },
+  {
+    "Id": "Admisiones.ValorCuotaModeradora",
+    "Description": "Valor Cuota Moderadora"
+  },
+  {
+    "Id": "Admisiones.ValorDescuentoEstadosId",
+    "Description": "Valor Descuento Estado"
+  },
+  {
+    "Id": "Admisiones.ValorPagarParticular",
+    "Description": "Valor Final"
+  },
+  {
+    "Id": "Admisiones.ValorPagoEstados",
+    "Description": "Tipo Pago"
+  },
+  {
+    "Id": "Admisiones.ValorPagoEstadosId",
+    "Description": "Valor Pago"
+  },
+  {
+    "Id": "AdmisionesCorrecion",
+    "Description": "Correcciones de auditoria"
+  },
+  {
+    "Id": "AdmisionesServiciosPrestados",
+    "Description": "Admisiones Servicios Prestados"
+  },
+  {
+    "Id": "AdmisionesServiciosPrestados.ArchivosResultados",
+    "Description": "Resultados"
+  },
+  {
+    "Id": "AdmisionesServiciosPrestados.Cantidad",
+    "Description": "Cantidad"
+  },
+  {
+    "Id": "AdmisionesServiciosPrestados.Fecha",
+    "Description": "Fecha"
+  },
+  {
+    "Id": "AdmisionesServiciosPrestados.ImagenesDiagnosticas",
+    "Description": "Imágenes Diagnósticas"
+  },
+  {
+    "Id": "AdmisionesServiciosPrestados.NumeroIdentificacion",
+    "Description": "Número Identificación"
+  },
+  {
+    "Id": "AdmisionesServiciosPrestados.Observaciones",
+    "Description": "Observaciones"
+  },
+  {
+    "Id": "AdmisionesServiciosPrestados.Paciente",
+    "Description": "Paciente"
+  },
+  {
+    "Id": "AdmisionesServiciosPrestados.Recomendaciones",
+    "Description": "Recomendaciones"
+  },
+  {
+    "Id": "AdmisionesServiciosPrestados.Servicio",
+    "Description": "Servicio"
+  },
+  {
+    "Id": "AdmisionesServiciosPrestados.ServiciosId",
+    "Description": "Servicio"
+  },
+  {
+    "Id": "AdmisionesServiciosPrestados.Total",
+    "Description": "Total"
+  },
+  {
+    "Id": "AdmisionesServiciosPrestados.ValorServicio",
+    "Description": "Valor"
+  },
+  {
+    "Id": "AdmisionesServiciosPrestadosArchivos.CargarArchivos",
+    "Description": "Cargar archivos"
+  },
+  {
+    "Id": "AdmisionesServiciosPrestadosArchivos.Nombre",
+    "Description": "Nombre del archivo"
+  },
+  {
+    "Id": "AgendaDisponible",
+    "Description": "Agenda Disponible"
+  },
+  {
+    "Id": "AgendaDisponible.Profesional",
+    "Description": "Profesional"
+  },
+  {
+    "Id": "AgendaMedica",
+    "Description": "Agenda Medica"
+  },
+  {
+    "Id": "AgendaProgramacion",
+    "Description": "Programación de Agenda"
+  },
+  {
+    "Id": "AgendaProgramacion.ConsultorioObligatorio",
+    "Description": "Debe seleccionar un consultorio."
+  },
+  {
+    "Id": "AgendaProgramacion.ConsultoriosIds",
+    "Description": "Consultorios"
+  },
+  {
+    "Id": "AgendaProgramacion.ConsultoriosIds.Aceptar",
+    "Description": "Aceptar"
+  },
+  {
+    "Id": "AgendaProgramacion.ConsultoriosIds.Asignar",
+    "Description": "Asignar"
+  },
+  {
+    "Id": "AgendaProgramacion.ConsultoriosIds.Limpiar",
+    "Description": "Limpiar"
+  },
+  {
+    "Id": "AgendaProgramacion.ConsultoriosIds.Ver",
+    "Description": "Ver Consultorios"
+  },
+  {
+    "Id": "AgendaProgramacion.DiponibleEstadosId",
+    "Description": "Estado"
+  },
+  {
+    "Id": "AgendaProgramacion.Domingo",
+    "Description": "Domingo"
+  },
+  {
+    "Id": "AgendaProgramacion.DuracionServicio",
+    "Description": "Duracion Servicio"
+  },
+  {
+    "Id": "AgendaProgramacion.EmpleadosId",
+    "Description": "Profesional"
+  },
+  {
+    "Id": "AgendaProgramacion.EstadosIdTipoDuracion",
+    "Description": "Tipo Duración"
+  },
+  {
+    "Id": "AgendaProgramacion.FechaFinal",
+    "Description": "Fecha Final"
+  },
+  {
+    "Id": "AgendaProgramacion.FechaInicio",
+    "Description": "Fecha Inicio"
+  },
+  {
+    "Id": "AgendaProgramacion.HoraFinal",
+    "Description": "Hora Final"
+  },
+  {
+    "Id": "AgendaProgramacion.HoraInicio",
+    "Description": "Hora Inicio"
+  },
+  {
+    "Id": "AgendaProgramacion.Jueves",
+    "Description": "Jueves"
+  },
+  {
+    "Id": "AgendaProgramacion.Lunes",
+    "Description": "Lunes"
+  },
+  {
+    "Id": "AgendaProgramacion.Martes",
+    "Description": "Martes"
+  },
+  {
+    "Id": "AgendaProgramacion.Miercoles",
+    "Description": "Miércoles"
+  },
+  {
+    "Id": "AgendaProgramacion.Observaciones",
+    "Description": "Observaciones"
+  },
+  {
+    "Id": "AgendaProgramacion.PeriodicidadEstadosId",
+    "Description": "Periodicidad"
+  },
+  {
+    "Id": "AgendaProgramacion.Sabado",
+    "Description": "Sábado"
+  },
+  {
+    "Id": "AgendaProgramacion.ServiciosId",
+    "Description": "Servicio"
+  },
+  {
+    "Id": "AgendaProgramacion.TipoDuracion",
+    "Description": "Tipo Duración"
+  },
+  {
+    "Id": "AgendaProgramacion.Viernes",
+    "Description": "Viernes"
+  },
+  {
+    "Id": "Atenciones.AbrirHC",
+    "Description": "Abrir HC"
+  },
+  {
+    "Id": "Atenciones.AmbitoRealizacionProcedimientoId",
+    "Description": "Ambito Procedimiento"
+  },
+  {
+    "Id": "Atenciones.Anular",
+    "Description": "Anular"
+  },
+  {
+    "Id": "Atenciones.CausasExternasId",
+    "Description": "Causa Externa"
+  },
+  {
+    "Id": "Atenciones.ConsecutivoAdmision",
+    "Description": "No. Admisión"
+  },
+  {
+    "Id": "Atenciones.ConsecutivoCita",
+    "Description": "No. Cita"
+  },
+  {
+    "Id": "Atenciones.EmpleadosId",
+    "Description": "Empleado"
+  },
+  {
+    "Id": "Atenciones.EsControl",
+    "Description": "¿Es Control?"
+  },
+  {
+    "Id": "Atenciones.EstadosId",
+    "Description": "Estado"
+  },
+  {
+    "Id": "Atenciones.FechaAtencion",
+    "Description": "Fecha Atención"
+  },
+  {
+    "Id": "Atenciones.FinalidadConsultaId",
+    "Description": "Finalidad Consulta"
+  },
+  {
+    "Id": "Atenciones.FinalidadProcedimientoId",
+    "Description": "Finalidad Procedimiento"
+  },
+  {
+    "Id": "Atenciones.NotaProcedimientos",
+    "Description": "Notas de procedimiento"
+  },
+  {
+    "Id": "Atenciones.NumeroIdentificacion",
+    "Description": "Número de identificación"
+  },
+  {
+    "Id": "Atenciones.PacienteEntidad",
+    "Description": "Entidad"
+  },
+  {
+    "Id": "Atenciones.PacienteFechaNacimiento",
+    "Description": "Fecha de nacimiento"
+  },
+  {
+    "Id": "Atenciones.PacienteGenero",
+    "Description": "Genero"
+  },
+  {
+    "Id": "Atenciones.PacienteNombreCompleto",
+    "Description": "Paciente"
+  },
+  {
+    "Id": "Atenciones.PacientesTiposIdentificacion",
+    "Description": "Tipo de identificación"
+  },
+  {
+    "Id": "Atenciones.TipoHC",
+    "Description": "Tipo"
+  },
+  {
+    "Id": "Atenciones.VerCitasProgramadas",
+    "Description": "Mi agenda"
+  },
+  {
+    "Id": "Atenciones.VerListaCitasProgramadas",
+    "Description": "Citas Programadas"
+  },
+  {
+    "Id": "AtencionesLectura",
+    "Description": "Lectura de resultados"
+  },
+  {
+    "Id": "AtencionesLectura.Fecha",
+    "Description": "Fecha"
+  },
+  {
+    "Id": "AtencionesLectura.Paciente",
+    "Description": "Paciente"
+  },
+  {
+    "Id": "AtencionesLectura.Servicio",
+    "Description": "Servicio"
+  },
+  {
+    "Id": "AtencionesResultado",
+    "Description": "Resultados"
+  },
+  {
+    "Id": "AtencionesResultado.ArchivosResultados",
+    "Description": "Resultados"
+  },
+  {
+    "Id": "AtencionesResultado.Entregado",
+    "Description": "¿Fue Entregado?"
+  },
+  {
+    "Id": "AtencionesResultado.FechaLectura",
+    "Description": "Fecha Lectura"
+  },
+  {
+    "Id": "AtencionesResultado.ImagenesDiagnosticas",
+    "Description": "Imágenes Diagnósticas"
+  },
+  {
+    "Id": "AtencionesResultado.ImprimirNotaProcedimiento",
+    "Description": "Imprimir Nota Procedimiento"
+  },
+  {
+    "Id": "AtencionesResultado.Paciente",
+    "Description": "Paciente"
+  },
+  {
+    "Id": "AtencionesResultado.Resultado",
+    "Description": "Resultado"
+  },
+  {
+    "Id": "Audit",
+    "Description": "Auditoria"
+  },
+  {
+    "Id": "Audit.Column",
+    "Description": "Dato"
+  },
+  {
+    "Id": "Audit.Consecutivo",
+    "Description": "Consecutivo"
+  },
+  {
+    "Id": "Audit.Value",
+    "Description": "Valor"
+  },
+  {
+    "Id": "Audits",
+    "Description": "Auditoria"
+  },
+  {
+    "Id": "Audits.Action",
+    "Description": "Acción"
+  },
+  {
+    "Id": "Audits.KeyValues",
+    "Description": "Llaves"
+  },
+  {
+    "Id": "Audits.NewValues",
+    "Description": "Nuevo Valor"
+  },
+  {
+    "Id": "Audits.OldValues",
+    "Description": "Valor Anterior"
+  },
+  {
+    "Id": "Audits.TableName",
+    "Description": "Tabla"
+  },
+  {
+    "Id": "Audits.TransactionDate",
+    "Description": "Fecha"
+  },
+  {
+    "Id": "AutorizacionAdmisionesDescuentos",
+    "Description": "Autorización Admisiones Descuentos"
+  },
+  {
+    "Id": "AutorizacionAdmisionesDescuentos.Autorizar",
+    "Description": "Autorizar Descuento"
+  },
+  {
+    "Id": "AutorizacionAdmisionesDescuentos.ValorDescuento",
+    "Description": "Valor Descuento"
+  },
+  {
+    "Id": "AutorizacionAdmisionesDescuentos.ValorServicio",
+    "Description": "Valor Servicio"
+  },
+  {
+    "Id": "AutorizacionAdmisionesDescuentos.ValorTotal",
+    "Description": "Valor Total"
+  },
+  {
+    "Id": "Bancos",
+    "Description": "Bancos"
+  },
+  {
+    "Id": "Bancos.Codigo",
+    "Description": "Codigo"
+  },
+  {
+    "Id": "Bancos.Descripcion",
+    "Description": "Descripción"
+  },
+  {
+    "Id": "BLL.Atenciones.ErrorEmpleadoUsuario",
+    "Description": "El usuario \"{0}\" no se encuentra asociado a un empleado. Por favor configurarlo en el maestro de empleados"
+  },
+  {
+    "Id": "BLL.AutorizacionAdmisionesDescuentos.ErrorEmpleadoUsuario",
+    "Description": "El usuario \"{0}\" no se encuentra asociado a un empleado. Por favor configurarlo en el maestro de empleados"
+  },
+  {
+    "Id": "BLL.AutorizacionAdmisionesDescuentos.ErrorPermisoAutorizacion",
+    "Description": "El empleado \"{0}\" no tiene permiso para autorizar descuento en admisiones. Por favor configurarlo en el maestro de empleados"
+  },
+  {
+    "Id": "BLL.BORRAR",
+    "Description": "BORRAR REGISTRO"
+  },
+  {
+    "Id": "BLL.BUSINESS.DELETE_REL",
+    "Description": "El registro no se puede eliminar porque esta siendo usado en: {0}"
+  },
+  {
+    "Id": "BLL.BUSINESS.MODIFIEDROW",
+    "Description": "Este registro fue actualizado al mismo tiempo por el usuario {0} por lo tanto no se permitira modificar. Fecha modificación: {1}"
+  },
+  {
+    "Id": "BLL.BUSINESS.UNIQUE",
+    "Description": "{0}: Su valor ya exiten en otro registro"
+  },
+  {
+    "Id": "BLL.BUSINESS.UNREGISTEREDROW",
+    "Description": "El registro no existe."
+  },
+  {
+    "Id": "BLL.CREAR",
+    "Description": "NUEVO REGISTRO"
+  },
+  {
+    "Id": "BLL.LISTAR",
+    "Description": "ACCESO A OPCION  DE MENU"
+  },
+  {
+    "Id": "BLL.MODIFICAR",
+    "Description": "MODIFICAR REGISTRO"
+  },
+  {
+    "Id": "BTN.Consultar",
+    "Description": "Consultar"
+  },
+  {
+    "Id": "Cajas.Nombre",
+    "Description": "Nombre"
+  },
+  {
+    "Id": "Cajas.SedesId",
+    "Description": "Sede"
+  },
+  {
+    "Id": "CategoriasIngresos.Codigo",
+    "Description": "Código"
+  },
+  {
+    "Id": "CategoriasIngresosDetalles",
+    "Description": "Detalle"
+  },
+  {
+    "Id": "CategoriasIngresosDetalles.CopagoMaximoAno",
+    "Description": "Maximo Año"
+  },
+  {
+    "Id": "CategoriasIngresosDetalles.CopagoMaximoEvento",
+    "Description": "Maximo Evento"
+  },
+  {
+    "Id": "CategoriasIngresosDetalles.CuotaModeradora",
+    "Description": "Cuota Moderadora"
+  },
+  {
+    "Id": "CategoriasIngresosDetalles.FechaFinal",
+    "Description": "Fecha Final"
+  },
+  {
+    "Id": "CategoriasIngresosDetalles.FechaInicial",
+    "Description": "Fecha Inicial"
+  },
+  {
+    "Id": "CategoriasIngresosDetalles.PorcentajeCopago",
+    "Description": "Copago %"
+  },
+  {
+    "Id": "CategoriasServicios",
+    "Description": "Categorias de servicios"
+  },
+  {
+    "Id": "CategoriasServicios.Nombre",
+    "Description": "Nombre"
+  },
+  {
+    "Id": "CausalesGlosas",
+    "Description": "Causales Glosas"
+  },
+  {
+    "Id": "CausalesGlosas.Descripcion",
+    "Description": "Descripción"
+  },
+  {
+    "Id": "CausalesGlosas.Descripcion:",
+    "Description": "Descripción"
+  },
+  {
+    "Id": "CausasExternas",
+    "Description": "Causas externas"
+  },
+  {
+    "Id": "CausasExternas.Nombre",
+    "Description": "Nombre"
+  },
+  {
+    "Id": "CiclosCajas",
+    "Description": "Ciclos de Cajas"
+  },
+  {
+    "Id": "CiclosCajas.CajasId",
+    "Description": "Caja"
+  },
+  {
+    "Id": "CiclosCajas.CloseUsersId",
+    "Description": "Usuario Cierre"
+  },
+  {
+    "Id": "CiclosCajas.EstadosId",
+    "Description": "Estado"
+  },
+  {
+    "Id": "CiclosCajas.FechaApertura",
+    "Description": "Fecha Apertura"
+  },
+  {
+    "Id": "CiclosCajas.FechaCierre",
+    "Description": "Fecha Cierre"
+  },
+  {
+    "Id": "CiclosCajas.InformacionApertura",
+    "Description": "Información de la Apertura de Caja"
+  },
+  {
+    "Id": "CiclosCajas.InformacionCierre",
+    "Description": "Información del Cierre de Caja"
+  },
+  {
+    "Id": "CiclosCajas.InformacionTotalCierre",
+    "Description": "Información Total Cierre"
+  },
+  {
+    "Id": "CiclosCajas.OpenUsersId",
+    "Description": "Usuario Apertura"
+  },
+  {
+    "Id": "CiclosCajas.TotalFaltante",
+    "Description": "Total Faltante"
+  },
+  {
+    "Id": "CiclosCajas.TotalRecaudos",
+    "Description": "Total Recaudos"
+  },
+  {
+    "Id": "CiclosCajas.TotalSobrante",
+    "Description": "Total Sobrante"
+  },
+  {
+    "Id": "CiclosCajas.ValorApertura",
+    "Description": "Valor Apertura"
+  },
+  {
+    "Id": "CiclosCajas.ValorCierre",
+    "Description": "Valor Cierre"
+  },
+  {
+    "Id": "Citas",
+    "Description": "Citas"
+  },
+  {
+    "Id": "Citas.AgendaDisponibleId.Asignar",
+    "Description": "Asignar Agenda"
+  },
+  {
+    "Id": "Citas.AgendaDisponibleId.Ver",
+    "Description": "Ver Agenda"
+  },
+  {
+    "Id": "Citas.Agregar",
+    "Description": "Agregar"
+  },
+  {
+    "Id": "Citas.Cancelar",
+    "Description": "Cancelar"
+  },
+  {
+    "Id": "Citas.Cantidad",
+    "Description": "Cantidad"
+  },
+  {
+    "Id": "Citas.Consecutivo",
+    "Description": "Consecutivo"
+  },
+  {
+    "Id": "Citas.ConsultoriosId",
+    "Description": "Consultorio"
+  },
+  {
+    "Id": "Citas.ConveniosId",
+    "Description": "Convenio"
+  },
+  {
+    "Id": "Citas.Entidades",
+    "Description": "Entidad"
+  },
+  {
+    "Id": "Citas.EspecialidadesId",
+    "Description": "Especialidad"
+  },
+  {
+    "Id": "Citas.EstadosId",
+    "Description": "Estado"
+  },
+  {
+    "Id": "Citas.Fecha",
+    "Description": "Fecha deseada por el Paciente"
+  },
+  {
+    "Id": "Citas.FechaFinal",
+    "Description": "Fecha Final"
+  },
+  {
+    "Id": "Citas.FechaInicio",
+    "Description": "Fecha de Inicio"
+  },
+  {
+    "Id": "Citas.FechaInicioCita",
+    "Description": "Fecha de Cita"
+  },
+  {
+    "Id": "Citas.GuadarSalir",
+    "Description": "Guadar y Salir"
+  },
+  {
+    "Id": "Citas.HoraInicioCita",
+    "Description": "Hora de Cita"
+  },
+  {
+    "Id": "Citas.Modificar",
+    "Description": "Modificar"
+  },
+  {
+    "Id": "Citas.Observaciones",
+    "Description": "Observaciones"
+  },
+  {
+    "Id": "Citas.PacientesId",
+    "Description": "Paciente"
+  },
+  {
+    "Id": "Citas.Preparacion",
+    "Description": "Preparación"
+  },
+  {
+    "Id": "Citas.SedesId",
+    "Description": "Sede"
+  },
+  {
+    "Id": "Citas.ServiciosId",
+    "Description": "Servicio"
+  },
+  {
+    "Id": "Citas.TiposCitasId",
+    "Description": "Tipo de Cita"
+  },
+  {
+    "Id": "CitasAtencion",
+    "Description": "Citas por atención"
+  },
+  {
+    "Id": "Ciudades.Codigo",
+    "Description": "Código"
+  },
+  {
+    "Id": "Ciudades.DepartamentosId",
+    "Description": "Departamentos"
+  },
+  {
+    "Id": "Ciudades.Nombre",
+    "Description": "Nombre"
+  },
+  {
+    "Id": "Conceptos.Descripcion",
+    "Description": "Descripcion"
+  },
+  {
+    "Id": "ConfiguracionEnvioEmail",
+    "Description": "Conf. Servicio de correos"
+  },
+  {
+    "Id": "ConfiguracionEnvioEmail.Contrasena",
+    "Description": "Contraseña"
+  },
+  {
+    "Id": "ConfiguracionEnvioEmail.CorreoElectronico",
+    "Description": "Correo Electronico"
+  },
+  {
+    "Id": "ConfiguracionEnvioEmail.Origen",
+    "Description": "Origen"
+  },
+  {
+    "Id": "ConfiguracionEnvioEmail.ProbarEnvio",
+    "Description": "Probar"
+  },
+  {
+    "Id": "ConfiguracionEnvioEmail.Puerto",
+    "Description": "Puerto"
+  },
+  {
+    "Id": "ConfiguracionEnvioEmail.ServidorSMTP",
+    "Description": "Servidor SMTP"
+  },
+  {
+    "Id": "ConfiguracionEnvioEmail.UsaSSL",
+    "Description": "¿Usa SSL?"
+  },
+  {
+    "Id": "ConsultarGenerico",
+    "Description": "Consultar"
+  },
+  {
+    "Id": "Consultorios",
+    "Description": "Consultorios"
+  },
+  {
+    "Id": "Consultorios.Codigo",
+    "Description": "Código"
+  },
+  {
+    "Id": "Consultorios.EstadosId",
+    "Description": "Estado"
+  },
+  {
+    "Id": "Consultorios.Nombre",
+    "Description": "Consultorio"
+  },
+  {
+    "Id": "Consultorios.SedesId",
+    "Description": "Sede"
+  },
+  {
+    "Id": "Convenios.Codigo",
+    "Description": "Código"
+  },
+  {
+    "Id": "Convenios.Concepto",
+    "Description": "Concepto"
+  },
+  {
+    "Id": "Convenios.DiaFacturacionMes",
+    "Description": "Día Facturación Mes"
+  },
+  {
+    "Id": "Convenios.EmpresasId",
+    "Description": "Empresas Id"
+  },
+  {
+    "Id": "Convenios.EntidadesId",
+    "Description": "Entidad"
+  },
+  {
+    "Id": "Convenios.EstadosId",
+    "Description": "Estados"
+  },
+  {
+    "Id": "Convenios.FacturarCodigoInterno",
+    "Description": "Facturar Código Interno"
+  },
+  {
+    "Id": "Convenios.FechaCaducidad",
+    "Description": "Fecha Caducidad"
+  },
+  {
+    "Id": "Convenios.FechaInicio",
+    "Description": "Fecha Inicio"
+  },
+  {
+    "Id": "Convenios.FormasPagosId",
+    "Description": "Forma de pago"
+  },
+  {
+    "Id": "Convenios.ListaPreciosId",
+    "Description": "Lista Precios"
+  },
+  {
+    "Id": "Convenios.ModalidadesContratacionId",
+    "Description": "Modalidad de contratación"
+  },
+  {
+    "Id": "Convenios.Nombre",
+    "Description": "Convenio"
+  },
+  {
+    "Id": "Convenios.NroContrato",
+    "Description": "Nro. Contrato"
+  },
+  {
+    "Id": "Convenios.NroPacientes",
+    "Description": "Nro. Pacientes"
+  },
+  {
+    "Id": "Convenios.NroPacientesRestantes",
+    "Description": "Nro. Pacientes restantes"
+  },
+  {
+    "Id": "Convenios.NroPoliza",
+    "Description": "Nro. Póliza"
+  },
+  {
+    "Id": "Convenios.Observaciones",
+    "Description": "Observaciones"
+  },
+  {
+    "Id": "Convenios.PeriodicidadPago",
+    "Description": "Periocidad Pago"
+  },
+  {
+    "Id": "Convenios.PlanBeneficio",
+    "Description": "Plan de beneficio"
+  },
+  {
+    "Id": "Convenios.Presupuesto",
+    "Description": "Presupuesto"
+  },
+  {
+    "Id": "Convenios.RequierePacientes",
+    "Description": "Requiere pacientes"
+  },
+  {
+    "Id": "Convenios.RequierePresupuesto",
+    "Description": "Requiere presupuesto"
+  },
+  {
+    "Id": "Convenios.SaldoPresupuesto",
+    "Description": "Saldo presupuesto"
+  },
+  {
+    "Id": "Convenios.TipoFacturaEstadosId",
+    "Description": "Tipo Factura"
+  },
+  {
+    "Id": "ConveniosServicios",
+    "Description": "Servicios"
+  },
+  {
+    "Id": "ConveniosServicios.Cantidad",
+    "Description": "Cantidad"
+  },
+  {
+    "Id": "ConveniosServicios.ConveniosId",
+    "Description": "Convenios"
+  },
+  {
+    "Id": "ConveniosServicios.ServiciosId",
+    "Description": "Servicios"
+  },
+  {
+    "Id": "CreatedBy",
+    "Description": "Creado por"
+  },
+  {
+    "Id": "CreationDate",
+    "Description": "Fecha de Creación"
+  },
+  {
+    "Id": "Cups.Codigo",
+    "Description": "Código"
+  },
+  {
+    "Id": "Cups.Descripcion",
+    "Description": "Descripción"
+  },
+  {
+    "Id": "Cups.PBS",
+    "Description": "¿Es PBS?"
+  },
+  {
+    "Id": "Dashboard",
+    "Description": "Indicadores"
+  },
+  {
+    "Id": "DEAFULT.Anular",
+    "Description": "Anular"
+  },
+  {
+    "Id": "DEAFULT.CargarDatosPlantilla",
+    "Description": "Cargar Plantilla"
+  },
+  {
+    "Id": "DEAFULT.DescargarPlantilla",
+    "Description": "Descargar Plantilla"
+  },
+  {
+    "Id": "DEAFULT.Liquidar",
+    "Description": "Liquidar"
+  },
+  {
+    "Id": "DEAFULT.ModificaRegistros",
+    "Description": "¿Actualizar registros que ya existan?"
+  },
+  {
+    "Id": "DEFAULT.ELECTRONICNOTE",
+    "Description": "Nota Electronica"
+  },
+  {
+    "Id": "DEFAULT.Imprimir",
+    "Description": "Imprimir"
+  },
+  {
+    "Id": "DEFAULT.INFORMATIONADITIONAL",
+    "Description": "Información Adicional"
+  },
+  {
+    "Id": "DEFAULT.INFORMATIONCLIENTE",
+    "Description": "Informacion del Cliente"
+  },
+  {
+    "Id": "DEFAULT.INFORMATIONCONSULTA",
+    "Description": "Información Consulta"
+  },
+  {
+    "Id": "DEFAULT.INFORMATIONENTTIES",
+    "Description": "Entidades y Sedes a Facturar"
+  },
+  {
+    "Id": "DEFAULT.INFORMATIONGENERAL",
+    "Description": "Información General"
+  },
+  {
+    "Id": "DEFAULT.INFORMATIONPATIENTS",
+    "Description": "Paciente a Facturar"
+  },
+  {
+    "Id": "DEFAULT.INFORMATIONPeriod",
+    "Description": "Periodo a Facturar"
+  },
+  {
+    "Id": "DEFAULT.INFORMATIONVALUE",
+    "Description": "Valores"
+  },
+  {
+    "Id": "Departamentos.Codigo",
+    "Description": "Código"
+  },
+  {
+    "Id": "Departamentos.Nombre",
+    "Description": "Departamento"
+  },
+  {
+    "Id": "Departamentos.Pais",
+    "Description": "País"
+  },
+  {
+    "Id": "Departamentos.PaisesId",
+    "Description": "Paises"
+  },
+  {
+    "Id": "Diagnosticos",
+    "Description": "Diagnósticos"
+  },
+  {
+    "Id": "Diagnosticos.Codigo",
+    "Description": "Código"
+  },
+  {
+    "Id": "Diagnosticos.Descripcion",
+    "Description": "Descripción"
+  },
+  {
+    "Id": "Diagnosticos.GenerosId",
+    "Description": "Géneros"
+  },
+  {
+    "Id": "Diagnosticos.LimiteEdadInferior",
+    "Description": "Límite Edad Inferior"
+  },
+  {
+    "Id": "Diagnosticos.LimiteEdadSuperior",
+    "Description": "Límite Edad Superior"
+  },
+  {
+    "Id": "DLCOLUMNFKISREQUIRED",
+    "Description": "La columna {0} es requerida."
+  },
+  {
+    "Id": "DLCOLUMNINCORRECT",
+    "Description": "La columna {0} tiene un valor incorrecto."
+  },
+  {
+    "Id": "DLCOLUMNISREQUIRED",
+    "Description": "La columna {0} es requerida."
+  },
+  {
+    "Id": "DLCOLUMNMAXLENGTH",
+    "Description": "La columna {0} no puede superar los {1} caracteres."
+  },
+  {
+    "Id": "dministracionHonorariosServicios.ValorHonorarioParticular",
+    "Description": "Valor Particular"
+  },
+  {
+    "Id": "Documentos.Activo",
+    "Description": "¿Activo?"
+  },
+  {
+    "Id": "Documentos.ConsecutivoDesde",
+    "Description": "Consecutivo Desde"
+  },
+  {
+    "Id": "Documentos.ConsecutivoHasta",
+    "Description": "Consecutivo Hasta"
+  },
+  {
+    "Id": "Documentos.Descripcion",
+    "Description": "Descripción"
+  },
+  {
+    "Id": "Documentos.EsFacturaParticular",
+    "Description": "¿Es para facturación de paciente?"
+  },
+  {
+    "Id": "Documentos.FechaDesde",
+    "Description": "Fecha Desde"
+  },
+  {
+    "Id": "Documentos.FechaHasta",
+    "Description": "Fecha Hasta"
+  },
+  {
+    "Id": "Documentos.LlaveUnica",
+    "Description": "Llave Unica"
+  },
+  {
+    "Id": "Documentos.Prefijo",
+    "Description": "Prefijo"
+  },
+  {
+    "Id": "Documentos.ResolucionDian",
+    "Description": "Resolución DIAN"
+  },
+  {
+    "Id": "Documentos.Transaccion",
+    "Description": "Tipo"
+  },
+  {
+    "Id": "DuplicarListaPrecios",
+    "Description": "Duplicar lista de precios"
+  },
+  {
+    "Id": "EmpleadoProfesiones",
+    "Description": "Profesiones"
+  },
+  {
+    "Id": "EmpleadoProfesiones.ProfesionesId",
+    "Description": "Profesión"
+  },
+  {
+    "Id": "Empleados.AutorizaDescuento",
+    "Description": "¿Autoriza descuento en admisiones?"
+  },
+  {
+    "Id": "Empleados.Direccion",
+    "Description": "Dirección"
+  },
+  {
+    "Id": "Empleados.ErrorAutorizaDescuento",
+    "Description": "Ya existe un empleado que autoriza descuento en admisiones: "
+  },
+  {
+    "Id": "Empleados.EstadosCivilesId",
+    "Description": "Estado Civil"
+  },
+  {
+    "Id": "Empleados.FechaNacimiento",
+    "Description": "Fecha de Nacimiento"
+  },
+  {
+    "Id": "Empleados.FirmaDigital",
+    "Description": "Firma Digital"
+  },
+  {
+    "Id": "Empleados.FirmaDigitalArchivo",
+    "Description": "Firma Digital"
+  },
+  {
+    "Id": "Empleados.GenerosId",
+    "Description": "Genero"
+  },
+  {
+    "Id": "Empleados.NombreCompleto",
+    "Description": "Profesional"
+  },
+  {
+    "Id": "Empleados.NombresApellidos",
+    "Description": "Nombres y Apellidos"
+  },
+  {
+    "Id": "Empleados.NumeroIdentificacion",
+    "Description": "Numero de Identificacion"
+  },
+  {
+    "Id": "Empleados.PrimerApellido",
+    "Description": "Primer Apellido"
+  },
+  {
+    "Id": "Empleados.PrimerNombre",
+    "Description": "Primer Nombre"
+  },
+  {
+    "Id": "Empleados.RegistroMedico",
+    "Description": "Registro Médico"
+  },
+  {
+    "Id": "Empleados.SegundaDireccion",
+    "Description": "Segunda Dirección"
+  },
+  {
+    "Id": "Empleados.SegundoApellido",
+    "Description": "Segundo Apellido"
+  },
+  {
+    "Id": "Empleados.SegundoNombre",
+    "Description": "Segundo Nombre"
+  },
+  {
+    "Id": "Empleados.SegundoTelefono",
+    "Description": "Segundo Teléfono"
+  },
+  {
+    "Id": "Empleados.SelloDigital",
+    "Description": "Sello Digital"
+  },
+  {
+    "Id": "Empleados.SelloDigitalArchivo",
+    "Description": "Sello Digital"
+  },
+  {
+    "Id": "Empleados.Telefono",
+    "Description": "Teléfono"
+  },
+  {
+    "Id": "Empleados.TipoEmpleados",
+    "Description": "Tipo de Empleado"
+  },
+  {
+    "Id": "Empleados.TipoIdentificacion",
+    "Description": "Tipo de Identificacion"
+  },
+  {
+    "Id": "Empleados.TipoIdentificacionMayorEdad",
+    "Description": "El tipo de identificación es incorrecto para una persona mayor de edad."
+  },
+  {
+    "Id": "Empleados.TipoIdentificacionMenorEdad",
+    "Description": "El tipo de identificación es incorrecto para una persona menor de edad."
+  },
+  {
+    "Id": "Empleados.TiposIdentificacionId",
+    "Description": "Tipo Identificacion"
+  },
+  {
+    "Id": "Empleados.TiposSangreId",
+    "Description": "Tipo de Sangre"
+  },
+  {
+    "Id": "Empleados.UserId",
+    "Description": "Usuario del sistema"
+  },
+  {
+    "Id": "EmpleadosEspecialidades",
+    "Description": "Especialidades"
+  },
+  {
+    "Id": "EmpleadosEspecialidades.EspecialidadesId",
+    "Description": "Especialidad"
+  },
+  {
+    "Id": "Empresas",
+    "Description": "Empresa"
+  },
+  {
+    "Id": "Empresas.Alias",
+    "Description": "Alias"
+  },
+  {
+    "Id": "Empresas.Celular",
+    "Description": "Numero de Celular"
+  },
+  {
+    "Id": "Empresas.CIIU",
+    "Description": "Código CIIU"
+  },
+  {
+    "Id": "Empresas.CiudadesId",
+    "Description": "Ciudad"
+  },
+  {
+    "Id": "Empresas.CodigoPostal",
+    "Description": "Código Postal"
+  },
+  {
+    "Id": "Empresas.CodigoReps",
+    "Description": "Código REPS"
+  },
+  {
+    "Id": "Empresas.Departamentos",
+    "Description": "Departamento"
+  },
+  {
+    "Id": "Empresas.Direccion",
+    "Description": "Dirección"
+  },
+  {
+    "Id": "Empresas.Downloadlogo",
+    "Description": "Ver logo actual"
+  },
+  {
+    "Id": "Empresas.DV",
+    "Description": "DV"
+  },
+  {
+    "Id": "Empresas.EsResponsabledeIva",
+    "Description": "Responsable de Iva"
+  },
+  {
+    "Id": "Empresas.InformacionAdicional",
+    "Description": "Información Adicional"
+  },
+  {
+    "Id": "Empresas.Logo",
+    "Description": "Logo"
+  },
+  {
+    "Id": "Empresas.LogoArchivos",
+    "Description": "Logo"
+  },
+  {
+    "Id": "Empresas.NombresApellidosRepresentanteLegal",
+    "Description": "Nombres y apellidos"
+  },
+  {
+    "Id": "Empresas.NumeroIdentificacion",
+    "Description": "Número de Identificación"
+  },
+  {
+    "Id": "Empresas.NumeroIdentificacionRepresentanteLegal",
+    "Description": "Número de Identificación"
+  },
+  {
+    "Id": "Empresas.PaginaWeb",
+    "Description": "Pagina Web"
+  },
+  {
+    "Id": "Empresas.Paises",
+    "Description": "Pais"
+  },
+  {
+    "Id": "Empresas.RazonSocial",
+    "Description": "Razón Social"
+  },
+  {
+    "Id": "Empresas.RepresentanteLegal",
+    "Description": "Representante Legal"
+  },
+  {
+    "Id": "Empresas.Telefono",
+    "Description": "Telefono"
+  },
+  {
+    "Id": "Empresas.TiposIdentificacionId",
+    "Description": "Tipo de Identificación"
+  },
+  {
+    "Id": "Empresas.TiposIdentificacionRepresentanteLegalId",
+    "Description": "Tipo de identificación"
+  },
+  {
+    "Id": "Empresas.TiposRegimenContableId:",
+    "Description": "Régimen Contable"
+  },
+  {
+    "Id": "EmpresasEsquemasImpuestos",
+    "Description": "Impuestos"
+  },
+  {
+    "Id": "EmpresasEsquemasImpuestos.EsquemasImpuestosId",
+    "Description": "Impuesto"
+  },
+  {
+    "Id": "EmpresasResponsabilidadesFiscales",
+    "Description": "Responsabilidades"
+  },
+  {
+    "Id": "Enfermedad Actual",
+    "Description": "Enfermedad Actual"
+  },
+  {
+    "Id": "Entidades",
+    "Description": "Entidades"
+  },
+  {
+    "Id": "Entidades.Alias",
+    "Description": "Nombre Comercial / RIPS"
+  },
+  {
+    "Id": "Entidades.CiudadesId",
+    "Description": "Ciudad"
+  },
+  {
+    "Id": "Entidades.CodigoPostal",
+    "Description": "Código Postal"
+  },
+  {
+    "Id": "Entidades.CodigoReps",
+    "Description": "Código REPS"
+  },
+  {
+    "Id": "Entidades.ConsecutivoRips",
+    "Description": "Consecutivo RIPS"
+  },
+  {
+    "Id": "Entidades.CorreoElectronico",
+    "Description": "Correo Electrónico"
+  },
+  {
+    "Id": "Entidades.DepartamentosId",
+    "Description": "Departamento"
+  },
+  {
+    "Id": "Entidades.Direccion",
+    "Description": "Dirección"
+  },
+  {
+    "Id": "Entidades.DV",
+    "Description": "DV"
+  },
+  {
+    "Id": "Entidades.EsResponsabledeIva",
+    "Description": "Responsable de Iva"
+  },
+  {
+    "Id": "Entidades.EstadosId",
+    "Description": "Estado"
+  },
+  {
+    "Id": "Entidades.Fax",
+    "Description": "Fax"
+  },
+  {
+    "Id": "Entidades.Nombre",
+    "Description": "Razón Social"
+  },
+  {
+    "Id": "Entidades.NroMatriculaMercantil",
+    "Description": "Matricula Mercantil"
+  },
+  {
+    "Id": "Entidades.NumeroIdentificacion",
+    "Description": "Número de Identificación"
+  },
+  {
+    "Id": "Entidades.PaginaWeb",
+    "Description": "Página Web"
+  },
+  {
+    "Id": "Entidades.PaisesId",
+    "Description": "País"
+  },
+  {
+    "Id": "Entidades.PorcentajeRetefuente",
+    "Description": "Porcentaje Retefuente %"
+  },
+  {
+    "Id": "Entidades.PorcentajeReteIca",
+    "Description": "Porcentaje Reteica %"
+  },
+  {
+    "Id": "Entidades.Telefono",
+    "Description": "Teléfono"
+  },
+  {
+    "Id": "Entidades.TipoEntidadesId",
+    "Description": "Tipo"
+  },
+  {
+    "Id": "Entidades.TiposIdentificacionId",
+    "Description": "Tipo de Identificación"
+  },
+  {
+    "Id": "Entidades.TiposPersonasId",
+    "Description": "Tipo de Persona"
+  },
+  {
+    "Id": "EntidadesEsquemasImpuestos",
+    "Description": "Esquema de impuestos"
+  },
+  {
+    "Id": "EntidadesEsquemasImpuestos.EsquemasImpuestosId",
+    "Description": "Esquema de impuestos"
+  },
+  {
+    "Id": "EntidadesResponsabilidadesFiscales",
+    "Description": "Responsabilidades fiscales"
+  },
+  {
+    "Id": "EntidadesResponsabilidadesFiscales.ResponsabilidadesFiscalesId",
+    "Description": "Responsabilidades Fiscales"
+  },
+  {
+    "Id": "EntregaResultados",
+    "Description": "Entrega de Resultados"
+  },
+  {
+    "Id": "EntregaResultados.Aceptar",
+    "Description": "Aceptar"
+  },
+  {
+    "Id": "EntregaResultados.Apellidos",
+    "Description": "Apellidos"
+  },
+  {
+    "Id": "EntregaResultados.Cancelar",
+    "Description": "Cancelar"
+  },
+  {
+    "Id": "EntregaResultados.ContanciaArchivos",
+    "Description": "Constancia"
+  },
+  {
+    "Id": "EntregaResultados.ContanciaArchivosId",
+    "Description": "Constancia"
+  },
+  {
+    "Id": "EntregaResultados.Email",
+    "Description": "Correo electronico"
+  },
+  {
+    "Id": "EntregaResultados.Fecha",
+    "Description": "Fecha"
+  },
+  {
+    "Id": "EntregaResultados.Hora",
+    "Description": "Hora de entrega"
+  },
+  {
+    "Id": "EntregaResultados.ImprimirResultados",
+    "Description": "Imprimir Resultados"
+  },
+  {
+    "Id": "EntregaResultados.Limpiar",
+    "Description": "Limpiar"
+  },
+  {
+    "Id": "EntregaResultados.MediosEntragasId",
+    "Description": "Medio de Entrega"
+  },
+  {
+    "Id": "EntregaResultados.NombreCompleto",
+    "Description": "Nombres Recibe"
+  },
+  {
+    "Id": "EntregaResultados.Nombres",
+    "Description": "Nombres"
+  },
+  {
+    "Id": "EntregaResultados.NumeroIdentificacion",
+    "Description": "Numero de Identificación"
+  },
+  {
+    "Id": "EntregaResultados.Observaciones",
+    "Description": "Observaciones"
+  },
+  {
+    "Id": "EntregaResultados.PacientesId",
+    "Description": "Paciente"
+  },
+  {
+    "Id": "EntregaResultados.ParentescosId",
+    "Description": "Parentesco"
+  },
+  {
+    "Id": "EntregaResultados.Resultados",
+    "Description": "Resultados"
+  },
+  {
+    "Id": "EntregaResultados.SeleccionNula",
+    "Description": "No se selecciono ningun resultado para entregar."
+  },
+  {
+    "Id": "EntregaResultados.Telefono",
+    "Description": "Telefono"
+  },
+  {
+    "Id": "EntregaResultados.TiposIdentificacionid",
+    "Description": "Tipo de Identificación"
+  },
+  {
+    "Id": "EntregaResultadosDetalles",
+    "Description": "Resultados entregados"
+  },
+  {
+    "Id": "EntregaResultadosDetalles.FechaLecturaResultado",
+    "Description": "Fecha Lectura Resultado"
+  },
+  {
+    "Id": "EnviaEmailLog",
+    "Description": "Log"
+  },
+  {
+    "Id": "EnviaEmailLog.Asunto",
+    "Description": "Asunto"
+  },
+  {
+    "Id": "EnviaEmailLog.CorreoEnvia",
+    "Description": "Correo que envia"
+  },
+  {
+    "Id": "EnviaEmailLog.CorreosDestinatarios",
+    "Description": "Destinatarios y Copia"
+  },
+  {
+    "Id": "EnviaEmailLog.CreationDate",
+    "Description": "Fecha y hora"
+  },
+  {
+    "Id": "EnviaEmailLog.Error",
+    "Description": "Error"
+  },
+  {
+    "Id": "EnviaEmailLog.ErrorDeDatos",
+    "Description": "Datos Erróneos"
+  },
+  {
+    "Id": "EnviaEmailLog.Exitoso",
+    "Description": "¿Envío Exitoso?"
+  },
+  {
+    "Id": "Especialidades.Nombre",
+    "Description": "Nombre"
+  },
+  {
+    "Id": "Estados.Nombre",
+    "Description": "Estado"
+  },
+  {
+    "Id": "Estados.Tipo",
+    "Description": "Tipo"
+  },
+  {
+    "Id": "EstadosCiviles",
+    "Description": "Estados civiles"
+  },
+  {
+    "Id": "EstadosCiviles.Nombre",
+    "Description": "Nombre"
+  },
+  {
+    "Id": "EventosDIAN.CodigoEvento",
+    "Description": "Código"
+  },
+  {
+    "Id": "EventosDIAN.Descripcion",
+    "Description": "Descripción"
+  },
+  {
+    "Id": "EventosDIAN.FechaEmision",
+    "Description": "Fecha Emisión"
+  },
+  {
+    "Id": "EventosDIAN.FechaEvento",
+    "Description": "Fecha Evento"
+  },
+  {
+    "Id": "EventosDIAN.NroId",
+    "Description": "Id"
+  },
+  {
+    "Id": "EventosDIAN.NumDocEmisor",
+    "Description": "Nit Emisor"
+  },
+  {
+    "Id": "EventosDIAN.NumDocReceptor",
+    "Description": "Nit Receptor"
+  },
+  {
+    "Id": "EventosDIAN.Observacion",
+    "Description": "Observación"
+  },
+  {
+    "Id": "EventosDIAN.Pdf",
+    "Description": "PDF"
+  },
+  {
+    "Id": "EventosDIAN.SubtipoDoc",
+    "Description": "SubTipo Documento"
+  },
+  {
+    "Id": "EventosDIAN.TipoDoc",
+    "Description": "Tipo Documento"
+  },
+  {
+    "Id": "EventosDIAN.TipoEvento",
+    "Description": "Tipo"
+  },
+  {
+    "Id": "EventosDIAN.Uri",
+    "Description": "Uri"
+  },
+  {
+    "Id": "EventosDIAN.Uuid",
+    "Description": "Guid"
+  },
+  {
+    "Id": "EventosDIAN.XmlDoc",
+    "Description": "Documento XML"
+  },
+  {
+    "Id": "Facturacion",
+    "Description": "Facturación"
+  },
+  {
+    "Id": "Facturas.AceptadoDIAN",
+    "Description": "Aceptado DIAN"
+  },
+  {
+    "Id": "Facturas.AdquirienteJuridico",
+    "Description": "Adquiriente P. Jurídica"
+  },
+  {
+    "Id": "Facturas.AdquirienteNatural",
+    "Description": "Adquitiente P. Natural"
+  },
+  {
+    "Id": "Facturas.CUFE",
+    "Description": "CUFE"
+  },
+  {
+    "Id": "Facturas.DIANResponse",
+    "Description": "Respuesta DIAN"
+  },
+  {
+    "Id": "Facturas.DocumentosId",
+    "Description": "Prefijo"
+  },
+  {
+    "Id": "Facturas.EmpresasId",
+    "Description": "Empresa"
+  },
+  {
+    "Id": "Facturas.EntidadesId",
+    "Description": "Entidades"
+  },
+  {
+    "Id": "Facturas.EnviarCorreo",
+    "Description": "Enviar Correo"
+  },
+  {
+    "Id": "Facturas.EnviarDIAN",
+    "Description": "Enviar DIAN"
+  },
+  {
+    "Id": "Facturas.ErrorReference",
+    "Description": "Error"
+  },
+  {
+    "Id": "Facturas.Estadosid",
+    "Description": "Estado"
+  },
+  {
+    "Id": "Facturas.FacturacionElectronica",
+    "Description": "Facturación Electrónica"
+  },
+  {
+    "Id": "Facturas.Fecha",
+    "Description": "Fecha de emisión"
+  },
+  {
+    "Id": "Facturas.FechaFinal",
+    "Description": "Fecha Final"
+  },
+  {
+    "Id": "Facturas.FehaInicial",
+    "Description": "Fecha Inicial"
+  },
+  {
+    "Id": "Facturas.FilialesId",
+    "Description": "Filiales"
+  },
+  {
+    "Id": "Facturas.FormasPagosId",
+    "Description": "Forma de pago"
+  },
+  {
+    "Id": "Facturas.GenerateFileToCobol",
+    "Description": "Generar Archivos Siesa 8.5"
+  },
+  {
+    "Id": "Facturas.IssueDate",
+    "Description": "Fecha Evento"
+  },
+  {
+    "Id": "Facturas.MediosPagoId",
+    "Description": "Medio de pago"
+  },
+  {
+    "Id": "Facturas.ModificarDatosFactura",
+    "Description": "Modificar Datos"
+  },
+  {
+    "Id": "Facturas.NotInformation",
+    "Description": "No hay información de la DIAN"
+  },
+  {
+    "Id": "Facturas.NroConsecutivo",
+    "Description": "Consecutivo"
+  },
+  {
+    "Id": "Facturas.Observaciones",
+    "Description": "Observaciones"
+  },
+  {
+    "Id": "Facturas.OrdenCompra",
+    "Description": "Orden de compra"
+  },
+  {
+    "Id": "Facturas.Prefijo",
+    "Description": "Prefijo"
+  },
+  {
+    "Id": "Facturas.ReferenciaFactura",
+    "Description": "Referencia de factura"
+  },
+  {
+    "Id": "Facturas.Saldo",
+    "Description": "Saldo"
+  },
+  {
+    "Id": "Facturas.Sede",
+    "Description": "Sede"
+  },
+  {
+    "Id": "Facturas.SedesId",
+    "Description": "Sede"
+  },
+  {
+    "Id": "Facturas.TieneNotas",
+    "Description": "¿Tiene notas?"
+  },
+  {
+    "Id": "Facturas.TiposRegimenesId",
+    "Description": "Régimen"
+  },
+  {
+    "Id": "Facturas.UrlTracking",
+    "Description": "Seguimiento"
+  },
+  {
+    "Id": "Facturas.ValidacionAcepta",
+    "Description": "Validacion Acepta"
+  },
+  {
+    "Id": "Facturas.ValorCopagoCuotaModeradora",
+    "Description": "Valor Copago o C/Moderadora"
+  },
+  {
+    "Id": "Facturas.ValorDescuentos",
+    "Description": "Descuento"
+  },
+  {
+    "Id": "Facturas.ValorImpuestos",
+    "Description": "Valor impuestos"
+  },
+  {
+    "Id": "Facturas.ValorIva",
+    "Description": "Iva"
+  },
+  {
+    "Id": "Facturas.ValorSubtotal",
+    "Description": "Subtotal"
+  },
+  {
+    "Id": "Facturas.ValorTotal",
+    "Description": "Total"
+  },
+  {
+    "Id": "Facturas.XmlUrl",
+    "Description": "URL XML"
+  },
+  {
+    "Id": "FacturasCopagoCuotaModeradoras.ValorTotal",
+    "Description": "Valor Total"
+  },
+  {
+    "Id": "FacturasDetalles",
+    "Description": "Detalle"
+  },
+  {
+    "Id": "FacturasDetalles.Cantidad",
+    "Description": "Cantidad"
+  },
+  {
+    "Id": "FacturasDetalles.NroLinea",
+    "Description": "#"
+  },
+  {
+    "Id": "FacturasDetalles.PorcDescuento",
+    "Description": "% Descuento"
+  },
+  {
+    "Id": "FacturasDetalles.PorcImpuesto",
+    "Description": "% Impuesto"
+  },
+  {
+    "Id": "FacturasDetalles.SubTotal",
+    "Description": "Sub Total"
+  },
+  {
+    "Id": "FacturasDetalles.ValorServicio",
+    "Description": "Valor Servicio"
+  },
+  {
+    "Id": "FacturasDetalles.ValorTotal",
+    "Description": "Valor Total"
+  },
+  {
+    "Id": "FacturasEstados",
+    "Description": "Facturas por estado"
+  },
+  {
+    "Id": "FacturasGeneracion",
+    "Description": "Genración de Facturas"
+  },
+  {
+    "Id": "FacturasGeneracion.CiclosCajasId",
+    "Description": "Caja"
+  },
+  {
+    "Id": "FacturasGeneracion.ConveniosId",
+    "Description": "Convenio"
+  },
+  {
+    "Id": "FacturasGeneracion.DocumentosId",
+    "Description": "Documento"
+  },
+  {
+    "Id": "FacturasGeneracion.EmpresasId",
+    "Description": "Empresas"
+  },
+  {
+    "Id": "FacturasGeneracion.EntidadesId",
+    "Description": "Entidades"
+  },
+  {
+    "Id": "FacturasGeneracion.FechaFinal",
+    "Description": "Fecha Final"
+  },
+  {
+    "Id": "FacturasGeneracion.FechaGeneracion",
+    "Description": "Fecha de generacion"
+  },
+  {
+    "Id": "FacturasGeneracion.FechaInicio",
+    "Description": "Fecha Inicio"
+  },
+  {
+    "Id": "FacturasGeneracion.FilialesId",
+    "Description": "Filial"
+  },
+  {
+    "Id": "FacturasGeneracion.ImprimirAnexo",
+    "Description": "Imprimir Anexo"
+  },
+  {
+    "Id": "FacturasGeneracion.MediosPagoId",
+    "Description": "Medio de pago"
+  },
+  {
+    "Id": "FacturasGeneracion.Observaciones",
+    "Description": "Observaciones"
+  },
+  {
+    "Id": "FacturasGeneracion.OrdenCompra",
+    "Description": "Orden de Compra"
+  },
+  {
+    "Id": "FacturasGeneracion.PacientesId",
+    "Description": "Paciente"
+  },
+  {
+    "Id": "FacturasGeneracion.PlantillaCargueFE",
+    "Description": "Plantilla FE"
+  },
+  {
+    "Id": "FacturasGeneracion.ReferenciaFactura",
+    "Description": "Referencia de Factura"
+  },
+  {
+    "Id": "FacturasGeneracion.SedesId",
+    "Description": "Sedes"
+  },
+  {
+    "Id": "FacturasGeneracion.TiposRegimenesId",
+    "Description": "Régimen"
+  },
+  {
+    "Id": "Festivos.Descripcion",
+    "Description": "Descripción"
+  },
+  {
+    "Id": "Festivos.Dia",
+    "Description": "Dia"
+  },
+  {
+    "Id": "Festivos.GenerarFestivos",
+    "Description": "Generar Festivos"
+  },
+  {
+    "Id": "Filiales.CiudadesId",
+    "Description": "Ciudad"
+  },
+  {
+    "Id": "Filiales.CorreoElectronico",
+    "Description": "Correo Electrónico"
+  },
+  {
+    "Id": "Filiales.Departamentos",
+    "Description": "Departamento"
+  },
+  {
+    "Id": "Filiales.Direccion",
+    "Description": "Dirección"
+  },
+  {
+    "Id": "Filiales.EstadosId",
+    "Description": "Estado"
+  },
+  {
+    "Id": "Filiales.Fax",
+    "Description": "Fax"
+  },
+  {
+    "Id": "Filiales.Nombre",
+    "Description": "Nombre"
+  },
+  {
+    "Id": "Filiales.PaginaWeb",
+    "Description": "Página Web"
+  },
+  {
+    "Id": "FormasPagos",
+    "Description": "Formas de Pago"
+  },
+  {
+    "Id": "FormasPagos.Codigo",
+    "Description": "Código"
+  },
+  {
+    "Id": "FormasPagos.Nombre",
+    "Description": "Descripción"
+  },
+  {
+    "Id": "Generacion",
+    "Description": "Generación"
+  },
+  {
+    "Id": "Generico.Departamentos",
+    "Description": "Departamento"
+  },
+  {
+    "Id": "Generico.Paises",
+    "Description": "País"
+  },
+  {
+    "Id": "Generos",
+    "Description": "Géneros"
+  },
+  {
+    "Id": "Generos.Codigo",
+    "Description": "Código"
+  },
+  {
+    "Id": "Generos.Nombre",
+    "Description": "Nombre"
+  },
+  {
+    "Id": "Glosas.CausalesGlosasId",
+    "Description": "Causal Glosa"
+  },
+  {
+    "Id": "Glosas.Conciliacion",
+    "Description": "Información de la conciliación"
+  },
+  {
+    "Id": "Glosas.Factura",
+    "Description": "Información de la factura"
+  },
+  {
+    "Id": "Glosas.FacturasId",
+    "Description": "Factura"
+  },
+  {
+    "Id": "Glosas.Glosa",
+    "Description": "Información de la glosa"
+  },
+  {
+    "Id": "Glosas.ValorAceptado",
+    "Description": "Valor Aceptado"
+  },
+  {
+    "Id": "Glosas.ValorGlosado",
+    "Description": "Valor Glosado"
+  },
+  {
+    "Id": "Glosas.ValorGlosadoFinal",
+    "Description": "Valor Glosado Final"
+  },
+  {
+    "Id": "HCPreguntas",
+    "Description": "Preguntas"
+  },
+  {
+    "Id": "HCPreguntas.Descripcion",
+    "Description": "Descripcion"
+  },
+  {
+    "Id": "HCPreguntas.EsEdicionEnPopup",
+    "Description": "¿Es respuesta larga?"
+  },
+  {
+    "Id": "HCPreguntas.TipoPreguntaId",
+    "Description": "Tipo Pregunta"
+  },
+  {
+    "Id": "HCRespuestas",
+    "Description": "Respuestas"
+  },
+  {
+    "Id": "HCRespuestas.Orden",
+    "Description": "Orden"
+  },
+  {
+    "Id": "HCRespuestas.Texto",
+    "Description": "Texto"
+  },
+  {
+    "Id": "HCRespuestas.TextoFinal",
+    "Description": "Texto Final"
+  },
+  {
+    "Id": "HCRespuestas.TipoControlId",
+    "Description": "Tipo Control"
+  },
+  {
+    "Id": "HCRespuestas.ValoresLista",
+    "Description": "Valores Lista"
+  },
+  {
+    "Id": "HCTipos",
+    "Description": "Tipos Historias Clinicas"
+  },
+  {
+    "Id": "HCTipos.Descripcion",
+    "Description": "Descripción"
+  },
+  {
+    "Id": "HCTipos.EspecialidadesId",
+    "Description": "Especialidad"
+  },
+  {
+    "Id": "HCTiposPreguntas",
+    "Description": "Preguntas Historia Clinica"
+  },
+  {
+    "Id": "HCTiposPreguntas.HCPreguntasId",
+    "Description": "Pregunta"
+  },
+  {
+    "Id": "HCTiposPreguntas.Orden",
+    "Description": "Orden"
+  },
+  {
+    "Id": "HistoriasClinicas",
+    "Description": "Historias Clinicas"
+  },
+  {
+    "Id": "HistoriasClinicas.AdmisionesId",
+    "Description": "Admision"
+  },
+  {
+    "Id": "HistoriasClinicas.Altura",
+    "Description": "Talla (cms)"
+  },
+  {
+    "Id": "HistoriasClinicas.Analisis",
+    "Description": "Análisis"
+  },
+  {
+    "Id": "HistoriasClinicas.AntecedentesFamiliar",
+    "Description": "Antecedentes Familiares"
+  },
+  {
+    "Id": "HistoriasClinicas.AntecedentesPersonal",
+    "Description": "Antecedentes Personales"
+  },
+  {
+    "Id": "HistoriasClinicas.CerrarHC",
+    "Description": "Cerrar HC"
+  },
+  {
+    "Id": "HistoriasClinicas.Consecutivo",
+    "Description": "Numero"
+  },
+  {
+    "Id": "HistoriasClinicas.DominanciaEstadosId",
+    "Description": "Dominancia"
+  },
+  {
+    "Id": "HistoriasClinicas.EnfermedadActual",
+    "Description": "Enfermedad Actual"
+  },
+  {
+    "Id": "HistoriasClinicas.EsControl",
+    "Description": "Es Control?"
+  },
+  {
+    "Id": "HistoriasClinicas.Especialidad",
+    "Description": "Especialidad"
+  },
+  {
+    "Id": "HistoriasClinicas.EstadosId",
+    "Description": "Estado"
+  },
+  {
+    "Id": "HistoriasClinicas.ExamenFisico",
+    "Description": "Examen Físico"
+  },
+  {
+    "Id": "HistoriasClinicas.FechaApertura",
+    "Description": "Fecha Apertura"
+  },
+  {
+    "Id": "HistoriasClinicas.FrecuenciaCardiaca",
+    "Description": "Frecuencia Cardiaca"
+  },
+  {
+    "Id": "HistoriasClinicas.FrecuenciaRespiratoria",
+    "Description": "Frecuencia Respiratoria"
+  },
+  {
+    "Id": "HistoriasClinicas.Hallazgos",
+    "Description": "Hallazgos"
+  },
+  {
+    "Id": "HistoriasClinicas.HCTiposId",
+    "Description": "Tipo Historia Clinica"
+  },
+  {
+    "Id": "HistoriasClinicas.HistoriaClinicaPrincipal",
+    "Description": "Historia Clinica Principal"
+  },
+  {
+    "Id": "HistoriasClinicas.ImprimirDocumentosAPacientes",
+    "Description": "Imprimir documentos a pacientes"
+  },
+  {
+    "Id": "HistoriasClinicas.ImprimirHCPaciente",
+    "Description": "Imprimir"
+  },
+  {
+    "Id": "HistoriasClinicas.MostrarPopudModificarDatosAtencion",
+    "Description": "Modificar datos atención"
+  },
+  {
+    "Id": "HistoriasClinicas.MotivoConsulta",
+    "Description": "Motivo Consulta"
+  },
+  {
+    "Id": "HistoriasClinicas.PacientesId",
+    "Description": "Paciente"
+  },
+  {
+    "Id": "HistoriasClinicas.PerimetroCefalico",
+    "Description": "Perimetro Cefálico"
+  },
+  {
+    "Id": "HistoriasClinicas.Peso",
+    "Description": "Peso (kilos)"
+  },
+  {
+    "Id": "HistoriasClinicas.PlanManejo",
+    "Description": "Plan de Manejo"
+  },
+  {
+    "Id": "HistoriasClinicas.PopupImprimirHCPaciente",
+    "Description": "Paciente"
+  },
+  {
+    "Id": "HistoriasClinicas.ProfesionalId",
+    "Description": "Profesional"
+  },
+  {
+    "Id": "HistoriasClinicas.SignosVitales",
+    "Description": "Signos Vitales"
+  },
+  {
+    "Id": "HistoriasClinicas.Temperatura",
+    "Description": "Temperatura"
+  },
+  {
+    "Id": "HistoriasClinicas.TensionArterial",
+    "Description": "Tensión Arterial"
+  },
+  {
+    "Id": "HistoriasClinicasDiagnosticos",
+    "Description": "Diagnosticos"
+  },
+  {
+    "Id": "HistoriasClinicasDiagnosticos.DiagnosticosId",
+    "Description": "Diagnostico"
+  },
+  {
+    "Id": "HistoriasClinicasDiagnosticos.Principal",
+    "Description": "Es Principal?"
+  },
+  {
+    "Id": "HistoriasClinicasDiagnosticos.TiposDiagnosticosId",
+    "Description": "Tipos de diagnostico"
+  },
+  {
+    "Id": "HistoriasClinicasNotasAclaratorias",
+    "Description": "Notas Aclaratorias Historias Clinicas"
+  },
+  {
+    "Id": "HistoriasClinicasNotasAclaratorias.Aclaracion",
+    "Description": "Aclaración"
+  },
+  {
+    "Id": "HistoriasClinicasNotasAclaratorias.FechaCreacion",
+    "Description": "Fecha creación"
+  },
+  {
+    "Id": "HistoriasClinicasNotasAclaratorias.HistoriasClinicasId",
+    "Description": "Historia Clinica"
+  },
+  {
+    "Id": "HistoriasClinicasNotasAclaratorias.ProfesionalId",
+    "Description": "Profesional"
+  },
+  {
+    "Id": "HistoriasClinicasRespuestas.HCRespuestasId",
+    "Description": "Metrica"
+  },
+  {
+    "Id": "HistoriasClinicasRespuestas.RespuestaAbierta",
+    "Description": "Respuesta"
+  },
+  {
+    "Id": "HistoriasClinicasRespuestas.RespuestaSeleccion",
+    "Description": "Respuesta"
+  },
+  {
+    "Id": "ImagenesDiagnosticas",
+    "Description": "Imagenes Diagnosticas"
+  },
+  {
+    "Id": "ImagenesDiagnosticas.Fecha",
+    "Description": "Fecha"
+  },
+  {
+    "Id": "ImagenesDiagnosticas.Observaciones",
+    "Description": "Observaciones"
+  },
+  {
+    "Id": "ImagenesDiagnosticas.PacientesId",
+    "Description": "Paciente"
+  },
+  {
+    "Id": "ImagenesDiagnosticas.ServiciosId",
+    "Description": "Servicio"
+  },
+  {
+    "Id": "ImagenesDiagnosticasDetalle.CargarImagenDiagnostica",
+    "Description": "Cargar Imagenes"
+  },
+  {
+    "Id": "ImagenesDiagnosticasDetalle.Nombre",
+    "Description": "Nombre del archivo"
+  },
+  {
+    "Id": "ImagenesDiagnosticasDetalle.PopupImagenDiagnostica",
+    "Description": "Cargar Imagenes"
+  },
+  {
+    "Id": "ImagenesDiagnosticasDetalle.RefrescarImagenesDiagnosticasDetalle",
+    "Description": "Refrescar"
+  },
+  {
+    "Id": "Incapacidades",
+    "Description": "Incapacidades"
+  },
+  {
+    "Id": "Incapacidades.DiagnosticosId",
+    "Description": "Diagnostico"
+  },
+  {
+    "Id": "Incapacidades.EsProrroga",
+    "Description": "¿Es Prorroga?"
+  },
+  {
+    "Id": "Incapacidades.Fecha",
+    "Description": "Fecha"
+  },
+  {
+    "Id": "Incapacidades.FechaFinalizacion",
+    "Description": "Fecha de finalización"
+  },
+  {
+    "Id": "Incapacidades.FechaInicio",
+    "Description": "Fecha Inicio"
+  },
+  {
+    "Id": "Incapacidades.HIstoriasClinicasId",
+    "Description": "Historia Clinica"
+  },
+  {
+    "Id": "Incapacidades.IncapacidadesOrigenesId",
+    "Description": "Origen Incapacidad"
+  },
+  {
+    "Id": "Incapacidades.NroDias",
+    "Description": "Nro. Dias"
+  },
+  {
+    "Id": "Incapacidades.NroOrden",
+    "Description": "Nro. Orden"
+  },
+  {
+    "Id": "Incapacidades.Observaciones",
+    "Description": "Observaciones"
+  },
+  {
+    "Id": "Incapacidades.PacientesId",
+    "Description": "Paciente"
+  },
+  {
+    "Id": "Incapacidades.ProfesionalId",
+    "Description": "Profesional"
+  },
+  {
+    "Id": "Incapacidades.Recomendaciones",
+    "Description": "Recomendaciones"
+  },
+  {
+    "Id": "IncapacidadesOrigenes",
+    "Description": "Origenes Incacidades"
+  },
+  {
+    "Id": "IncapacidadesOrigenes.Descripcion",
+    "Description": "Descripción"
+  },
+  {
+    "Id": "IndicacionesMedicas",
+    "Description": "Indicaciones Medicas"
+  },
+  {
+    "Id": "IndicacionesMedicas.Fecha",
+    "Description": "Fecha"
+  },
+  {
+    "Id": "IndicacionesMedicas.HistoriasClinicasId",
+    "Description": "Historia Clinica"
+  },
+  {
+    "Id": "IndicacionesMedicas.NroOrden",
+    "Description": "Nro Orden"
+  },
+  {
+    "Id": "IndicacionesMedicas.PacientesId",
+    "Description": "paciente"
+  },
+  {
+    "Id": "IndicacionesMedicas.ProfesionalId",
+    "Description": "Profesional"
+  },
+  {
+    "Id": "IndicacionesMedicasDetalles",
+    "Description": "Indicaciones Medicas Servicios"
+  },
+  {
+    "Id": "IndicacionesMedicasDetalles.Cantidad",
+    "Description": "Cantidad"
+  },
+  {
+    "Id": "IndicacionesMedicasDetalles.Observaciones",
+    "Description": "Observaciones"
+  },
+  {
+    "Id": "IndicacionesMedicasDetalles.Recomendaciones",
+    "Description": "Recomendaciones"
+  },
+  {
+    "Id": "IndicacionesMedicasDetalles.Servicio",
+    "Description": "Servicio"
+  },
+  {
+    "Id": "InterfaceInvoice.ErrorReference",
+    "Description": "Error"
+  },
+  {
+    "Id": "InterfaceInvoice.UrlTracking",
+    "Description": "Traza URL"
+  },
+  {
+    "Id": "InterfaceInvoice.XmlUrl",
+    "Description": "XML"
+  },
+  {
+    "Id": "LanguageResource",
+    "Description": "Recursos"
+  },
+  {
+    "Id": "LanguageResources.Active",
+    "Description": "Activo"
+  },
+  {
+    "Id": "LanguageResources.ResourceKey",
+    "Description": "LLave"
+  },
+  {
+    "Id": "LanguageResources.ResourceValue",
+    "Description": "Recurso"
+  },
+  {
+    "Id": "Languages",
+    "Description": "Idioma"
+  },
+  {
+    "Id": "Languages.Active",
+    "Description": "Activo"
+  },
+  {
+    "Id": "Languages.Code",
+    "Description": "Código"
+  },
+  {
+    "Id": "Languages.Culture",
+    "Description": "Cultura"
+  },
+  {
+    "Id": "Languages.Name",
+    "Description": "Nombre"
+  },
+  {
+    "Id": "LastUpdate",
+    "Description": "Fecha de Actualización"
+  },
+  {
+    "Id": "LecturaResultados",
+    "Description": "Lectura de resultados"
+  },
+  {
+    "Id": "LiquidacionHonorarios",
+    "Description": "Liquidación de honorarios"
+  },
+  {
+    "Id": "LiquidacionHonorarios.Consecutivo",
+    "Description": "Consecutivo"
+  },
+  {
+    "Id": "LiquidacionHonorarios.DetalleAnulacion",
+    "Description": "Detalle de anulación"
+  },
+  {
+    "Id": "LiquidacionHonorarios.EmpleadosId",
+    "Description": "Profesional"
+  },
+  {
+    "Id": "LiquidacionHonorarios.EstadosId",
+    "Description": "Estado"
+  },
+  {
+    "Id": "LiquidacionHonorarios.FechaFinal",
+    "Description": "Fecha final"
+  },
+  {
+    "Id": "LiquidacionHonorarios.FechaInicio",
+    "Description": "Fecha inicio"
+  },
+  {
+    "Id": "LiquidacionHonorarios.Observaciones",
+    "Description": "Observaciones"
+  },
+  {
+    "Id": "LiquidacionHonorarios.ValorTotal",
+    "Description": "Valor total"
+  },
+  {
+    "Id": "LiquidacionHonorariosDetalle",
+    "Description": "Detalle"
+  },
+  {
+    "Id": "LiquidacionHonorariosDetalle.EsLectura",
+    "Description": "¿Es Lectura?"
+  },
+  {
+    "Id": "LiquidacionHonorariosDetalle.Valor",
+    "Description": "Valor"
+  },
+  {
+    "Id": "LiquitadionHonorariosMedicos",
+    "Description": "Liquitadión de honorarios medicos"
+  },
+  {
+    "Id": "ListaPrecios",
+    "Description": "Lista de precios"
+  },
+  {
+    "Id": "ListaPrecios.EmpresasId",
+    "Description": "Empresa"
+  },
+  {
+    "Id": "ListaPrecios.Nombre",
+    "Description": "Nombre"
+  },
+  {
+    "Id": "ListaPrecios.NombreDuplicar",
+    "Description": "Nombre"
+  },
+  {
+    "Id": "ListaPrecios.Porcentaje",
+    "Description": "Porcentaje"
+  },
+  {
+    "Id": "ListaPrecios.PorcentajeDuplicar",
+    "Description": "Porcentaje"
+  },
+  {
+    "Id": "ListaPrecios.PorcentajeIncrementoServicio",
+    "Description": "Porcentaje de incremento servicio"
+  },
+  {
+    "Id": "ListaPrecios.Tarifa",
+    "Description": "Tarifa"
+  },
+  {
+    "Id": "ListaPrecios.TipoEstadoDuplicar",
+    "Description": "Estado"
+  },
+  {
+    "Id": "ListaPrecios.TipoEstadosId",
+    "Description": "Tipo de configuración"
+  },
+  {
+    "Id": "ListaPrecios.Total",
+    "Description": "Total"
+  },
+  {
+    "Id": "ListaPrecios.Valor",
+    "Description": "Valor"
+  },
+  {
+    "Id": "ListaPrecios.ValorDuplicar",
+    "Description": "Valor"
+  },
+  {
+    "Id": "Medicamentos.ConcentracionesId",
+    "Description": "Concentración"
+  },
+  {
+    "Id": "Medicamentos.FormasFarmaceuticasId",
+    "Description": "Forma Farmaceutica"
+  },
+  {
+    "Id": "Medicamentos.Nombre",
+    "Description": "Medicamento"
+  },
+  {
+    "Id": "Medicamentos.ViaAdministracionId",
+    "Description": "Via de Administración"
+  },
+  {
+    "Id": "MedicamentosConcentraciones",
+    "Description": "Medicamentos Concentraciones"
+  },
+  {
+    "Id": "MedicamentosConcentraciones.Nombre",
+    "Description": "Descripción"
+  },
+  {
+    "Id": "MedicamentosFormasFarmaceuticas",
+    "Description": "Medicamentos Formas Farmaceuticas"
+  },
+  {
+    "Id": "MedicamentosFormasFarmaceuticas.Nombre",
+    "Description": "Descripción"
+  },
+  {
+    "Id": "MedicamentosViaAdministracion",
+    "Description": "Medicamentos Via de Administración"
+  },
+  {
+    "Id": "MedicamentosViaAdministracion.Nombre",
+    "Description": "Descripción"
+  },
+  {
+    "Id": "MedicamentosViaAdministracion.Nombre: *",
+    "Description": "Descripción"
+  },
+  {
+    "Id": "MediosEntregas",
+    "Description": "Medios de Entrega"
+  },
+  {
+    "Id": "MediosEntregas.Descripcion",
+    "Description": "Descripción"
+  },
+  {
+    "Id": "MediosPago",
+    "Description": "Medios de Pago"
+  },
+  {
+    "Id": "MediosPago.Codigo",
+    "Description": "Código"
+  },
+  {
+    "Id": "MediosPago.Descripcion",
+    "Description": "Descripcion"
+  },
+  {
+    "Id": "MODULE.ASISTENCIAL",
+    "Description": "ASISTENCIAL"
+  },
+  {
+    "Id": "MODULE.DATOSFIJOS",
+    "Description": "DATOS FIJOS"
+  },
+  {
+    "Id": "MODULE.ESTUCTURACION",
+    "Description": "ESTRUCTURACIÓN"
+  },
+  {
+    "Id": "MODULE.FACTURACION",
+    "Description": "FACTURACIÓN"
+  },
+  {
+    "Id": "MODULE.GRAFICOS",
+    "Description": "GRAFICOS"
+  },
+  {
+    "Id": "MODULE.HC",
+    "Description": "HISTORIAS CLINICAS"
+  },
+  {
+    "Id": "MODULE.IPS",
+    "Description": "IPS"
+  },
+  {
+    "Id": "MODULE.OPERATIVO",
+    "Description": "OPERATIVO"
+  },
+  {
+    "Id": "MODULE.REPORTES",
+    "Description": "REPORTES"
+  },
+  {
+    "Id": "MODULE.SECURITY",
+    "Description": "SEGURIDAD"
+  },
+  {
+    "Id": "MODULE.SEGURIDAD",
+    "Description": "Seguridad"
+  },
+  {
+    "Id": "MODULE.SUPERCEO",
+    "Description": "DATOS FIJOS"
+  },
+  {
+    "Id": "Notas.AnularNota",
+    "Description": "Anular"
+  },
+  {
+    "Id": "Notas.AprobarNota",
+    "Description": "Aprobar"
+  },
+  {
+    "Id": "Notas.Consecutivo",
+    "Description": "Consecutivo"
+  },
+  {
+    "Id": "Notas.Cosecutivo",
+    "Description": "Consecutivo Factura"
+  },
+  {
+    "Id": "Notas.CUFE",
+    "Description": "CUFE"
+  },
+  {
+    "Id": "Notas.DIANResponse",
+    "Description": "Respuesta DIAN"
+  },
+  {
+    "Id": "Notas.DocumentosId",
+    "Description": "Documento"
+  },
+  {
+    "Id": "Notas.EmpresasId",
+    "Description": "Empresa"
+  },
+  {
+    "Id": "Notas.EntidadesId",
+    "Description": "Entidades"
+  },
+  {
+    "Id": "Notas.EnviarCorreo",
+    "Description": "Enviar Correo"
+  },
+  {
+    "Id": "Notas.EnviarDIAN",
+    "Description": "Enviar DIAN"
+  },
+  {
+    "Id": "Notas.ErrorReference",
+    "Description": "Error"
+  },
+  {
+    "Id": "Notas.Estadosid",
+    "Description": "Estado"
+  },
+  {
+    "Id": "Notas.FacturaPrefijo",
+    "Description": "Prefijo Factura"
+  },
+  {
+    "Id": "Notas.FacturasId",
+    "Description": "Factura"
+  },
+  {
+    "Id": "Notas.Fecha",
+    "Description": "Fecha"
+  },
+  {
+    "Id": "Notas.FechaVencimiento",
+    "Description": "Fecha de vencimiento"
+  },
+  {
+    "Id": "Notas.FormasPagosId",
+    "Description": "Forma de pago"
+  },
+  {
+    "Id": "Notas.IdDbusiness",
+    "Description": "Cliente"
+  },
+  {
+    "Id": "Notas.IssueDate",
+    "Description": "Fecha Evento"
+  },
+  {
+    "Id": "Notas.MediosPagoId",
+    "Description": "Medio de pago"
+  },
+  {
+    "Id": "Notas.MontoEscrito",
+    "Description": "Monto Escrito"
+  },
+  {
+    "Id": "Notas.NotasConceptosId",
+    "Description": "Concepto"
+  },
+  {
+    "Id": "Notas.Observaciones",
+    "Description": "Observaciones"
+  },
+  {
+    "Id": "Notas.OrdenCompra",
+    "Description": "Orden Compra"
+  },
+  {
+    "Id": "Notas.PacientesId",
+    "Description": "Pacientes"
+  },
+  {
+    "Id": "Notas.PeriodoFinal",
+    "Description": "Periodo Final"
+  },
+  {
+    "Id": "Notas.PeriodoInicial",
+    "Description": "Periodo Inicial"
+  },
+  {
+    "Id": "Notas.Referencia",
+    "Description": "Referencia"
+  },
+  {
+    "Id": "Notas.Saldo",
+    "Description": "Saldo"
+  },
+  {
+    "Id": "Notas.SedesId",
+    "Description": "Sede"
+  },
+  {
+    "Id": "Notas.SeleccionarPacientes",
+    "Description": "Seleccionar Pacientes"
+  },
+  {
+    "Id": "Notas.TipoNotaId",
+    "Description": "Tipo"
+  },
+  {
+    "Id": "Notas.UrlTracking",
+    "Description": "UrlTracking"
+  },
+  {
+    "Id": "Notas.ValorDescuentos",
+    "Description": "Descuentos"
+  },
+  {
+    "Id": "Notas.ValorImpuestos",
+    "Description": "Impuestos"
+  },
+  {
+    "Id": "Notas.ValorSubtotal",
+    "Description": "Sub Total"
+  },
+  {
+    "Id": "Notas.ValorTotal",
+    "Description": "Total"
+  },
+  {
+    "Id": "Notas.XmlUrl",
+    "Description": "XML"
+  },
+  {
+    "Id": "NotasConceptos",
+    "Description": "Conceptos Notas"
+  },
+  {
+    "Id": "NotasConceptos.Codigo",
+    "Description": "Codigo"
+  },
+  {
+    "Id": "NotasConceptos.Descripcion",
+    "Description": "Descripcion"
+  },
+  {
+    "Id": "NotasConceptos.DocumentosId",
+    "Description": "Tipo Nota"
+  },
+  {
+    "Id": "NotasConceptos.TipoNotaId",
+    "Description": "Tipo"
+  },
+  {
+    "Id": "NotasDetalles",
+    "Description": "Detalle"
+  },
+  {
+    "Id": "NotasDetalles.Cantidad",
+    "Description": "Cantidad"
+  },
+  {
+    "Id": "NotasDetalles.NroLinea",
+    "Description": "Linea"
+  },
+  {
+    "Id": "NotasDetalles.PorcDescuento",
+    "Description": "% Descto"
+  },
+  {
+    "Id": "NotasDetalles.PorcImpuesto",
+    "Description": "% Impuesto"
+  },
+  {
+    "Id": "NotasDetalles.ServiciosId",
+    "Description": "Servicio"
+  },
+  {
+    "Id": "NotasDetalles.SubTotal",
+    "Description": "SubTotal"
+  },
+  {
+    "Id": "NotasDetalles.ValorServicio",
+    "Description": "VlrUnitario"
+  },
+  {
+    "Id": "NotasDetalles.ValorTotal",
+    "Description": "Total"
+  },
+  {
+    "Id": "OrdenesMedicamentos",
+    "Description": "Ordenes de Medicamentos"
+  },
+  {
+    "Id": "OrdenesMedicamentos.Fecha",
+    "Description": "Fecha"
+  },
+  {
+    "Id": "OrdenesMedicamentos.FechaVencimiento",
+    "Description": "Fecha de Vencimiento"
+  },
+  {
+    "Id": "OrdenesMedicamentos.HIstoriasClinicasId",
+    "Description": "Historia Clinica"
+  },
+  {
+    "Id": "OrdenesMedicamentos.NroOrden",
+    "Description": "Nro. Orden"
+  },
+  {
+    "Id": "OrdenesMedicamentos.PacientesId",
+    "Description": "Paciente"
+  },
+  {
+    "Id": "OrdenesMedicamentos.ProfesionalId",
+    "Description": "Profesional"
+  },
+  {
+    "Id": "OrdenesMedicamentosDetalles",
+    "Description": "Detalles"
+  },
+  {
+    "Id": "OrdenesMedicamentosDetalles.Cantidad",
+    "Description": "Cantidad"
+  },
+  {
+    "Id": "OrdenesMedicamentosDetalles.DiasTratamiento",
+    "Description": "Dias Tratamiento"
+  },
+  {
+    "Id": "OrdenesMedicamentosDetalles.Dosis",
+    "Description": "Dosis"
+  },
+  {
+    "Id": "OrdenesMedicamentosDetalles.Frecuencia",
+    "Description": "Frecuencia"
+  },
+  {
+    "Id": "OrdenesMedicamentosDetalles.MedicamentosId",
+    "Description": "Medicamento"
+  },
+  {
+    "Id": "OrdenesMedicamentosDetalles.Observaciones",
+    "Description": "Observaciones"
+  },
+  {
+    "Id": "OrdenesMedicamentosDetalles.Recomendaciones",
+    "Description": "Recomendaciones"
+  },
+  {
+    "Id": "OrdenesMedicamentosDiagnosticos",
+    "Description": "Diagnosticos"
+  },
+  {
+    "Id": "OrdenesMedicamentosDiagnosticos.DiagnosticosId",
+    "Description": "Diagnóstico"
+  },
+  {
+    "Id": "OrdenesMedicamentosDiagnosticos.Principal",
+    "Description": "¿Es Principal?"
+  },
+  {
+    "Id": "OrdenesMedicamentosDiagnosticos.TiposDiagnosticosId",
+    "Description": "Tipos de diagnostico"
+  },
+  {
+    "Id": "OrdenesServicios",
+    "Description": "Ordenes de Servicios"
+  },
+  {
+    "Id": "OrdenesServicios.Fecha",
+    "Description": "Fecha"
+  },
+  {
+    "Id": "OrdenesServicios.FechaVencimiento",
+    "Description": "Fecha de Vencimiento"
+  },
+  {
+    "Id": "OrdenesServicios.HIstoriasClinicasId",
+    "Description": "Historias Clinicas"
+  },
+  {
+    "Id": "OrdenesServicios.NroOrden",
+    "Description": "Nro. Orden"
+  },
+  {
+    "Id": "OrdenesServicios.PacientesId",
+    "Description": "Paciente"
+  },
+  {
+    "Id": "OrdenesServicios.ProfesionalId",
+    "Description": "Profesional"
+  },
+  {
+    "Id": "OrdenesServiciosDetalles",
+    "Description": "Detalles"
+  },
+  {
+    "Id": "OrdenesServiciosDetalles.Cantidad",
+    "Description": "Cantidad"
+  },
+  {
+    "Id": "OrdenesServiciosDetalles.CupsId",
+    "Description": "Cups"
+  },
+  {
+    "Id": "OrdenesServiciosDetalles.Observaciones",
+    "Description": "Observaciones"
+  },
+  {
+    "Id": "OrdenesServiciosDetalles.Recomendaciones",
+    "Description": "Recomendaciones"
+  },
+  {
+    "Id": "OrdenesServiciosDiagnosticos",
+    "Description": "Diagnosticos"
+  },
+  {
+    "Id": "OrdenesServiciosDiagnosticos.DiagnosticosId",
+    "Description": "Diagnóstico"
+  },
+  {
+    "Id": "OrdenesServiciosDiagnosticos.Principal",
+    "Description": "¿Es Principal?"
+  },
+  {
+    "Id": "OrdenesServiciosDiagnosticos.TiposDiagnosticosId",
+    "Description": "Tipos de diagnostico"
+  },
+  {
+    "Id": "Pacientes",
+    "Description": "Pacientes"
+  },
+  {
+    "Id": "Pacientes.BuscarPacientePorCedula",
+    "Description": "Buscar Paciente"
+  },
+  {
+    "Id": "Pacientes.CategoriasIngresosId",
+    "Description": "Rango"
+  },
+  {
+    "Id": "Pacientes.CiudadesId",
+    "Description": "Ciudad"
+  },
+  {
+    "Id": "Pacientes.CorreoElectronico",
+    "Description": "Correo electronico"
+  },
+  {
+    "Id": "Pacientes.DepartamentosId",
+    "Description": "Departamento"
+  },
+  {
+    "Id": "Pacientes.Direccion",
+    "Description": "Dirección"
+  },
+  {
+    "Id": "Pacientes.EstadosCivilesId",
+    "Description": "Estado Civil"
+  },
+  {
+    "Id": "Pacientes.FechaNacimiento",
+    "Description": "Fecha de Nacimiento"
+  },
+  {
+    "Id": "Pacientes.GenerosId",
+    "Description": "Genero"
+  },
+  {
+    "Id": "Pacientes.NombreCompleto",
+    "Description": "Paciente"
+  },
+  {
+    "Id": "Pacientes.NumeroIdentificacion",
+    "Description": "Numero de Identificación"
+  },
+  {
+    "Id": "Pacientes.Observaciones",
+    "Description": "Observaciones"
+  },
+  {
+    "Id": "Pacientes.PaisesId",
+    "Description": "Pais"
+  },
+  {
+    "Id": "Pacientes.PrimerApellido",
+    "Description": "Primer Apellido"
+  },
+  {
+    "Id": "Pacientes.PrimerNombre",
+    "Description": "Primer Nombre"
+  },
+  {
+    "Id": "Pacientes.SedesId",
+    "Description": "Sede"
+  },
+  {
+    "Id": "Pacientes.SegundoApellido",
+    "Description": "Segundo Apellido"
+  },
+  {
+    "Id": "Pacientes.SegundoNombre",
+    "Description": "Segundo Nombre"
+  },
+  {
+    "Id": "Pacientes.Telefono",
+    "Description": "Telefono"
+  },
+  {
+    "Id": "Pacientes.TipoIdentificacionMayorEdad",
+    "Description": "El tipo de identificación es incorrecto para una persona mayor de edad."
+  },
+  {
+    "Id": "Pacientes.TipoIdentificacionMenorEdad",
+    "Description": "El tipo de identificación es incorrecto para una persona menor de edad."
+  },
+  {
+    "Id": "Pacientes.TiposAfiliadosId",
+    "Description": "Afiliado"
+  },
+  {
+    "Id": "Pacientes.TiposIdentificacionId",
+    "Description": "Tipo de Identificación"
+  },
+  {
+    "Id": "Pacientes.TiposRegimenesId",
+    "Description": "Regimen"
+  },
+  {
+    "Id": "Pacientes.TiposSangreId",
+    "Description": "Tipo de Sangre"
+  },
+  {
+    "Id": "Pacientes.YAEXISTEENTIDADEPS",
+    "Description": "El paciente ya tiene una EPS asociada: "
+  },
+  {
+    "Id": "PacientesEntidades",
+    "Description": "Entidades"
+  },
+  {
+    "Id": "PacientesEntidades.EntidadesId",
+    "Description": "Entidad"
+  },
+  {
+    "Id": "Pais",
+    "Description": "País"
+  },
+  {
+    "Id": "Paises",
+    "Description": "Países"
+  },
+  {
+    "Id": "Paises.Codigo",
+    "Description": "Código"
+  },
+  {
+    "Id": "Paises.Nombre",
+    "Description": "Pais"
+  },
+  {
+    "Id": "ParametrosGenerales",
+    "Description": "Parametros Generales"
+  },
+  {
+    "Id": "ParametrosGenerales.AnularAtenciones",
+    "Description": "Cambiar Estado - Anulada en atencion"
+  },
+  {
+    "Id": "ParametrosGenerales.Atenciones",
+    "Description": "Atenciones"
+  },
+  {
+    "Id": "ParametrosGenerales.CambiarEstados",
+    "Description": "Cambiar Estado"
+  },
+  {
+    "Id": "ParametrosGenerales.ConsecutivoAdmision",
+    "Description": "Consecutivo Admisión"
+  },
+  {
+    "Id": "ParametrosGenerales.ConsecutivoCita",
+    "Description": "Consecutivo Cita"
+  },
+  {
+    "Id": "ParametrosGenerales.DetalleAnulacion",
+    "Description": "Motivo de anulación"
+  },
+  {
+    "Id": "ParametrosGenerales.FechaDesdeAtenciones",
+    "Description": "Fecha Desde"
+  },
+  {
+    "Id": "ParametrosGenerales.FechaHastaAtenciones",
+    "Description": "Fecha Hasta"
+  },
+  {
+    "Id": "ParametrosGenerales.HabilitarAnteciones",
+    "Description": "Habilitar"
+  },
+  {
+    "Id": "ParametrosGenerales.TextoAyudaCambiarEstadosAnteciones",
+    "Description": "Esta función cambiara el estado de la cita, admisión y atención de \"Atendida\" a \"Anulada en Atencion\". "
+  },
+  {
+    "Id": "Parentescos.Descripcion",
+    "Description": "Descripción"
+  },
+  {
+    "Id": "Pendientes",
+    "Description": "Pendientes"
+  },
+  {
+    "Id": "Personas.EstadosCivilesId",
+    "Description": "Estado Civil"
+  },
+  {
+    "Id": "Personas.FechaNacimiento",
+    "Description": "Fecha de Nacimiento"
+  },
+  {
+    "Id": "Personas.GenerosId",
+    "Description": "Género"
+  },
+  {
+    "Id": "Personas.NumeroIdentificacion",
+    "Description": "Número de Identificación"
+  },
+  {
+    "Id": "Personas.PrimerApellido",
+    "Description": "Primer Apellido"
+  },
+  {
+    "Id": "Personas.PrimerNombre",
+    "Description": "Primer Nombre"
+  },
+  {
+    "Id": "Personas.SegundoApellido",
+    "Description": "Segundo Apellido"
+  },
+  {
+    "Id": "Personas.SegundoNombre",
+    "Description": "Segundo Nombre"
+  },
+  {
+    "Id": "Personas.TiposIdentificacionId",
+    "Description": "Tipo de Identificación"
+  },
+  {
+    "Id": "Personas.TiposSangreId",
+    "Description": "Grupo Sanguineo"
+  },
+  {
+    "Id": "PreciosServicios",
+    "Description": "Servicios"
+  },
+  {
+    "Id": "PreciosServicios.Cargue",
+    "Description": "Cargue"
+  },
+  {
+    "Id": "PreciosServicios.Plantilla",
+    "Description": "Plantilla"
+  },
+  {
+    "Id": "PreciosServicios.Precio",
+    "Description": "Precio Plantilla"
+  },
+  {
+    "Id": "PreciosServicios.ServiciosId",
+    "Description": "Servicio"
+  },
+  {
+    "Id": "Profesiones.Nombre",
+    "Description": "Nombre"
+  },
+  {
+    "Id": "Profile",
+    "Description": "Perfiles"
+  },
+  {
+    "Id": "ProfileNavigation",
+    "Description": "Permisos"
+  },
+  {
+    "Id": "ProfileNavigation.HavePermision",
+    "Description": "¿Contraresta politica?"
+  },
+  {
+    "Id": "ProfileNavigation.Module",
+    "Description": "Modulo"
+  },
+  {
+    "Id": "ProfileNavigation.ResourceKeyMaster",
+    "Description": "Opción"
+  },
+  {
+    "Id": "ProfileNavigation.ResourceKeyMethod",
+    "Description": "Acción"
+  },
+  {
+    "Id": "Profiles",
+    "Description": "Perfiles"
+  },
+  {
+    "Id": "Profiles.Description",
+    "Description": "Descripción"
+  },
+  {
+    "Id": "Profiles.IsActive",
+    "Description": "¿Activo?"
+  },
+  {
+    "Id": "Profiles.SecurityPolicy",
+    "Description": "Politica"
+  },
+  {
+    "Id": "ProfileUsers.UserId",
+    "Description": "Nombres del usuario"
+  },
+  {
+    "Id": "ProgramacionAgenda.Consecutivo",
+    "Description": "Consecutivo"
+  },
+  {
+    "Id": "ProgramacionAgenda.DiasSemana",
+    "Description": "Dias de la semana"
+  },
+  {
+    "Id": "ProgramacionAgenda.Domingo",
+    "Description": "Domingo"
+  },
+  {
+    "Id": "ProgramacionAgenda.ErrorFechaInicialMayorFechaFinal",
+    "Description": "Fecha inicial no puede se mayor que la fecha final."
+  },
+  {
+    "Id": "ProgramacionAgenda.FechaFinal",
+    "Description": "Fecha Final"
+  },
+  {
+    "Id": "ProgramacionAgenda.FechaInicio",
+    "Description": "Fecha Inicio"
+  },
+  {
+    "Id": "ProgramacionAgenda.InfoGeneral",
+    "Description": "Información General"
+  },
+  {
+    "Id": "ProgramacionAgenda.InfoSeleccion",
+    "Description": "Informacion de selección"
+  },
+  {
+    "Id": "ProgramacionAgenda.Jueves",
+    "Description": "Jueves"
+  },
+  {
+    "Id": "ProgramacionAgenda.Lunes",
+    "Description": "Lunes"
+  },
+  {
+    "Id": "ProgramacionAgenda.Martes",
+    "Description": "Martes"
+  },
+  {
+    "Id": "ProgramacionAgenda.Miercoles",
+    "Description": "Miercoles"
+  },
+  {
+    "Id": "ProgramacionAgenda.Observaciones",
+    "Description": "Observaciones"
+  },
+  {
+    "Id": "ProgramacionAgenda.Sabado",
+    "Description": "Sabado"
+  },
+  {
+    "Id": "ProgramacionAgenda.Viernes",
+    "Description": "Viernes"
+  },
+  {
+    "Id": "ProgramacionCitas",
+    "Description": "Programación de citas"
+  },
+  {
+    "Id": "ProgramacionCitas.AdmisionFecha",
+    "Description": "Fecha Admisión"
+  },
+  {
+    "Id": "ProgramacionCitas.AdmisionHora",
+    "Description": "Hora Admisión"
+  },
+  {
+    "Id": "ProgramacionCitas.Agenda",
+    "Description": "Agenda"
+  },
+  {
+    "Id": "ProgramacionCitas.CancelarCita",
+    "Description": "Cancelar"
+  },
+  {
+    "Id": "ProgramacionCitas.Cantidad",
+    "Description": "Cantidad"
+  },
+  {
+    "Id": "ProgramacionCitas.CitaFecha",
+    "Description": "Fecha Cita"
+  },
+  {
+    "Id": "ProgramacionCitas.CitaHora",
+    "Description": "Hora Cita"
+  },
+  {
+    "Id": "ProgramacionCitas.Consecutivo",
+    "Description": "Consecutivo"
+  },
+  {
+    "Id": "ProgramacionCitas.ConsultoriosId",
+    "Description": "Consultorio"
+  },
+  {
+    "Id": "ProgramacionCitas.ConveniosId",
+    "Description": "Convenio"
+  },
+  {
+    "Id": "ProgramacionCitas.DescargarXLSX0256",
+    "Description": "Descargar 0256"
+  },
+  {
+    "Id": "ProgramacionCitas.Duracion",
+    "Description": "Duración"
+  },
+  {
+    "Id": "ProgramacionCitas.EmpleadosId",
+    "Description": "Empleado"
+  },
+  {
+    "Id": "ProgramacionCitas.EntidadesId",
+    "Description": "Entidad"
+  },
+  {
+    "Id": "ProgramacionCitas.EspecialidadesId",
+    "Description": "Especialidad"
+  },
+  {
+    "Id": "ProgramacionCitas.EstadosId",
+    "Description": "Estado"
+  },
+  {
+    "Id": "ProgramacionCitas.EstadosIdTipoDuracion",
+    "Description": "Tipo Duración"
+  },
+  {
+    "Id": "ProgramacionCitas.FechaAsignacion",
+    "Description": "Fecha Asignación"
+  },
+  {
+    "Id": "ProgramacionCitas.FechaFinal",
+    "Description": "Fecha final"
+  },
+  {
+    "Id": "ProgramacionCitas.FechaInicio",
+    "Description": "Fecha Inicio"
+  },
+  {
+    "Id": "ProgramacionCitas.HoraFinal",
+    "Description": "Hora Final"
+  },
+  {
+    "Id": "ProgramacionCitas.HoraInicio",
+    "Description": "Hora Inicio"
+  },
+  {
+    "Id": "ProgramacionCitas.MotivoCancelacion",
+    "Description": "Motivo de Cancelación"
+  },
+  {
+    "Id": "ProgramacionCitas.MotivoReprogramacion",
+    "Description": "Motivo de Reprogramación"
+  },
+  {
+    "Id": "ProgramacionCitas.Observaciones",
+    "Description": "Observaciones"
+  },
+  {
+    "Id": "ProgramacionCitas.Pacientes",
+    "Description": "Paciente"
+  },
+  {
+    "Id": "ProgramacionCitas.PacientesId",
+    "Description": "Nombres y Apellidos del Paciente"
+  },
+  {
+    "Id": "ProgramacionCitas.Preparacion",
+    "Description": "Preparación"
+  },
+  {
+    "Id": "ProgramacionCitas.ReporteFechaDesde",
+    "Description": "Fecha desde"
+  },
+  {
+    "Id": "ProgramacionCitas.ReporteFechaHasta",
+    "Description": "Fecha hasta"
+  },
+  {
+    "Id": "ProgramacionCitas.ReporteSedeId",
+    "Description": "Sede"
+  },
+  {
+    "Id": "ProgramacionCitas.ReprogramarCita",
+    "Description": "Reprogramar"
+  },
+  {
+    "Id": "ProgramacionCitas.SedesId",
+    "Description": "Sede"
+  },
+  {
+    "Id": "ProgramacionCitas.ServiciosId",
+    "Description": "Servicio"
+  },
+  {
+    "Id": "ProgramacionCitas.TarifaConvenio",
+    "Description": "Tarifa Convenio"
+  },
+  {
+    "Id": "ProgramacionCitas.TarifaPlena",
+    "Description": "Tarifa Plena"
+  },
+  {
+    "Id": "ProgramacionCitas.TiposCitasId",
+    "Description": "Tipo"
+  },
+  {
+    "Id": "ProgramacionCitas.VerAgenda",
+    "Description": "Agenda"
+  },
+  {
+    "Id": "Radicacion",
+    "Description": "Radicación"
+  },
+  {
+    "Id": "RadicacionCuentas",
+    "Description": "Radicacion de cuentas"
+  },
+  {
+    "Id": "RadicacionCuentas.EmpresasId",
+    "Description": "Empresa"
+  },
+  {
+    "Id": "RadicacionCuentas.EntidadesId",
+    "Description": "Entidad"
+  },
+  {
+    "Id": "RadicacionCuentas.FechaRadicacion",
+    "Description": "Fecha Radicación"
+  },
+  {
+    "Id": "RadicacionCuentas.RadicacionArchivos",
+    "Description": "Constancia"
+  },
+  {
+    "Id": "RadicacionCuentas.SedesId",
+    "Description": "Sede"
+  },
+  {
+    "Id": "RadicacionCuentasDetalles",
+    "Description": "Detalle Recaudo"
+  },
+  {
+    "Id": "RadicacionCuentasDetalles.FacurasId",
+    "Description": "Factura"
+  },
+  {
+    "Id": "RangoEdad",
+    "Description": "Rangos de edad"
+  },
+  {
+    "Id": "RangoEdad.Nombre",
+    "Description": "Rango de edad"
+  },
+  {
+    "Id": "Recaudos.BancosId",
+    "Description": "Banco"
+  },
+  {
+    "Id": "Recaudos.CiclosCajasId",
+    "Description": "Caja"
+  },
+  {
+    "Id": "Recaudos.EmpresasId",
+    "Description": "Empresa"
+  },
+  {
+    "Id": "Recaudos.EntidadesId",
+    "Description": "Entidad"
+  },
+  {
+    "Id": "Recaudos.FechaConsignacion",
+    "Description": "Fecha Consignación"
+  },
+  {
+    "Id": "Recaudos.FechaRecaudo",
+    "Description": "Fecha Recaudo"
+  },
+  {
+    "Id": "Recaudos.InformacionCliente",
+    "Description": "Información del cliente"
+  },
+  {
+    "Id": "Recaudos.InformacionMedioPago",
+    "Description": "Información del medio de pago"
+  },
+  {
+    "Id": "Recaudos.InformacionTransaccion",
+    "Description": "Información de la Transacción"
+  },
+  {
+    "Id": "Recaudos.MediosPagoId",
+    "Description": "Medio Pago"
+  },
+  {
+    "Id": "Recaudos.NroAutorizacion",
+    "Description": "Nro Autorización"
+  },
+  {
+    "Id": "Recaudos.NroCheque",
+    "Description": "Nro Cheque"
+  },
+  {
+    "Id": "Recaudos.NroCuentaTarjeta",
+    "Description": "Nro Tarjeta"
+  },
+  {
+    "Id": "Recaudos.PacientesId",
+    "Description": "Paciente"
+  },
+  {
+    "Id": "Recaudos.Referencia",
+    "Description": "Referencia"
+  },
+  {
+    "Id": "Recaudos.SedesId",
+    "Description": "Sede"
+  },
+  {
+    "Id": "Recaudos.ValorTotalRecibido",
+    "Description": "Valor Pagado"
+  },
+  {
+    "Id": "RecaudosDetalles",
+    "Description": "Detalle"
+  },
+  {
+    "Id": "RecaudosDetalles.FacturasId",
+    "Description": "Factura"
+  },
+  {
+    "Id": "RecaudosDetalles.ValorAplicado",
+    "Description": "Valor Aplicado"
+  },
+  {
+    "Id": "RecaudosDetalles.ValorReteIca",
+    "Description": "Valor Retención ICA"
+  },
+  {
+    "Id": "RecaudosDetalles.ValorRetencion",
+    "Description": "Retención"
+  },
+  {
+    "Id": "RIPS",
+    "Description": "RIPS"
+  },
+  {
+    "Id": "Rips.Consecutivo",
+    "Description": "Consecutivo"
+  },
+  {
+    "Id": "Rips.EntidadesId",
+    "Description": "Entidad"
+  },
+  {
+    "Id": "Rips.FacturasId",
+    "Description": "Factura"
+  },
+  {
+    "Id": "Rips.FechaRemision",
+    "Description": "Fecha de Remisión"
+  },
+  {
+    "Id": "Rips.GenararCT",
+    "Description": "Genarar CT"
+  },
+  {
+    "Id": "Rips.GenerarAC",
+    "Description": "Genarar AC"
+  },
+  {
+    "Id": "Rips.GenerarAF",
+    "Description": "Genarar AF"
+  },
+  {
+    "Id": "Rips.GenerarAP",
+    "Description": "Genarar AP"
+  },
+  {
+    "Id": "Rips.GenerarArchivos",
+    "Description": "Generar Archivos"
+  },
+  {
+    "Id": "Rips.GenerarUS",
+    "Description": "Genarar US"
+  },
+  {
+    "Id": "Rips.Periodo",
+    "Description": "Período"
+  },
+  {
+    "Id": "Sedes",
+    "Description": "Sedes"
+  },
+  {
+    "Id": "Sedes.Ciudad",
+    "Description": "Ciudad"
+  },
+  {
+    "Id": "Sedes.CiudadesId",
+    "Description": "Ciudad"
+  },
+  {
+    "Id": "Sedes.Codigo",
+    "Description": "Codigo"
+  },
+  {
+    "Id": "Sedes.CodigoPostal",
+    "Description": "Código Postal"
+  },
+  {
+    "Id": "Sedes.CorreoElectronico",
+    "Description": "Correo Electronico"
+  },
+  {
+    "Id": "Sedes.Departamentos",
+    "Description": "Departamento"
+  },
+  {
+    "Id": "Sedes.Direccion",
+    "Description": "Dirección"
+  },
+  {
+    "Id": "Sedes.EstadosId",
+    "Description": "Estado"
+  },
+  {
+    "Id": "Sedes.Fax",
+    "Description": "Telefono"
+  },
+  {
+    "Id": "Sedes.Nombre",
+    "Description": "Sede"
+  },
+  {
+    "Id": "Sedes.NroMatriculaMercantil",
+    "Description": "Numero de Matricula Mercantil"
+  },
+  {
+    "Id": "Sedes.PaginaWeb",
+    "Description": "Pagina Web"
+  },
+  {
+    "Id": "Sedes.Paises",
+    "Description": "Pais"
+  },
+  {
+    "Id": "SedesDocumentos",
+    "Description": "Sedes"
+  },
+  {
+    "Id": "SedesDocumentos.SedesId",
+    "Description": "Sede"
+  },
+  {
+    "Id": "Servicios",
+    "Description": "Servicios"
+  },
+  {
+    "Id": "Servicios.AgenteRetencionIva",
+    "Description": "¿Es Agente retenedor de iva?"
+  },
+  {
+    "Id": "Servicios.Autorretenedor",
+    "Description": "¿Es autorretenedor?"
+  },
+  {
+    "Id": "Servicios.CategoriasServiciosId",
+    "Description": "Categoria"
+  },
+  {
+    "Id": "Servicios.Codigo",
+    "Description": "Código"
+  },
+  {
+    "Id": "Servicios.CodigoInterno",
+    "Description": "Código Interno"
+  },
+  {
+    "Id": "Servicios.CupsId",
+    "Description": "CUPS"
+  },
+  {
+    "Id": "Servicios.Duracion",
+    "Description": "Duración"
+  },
+  {
+    "Id": "Servicios.EspecialidadesId",
+    "Description": "Especialidad"
+  },
+  {
+    "Id": "Servicios.EsQuirurgico",
+    "Description": "¿Es Quirurgico?"
+  },
+  {
+    "Id": "Servicios.EstadosId",
+    "Description": "Estado"
+  },
+  {
+    "Id": "Servicios.EstadosIdTipoDuracion",
+    "Description": "Tipo Duración"
+  },
+  {
+    "Id": "Servicios.GranContribuyente",
+    "Description": "¿Es gran contribuyente?"
+  },
+  {
+    "Id": "Servicios.Nombre",
+    "Description": "Servicio"
+  },
+  {
+    "Id": "Servicios.Preparacion",
+    "Description": "Preparación"
+  },
+  {
+    "Id": "Servicios.RecaudaImpoConsumo",
+    "Description": "¿Recauda impo-consumo?"
+  },
+  {
+    "Id": "Servicios.RecaudaImpoConsumoBolsas",
+    "Description": "¿Recauda impo-consumo de bolsas?"
+  },
+  {
+    "Id": "Servicios.RecaudaIva",
+    "Description": "¿Recauda iva?"
+  },
+  {
+    "Id": "Servicios.RegimenSimple",
+    "Description": "¿Es de regimen simple?"
+  },
+  {
+    "Id": "Servicios.RequiereLecturaResultados",
+    "Description": "Requiere lectura de resultados"
+  },
+  {
+    "Id": "Servicios.RequiereProfesional",
+    "Description": "Requiere Profesional"
+  },
+  {
+    "Id": "Servicios.TarifaPlena",
+    "Description": "Tarifa plena"
+  },
+  {
+    "Id": "Servicios.TiposServiciosId",
+    "Description": "Tipo"
+  },
+  {
+    "Id": "ServiciosConsultorios",
+    "Description": "Servicios"
+  },
+  {
+    "Id": "ServiciosConsultorios.ServiciosId",
+    "Description": "Servicio"
+  },
+  {
+    "Id": "ServiciosEmpleados",
+    "Description": "Servicios"
+  },
+  {
+    "Id": "ServiciosFacturar.AdmisionesId",
+    "Description": "No. Admisión"
+  },
+  {
+    "Id": "ServiciosFacturar.Cantidad",
+    "Description": "Cantidad"
+  },
+  {
+    "Id": "ServiciosFacturar.ConvenioCodigo",
+    "Description": "Convenio"
+  },
+  {
+    "Id": "ServiciosFacturar.ConvenioFechaInicio",
+    "Description": "Inicio"
+  },
+  {
+    "Id": "ServiciosFacturar.ConvenioFechaTerminacion",
+    "Description": "Terminación"
+  },
+  {
+    "Id": "ServiciosFacturar.ConveniosEstadosNombre",
+    "Description": "Estado"
+  },
+  {
+    "Id": "ServiciosFacturar.EmpresasRazonSocial",
+    "Description": "Empresa"
+  },
+  {
+    "Id": "ServiciosFacturar.EntidadesNombre",
+    "Description": "Entidad"
+  },
+  {
+    "Id": "ServiciosFacturar.Facturado",
+    "Description": "Facturado?"
+  },
+  {
+    "Id": "ServiciosFacturar.FechaAtencion",
+    "Description": "Fecha Atención"
+  },
+  {
+    "Id": "ServiciosFacturar.PacienteNumeroIdentificacion",
+    "Description": "Número Identificación"
+  },
+  {
+    "Id": "ServiciosFacturar.PacientesNombres",
+    "Description": "Paciente"
+  },
+  {
+    "Id": "ServiciosFacturar.SedesNombre",
+    "Description": "Sede"
+  },
+  {
+    "Id": "ServiciosFacturar.ServiciosCup",
+    "Description": "CUP"
+  },
+  {
+    "Id": "ServiciosFacturar.ServiciosId",
+    "Description": "Servicio"
+  },
+  {
+    "Id": "ServiciosFacturar.ServiciosNombre",
+    "Description": "Servicio"
+  },
+  {
+    "Id": "ServiciosFacturar.ValorCopagoCuotaModeradora",
+    "Description": "COP/MOD/REC/COM"
+  },
+  {
+    "Id": "ServiciosFacturar.ValorDescuento",
+    "Description": "Desc"
+  },
+  {
+    "Id": "ServiciosFacturar.ValorImpuesto",
+    "Description": "Imp"
+  },
+  {
+    "Id": "ServiciosFacturar.ValorServicio",
+    "Description": "Valor"
+  },
+  {
+    "Id": "ServiciosSedes",
+    "Description": "Sedes"
+  },
+  {
+    "Id": "ServiciosSedes.EstadosId",
+    "Description": "Estado"
+  },
+  {
+    "Id": "ServiciosSedes.SedesId",
+    "Description": "Sede"
+  },
+  {
+    "Id": "TiposAfiliados",
+    "Description": "Tipos de afiliados"
+  },
+  {
+    "Id": "TiposAfiliados.Codigo",
+    "Description": "Código"
+  },
+  {
+    "Id": "TiposAfiliados.Nombre",
+    "Description": "Tipo de afiliado"
+  },
+  {
+    "Id": "TiposAtencion",
+    "Description": "Tipos de atención"
+  },
+  {
+    "Id": "TiposAtencion.Nombre",
+    "Description": "Nombre"
+  },
+  {
+    "Id": "TiposCitas.Nombre",
+    "Description": "Cita"
+  },
+  {
+    "Id": "TiposContratos",
+    "Description": "Tipos de contratos"
+  },
+  {
+    "Id": "TiposContratos.Nombre",
+    "Description": "Nombre"
+  },
+  {
+    "Id": "TiposDiagnosticos",
+    "Description": "Tipos de diagnósticos"
+  },
+  {
+    "Id": "TiposDiagnosticos.Nombre",
+    "Description": "Nombre"
+  },
+  {
+    "Id": "TiposDocumentos",
+    "Description": "Tipos de documentos"
+  },
+  {
+    "Id": "TiposDocumentos.Nombre",
+    "Description": "Nombre"
+  },
+  {
+    "Id": "TiposIdentificacion",
+    "Description": "Tipos de identificación"
+  },
+  {
+    "Id": "TiposIdentificacion.Codigo",
+    "Description": "Código"
+  },
+  {
+    "Id": "TiposIdentificacion.Nombre",
+    "Description": "Nombre"
+  },
+  {
+    "Id": "TiposRegimenes",
+    "Description": "Tipos de regímenes"
+  },
+  {
+    "Id": "TiposRegimenes.Codigo",
+    "Description": "Código"
+  },
+  {
+    "Id": "TiposRegimenes.CodigoRips",
+    "Description": "Codigo RIPS"
+  },
+  {
+    "Id": "TiposRegimenes.Nombre",
+    "Description": "Regimen"
+  },
+  {
+    "Id": "TiposSangre",
+    "Description": "Tipos de sangre"
+  },
+  {
+    "Id": "TiposSangre.Nombre",
+    "Description": "Grupo sanguíneo"
+  },
+  {
+    "Id": "TiposSangre.RH",
+    "Description": "Factor RH"
+  },
+  {
+    "Id": "TiposServicios",
+    "Description": "Tipos de servicios"
+  },
+  {
+    "Id": "TiposServicios.Nombre",
+    "Description": "Nombre"
+  },
+  {
+    "Id": "UpdatedBy",
+    "Description": "Actualizado por"
+  },
+  {
+    "Id": "Users",
+    "Description": "Usuarios"
+  },
+  {
+    "Id": "Users.Email",
+    "Description": "Correo electronico"
+  },
+  {
+    "Id": "Users.GenderId",
+    "Description": "Genero"
+  },
+  {
+    "Id": "Users.IdentificationNumber",
+    "Description": "Numero de identificación"
+  },
+  {
+    "Id": "Users.IdentificationTypeId",
+    "Description": "Tipo de identificación"
+  },
+  {
+    "Id": "Users.IsActive",
+    "Description": "¿Activo?"
+  },
+  {
+    "Id": "Users.LastNames",
+    "Description": "Apellidos"
+  },
+  {
+    "Id": "Users.Names",
+    "Description": "Nombres"
+  },
+  {
+    "Id": "Users.Password",
+    "Description": "Contraseña"
+  },
+  {
+    "Id": "Users.UserName",
+    "Description": "Usuario"
+  },
+  {
+    "Id": "Ventas",
+    "Description": "Ventas"
+  },
+  {
+    "Id": "VisorDicom",
+    "Description": "Visor DICOM"
+  }
+]

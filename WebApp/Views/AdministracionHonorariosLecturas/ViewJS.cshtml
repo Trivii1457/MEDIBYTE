@@ -1,0 +1,75 @@
+@model AdministracionHonorariosLecturasModel 
+@{
+    string Prefix = "AdministracionHonorariosLecturas"; 
+}
+
+<script>
+
+    function @(Prefix)OnValueChangedTipoPagoLecturaEstadosId(e)
+    {
+        if (e.value == 77) {
+            $("#@(Prefix)ValorHonorarioLectura").dxNumberBox("instance").option("max", 50000000);
+        } else {
+            $("#@(Prefix)ValorHonorarioLectura").dxNumberBox("instance").option("max", 100);
+        }
+    }
+
+    function @(Prefix)OnValueChangedServiciosId(e)
+    {
+        if (e.value == 0 || e.value == "" || e.value == null) {
+            $("#@(Prefix)TipoPagoLecturaEstadosId").dxSelectBox("instance").option("readOnly", true);
+            $("#@(Prefix)ValorHonorarioLectura").dxNumberBox("instance").option("readOnly", true);
+            $("#@(Prefix)TipoPagoLecturaEstadosId").dxSelectBox("instance").option("value", null);
+            $("#@(Prefix)ValorHonorarioLectura").dxNumberBox("instance").option("value", null);
+
+        } else {
+            $("#@(Prefix)TipoPagoLecturaEstadosId").dxSelectBox("instance").option("readOnly", false);
+            $("#@(Prefix)ValorHonorarioLectura").dxNumberBox("instance").option("readOnly", false);
+
+        }
+    }
+
+    function @(Prefix)FormSuccess(data)
+    {
+        hideLoadIndicator();
+        if ('@ViewData.ModelState.IsValid' == 'True')
+        {
+            if ("@ViewBag.Accion" == "Delete") {
+                DevExpress.ui.notify("Registro eliminado correctamente.","info");
+            } else if ("@ViewBag.Accion" == "Save") {
+                DevExpress.ui.notify("Registro guardado correctamente.","info");
+            } else {
+                DevExpress.ui.notify("Error no accion en submit.","info");
+            }
+        }
+    }
+
+    function @(Prefix)FormFailure(data)
+    {
+        hideLoadIndicator();
+        DevExpress.ui.notify("Error en el formulario","error");
+    }
+
+    function @(Prefix)FormSuccessDetail(data)
+    {
+        hideLoadIndicator();
+        if ('@ViewData.ModelState.IsValid' == 'True')
+        {
+            $("#AdministracionHonorariosLecturasDetalleDataGrid").dxDataGrid("instance").refresh();
+            if ("@ViewBag.Accion" == "Delete") {
+                DevExpress.ui.notify("Registro eliminado correctamente.","info");
+            } else if ("@ViewBag.Accion" == "Save") {
+                DevExpress.ui.notify("Registro guardado correctamente.","info");
+            } else {
+                DevExpress.ui.notify("Error no accion en submit.","info");
+            }
+        }
+    }
+
+    function @(Prefix)FormFailureDetail(data)
+    {
+        hideLoadIndicator();
+        DevExpress.ui.notify("Error en el formulario","error");
+    }
+
+</script>

@@ -1,0 +1,30 @@
+@{ 
+    string Prefix = "Rips";
+    string UrlClick = Url.Action("Edit", "Rips");
+    string UrlNew = Url.Action("New", "Rips");
+
+    var DataGridConfig = new DataGridConfiguration<Rips>(Prefix)
+        .OnClick(UrlClick, new { Id = "Id" })
+        .New(UrlNew,DApp.ActionViewSecurity(Context,UrlNew))
+        .Exports(true,true).SetStorage()
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("Rips"), "mainPanel");
+} 
+
+<div class="box-body table-responsive no-padding"> 
+@(Html.DControls().DataGridSimple<Rips>(DataGridConfig)
+    .ID("RipsDataGrid")
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Rips").LoadAction("Get").Key("Id"))
+    .Columns(columns =>
+    {
+        columns.AddFor(m => m.Consecutivo);
+        columns.AddFor(m => m.Periodo).Format(Format.MonthAndYear).HeaderFilter(x => x.AllowSearch(false)).AllowFiltering(false).AllowHeaderFiltering(false);
+        columns.AddFor(m => m.FechaRemision);
+        columns.AddFor(m => m.Entidades.Alias);
+        columns.AddFor(m => m.GenararCT);
+        columns.AddFor(m => m.GenerarAF);
+        columns.AddFor(m => m.GenerarUS);
+        columns.AddFor(m => m.GenerarAC);
+        columns.AddFor(m => m.GenerarAP);
+    })
+) 
+</div> 

@@ -1,0 +1,37 @@
+@model DevExpress.XtraReports.UI.XtraReport
+<script src="~/js/report-viewer.js" asp-append-version="true"></script>
+<script>
+
+    function BeforeRender(s, e) {
+        disposeOnUnload(s, e);
+    }
+
+    function CustomizeViewerMenuActions(s, e) {
+
+        var exportAction = e.GetById(DevExpress.Reporting.Viewer.ActionId.ExportTo);
+        if (exportAction)
+            exportAction.visible = true;
+
+        var printAction = e.GetById(DevExpress.Report.Preview.ActionId.Print);
+        if (printAction)
+            printAction.visible = true;
+
+        var printPageAction = e.GetById(DevExpress.Report.Preview.ActionId.PrintPage);
+        if (printPageAction)
+            printPageAction.visible = true;
+
+        DevExpress.Reporting.Viewer.Settings.EditablePreviewEnabled(false);
+    }
+
+</script>
+@(Html.DevExpress()
+.WebDocumentViewer("DocumentViewer")
+.Height("750px")
+.ClientSideEvents(events =>
+{
+    events.BeforeRender("BeforeRender");
+    events.CustomizeMenuActions("CustomizeViewerMenuActions");
+
+})
+.Name("report")
+.Bind(Model))

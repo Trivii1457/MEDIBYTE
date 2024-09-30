@@ -1,0 +1,22 @@
+@{ 
+    string Prefix = "TiposDocumentos"; 
+    string UrlClick = Url.Action("Edit", "TiposDocumentos"); 
+    string UrlNew = Url.Action("New", "TiposDocumentos"); 
+
+    var DataGridConfig = new DataGridConfiguration<TiposDocumentos>(Prefix) 
+        .OnClick(UrlClick, new { Id = "Id" }) 
+        .New(UrlNew,DApp.ActionViewSecurity(Context,UrlNew)) 
+        .Exports(true,true) 
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("TiposDocumentos"), "mainPanel"); 
+} 
+
+<div class="box-body table-responsive no-padding"> 
+@(Html.DControls().DataGridSimple<TiposDocumentos>(DataGridConfig) 
+    .ID("TiposDocumentosDataGrid") 
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("TiposDocumentos").LoadAction("Get").Key("Id")) 
+    .Columns(columns => 
+    { 
+        columns.AddFor(m => m.Nombre); 
+    }) 
+) 
+</div> 

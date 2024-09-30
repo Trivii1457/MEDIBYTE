@@ -1,0 +1,234 @@
+@*  Remplazar FATHERModel por el modelo del padre al que pertenece   *@
+
+@model ListaPreciosModel
+@{
+    string Prefix = "PreciosServicios";
+    string UrlOnClick = Url.Action("EditDetail", "PreciosServicios");
+    string UrlNew = Url.Action("NewDetail", "PreciosServicios", new { IdFather = Model.Entity.Id });
+
+
+    var DataGridDetailConfig = new DataGridConfiguration<PreciosServicios>(Prefix)
+        .OnClick(UrlOnClick, new { Id = "Id" }, Prefix + "MainPanelForm")
+        .New(UrlNew, Model.Entity.IsNew, Prefix + "MainPanelForm")
+        .AddButtons(new List<ButtonToolbar>
+        {
+            new ButtonToolbar
+            {
+                Action = $"{Prefix}DescargarPlantilla",
+                Icon = "download",
+                Text = DApp.DefaultLanguage.GetResource("DEAFULT.DescargarPlantilla"),
+                LocateInMenu = ToolbarItemLocateInMenuMode.Always,
+                Location = ToolbarItemLocation.Before
+            },
+            new ButtonToolbar
+            {
+                Action = $"{Prefix}MostrarCargarPlantillaDatos",
+                Icon = "xlsxfile",
+                Text = DApp.DefaultLanguage.GetResource("DEAFULT.CargarDatosPlantilla"),
+                LocateInMenu = ToolbarItemLocateInMenuMode.Always,
+                Location = ToolbarItemLocation.Before
+            }
+        })
+        .Exports(true, true);
+
+}
+
+<script>
+    
+    function @(Prefix)calcularValorTotal(item) {
+        var valorPorcentaje = 0;
+        if (item.ListaPrecios.TipoEstadosId != 54) {
+            valorPorcentaje = item.Precio + item.ListaPrecios.Valor;
+        }
+        else {
+            valorPorcentaje = item.Precio + (item.Precio * (item.ListaPrecios.Porcentaje / 100));
+        }
+        return valorPorcentaje;
+    }
+
+</script>
+
+<script>
+
+    function @(Prefix)DescargarPlantilla(){
+        DescargarArchivo("@Url.Action("DescargarPlantilla", Prefix)");
+    }
+
+    function @(Prefix)MostrarCargarPlantillaDatos(data)
+    {
+        $("#@(Prefix)PopupCargarDatos").dxPopup("instance").show();
+    }
+
+    function @(Prefix)FileUploaderCargarDatosOnUploadStarted(data)
+    {
+        showLoadIndicator();
+        $("#@(Prefix)Errores").html("");
+    }
+
+    function @(Prefix)FileUploaderCargarDatosOnUploaded(data)
+    {
+        hideLoadIndicator();
+        try {
+            var result = JSON.parse(data.request.response);
+            if (result.pathFileError) {
+                DescargarArchivo("@Url.Action("DescargarArchivoErrores", Prefix)", result.pathFileError);
+            }
+            $("#@(Prefix)DetalleDataGrid").dxDataGrid("instance").refresh();
+        } catch (err) {
+            console.error(err);
+            $("#@(Prefix)Errores").html(data.request.response);
+        }
+    }
+
+    function @(Prefix)FileUploaderCargarDatosOnUploadError(data)
+    {
+        hideLoadIndicator();
+
+        try {
+            var result = JSON.parse(data.request.response);
+            if (result.TieneErrores) {
+                var htmlError = "<ul>";
+                for (var i = 0; i < result.Errores.length; i++) {
+                    htmlError += "<li>" + result.Errores[i] + "</li>"
+                }
+                htmlError += "</ul>";
+                $("#@(Prefix)Errores").html(htmlError);
+            }
+        }
+        catch (err) {
+            console.error(err);
+            $("#@(Prefix)Errores").html(data.request.response);
+        }
+
+    }
+
+    function @(Prefix)PopupOnHidden(data)
+    {
+        $("#@(Prefix)ModificaRegistros").dxCheckBox("instance").option("value",false);
+        $("#@(Prefix)FileUploaderCargarDatos").dxFileUploader("instance").reset();
+    }
+
+    function @(Prefix)ModificaRegistrosOnValueChanged(data)
+    {
+        var modificaRegistros = $("#@(Prefix)ModificaRegistros").dxCheckBox("instance").option("value");
+        var fileUploader = $("#@(Prefix)FileUploaderCargarDatos").dxFileUploader("instance");
+        var url = fileUploader.option("uploadUrl");
+        url = updateQueryStringParameter(url, "modificaRegistros", modificaRegistros);
+        fileUploader.option("uploadUrl", url);
+    }
+
+</script>
+
+@* ------------ Descomentar el siguiente codigo si es una edicion en maestro --------------- *@
+
+<div class="card cardDeatil">
+    <div class="card-body">
+        <div class="box-body table-responsive no-padding">
+            @(Html.DControls().DataGridSimple<PreciosServicios>(DataGridDetailConfig)
+                .ID("PreciosServiciosDetalleDataGrid")
+                .DataSource(d => d.Mvc().LoadMethod("POST").Controller("PreciosServicios").LoadAction("Get").Key("Id"))
+                .DataSourceOptions(x => x.Filter("['ListaPreciosId','=','" + @Model.Entity.Id + "']")) // Cambiar IdFather por el campo foraneo hacia el padre
+                .Columns(columns =>
+                {
+                    columns.AddFor(m => m.Servicios.Codigo);
+                    columns.AddFor(m => m.Servicios.Nombre);
+                    columns.AddFor(m => m.Servicios.TarifaPlena);
+                    columns.AddFor(m => m.Precio);
+
+                    columns.Add().Caption(DApp.GetResource("Total")).CalculateCellValue(Prefix + "calcularValorTotal");
+                })
+            )
+        </div>
+        <div id="PreciosServiciosMainPanelForm"></div>
+    </div>
+</div>
+
+
+@* ------------ Descomentar el siguiente codigo si es una edicion en grilla y COMENTAR LOS METODOS OnClick y New del DataGridDetailConfig --------------- *@
+@*
+    <script>
+         function @(Prefix)OnInitNewRowDetalleDataGrid(model) {
+             model = GetAuditoryData(model);
+             model.data.IdFather = "@Model.Entity.Id"; // Cambiar IdFather por el campo foraneo hacia el padre
+         }
+    </script>
+    <div class="card cardDeatil">
+        <div class="card-body">
+            <div class="box-body table-responsive no-padding">
+                 @(Html.DControls().DataGridSimple<PreciosServicios>(DataGridDetailConfig)
+                     .ID("PreciosServiciosDetalleDataGrid")
+                     .DataSource(d => d.Mvc().LoadMethod("POST").Controller("PreciosServicios").LoadAction("Get").Key("Id")
+                         .InsertAction("AddInGrid").InsertMethod("POST").UpdateAction("ModifyInGrid").UpdateMethod("POST").DeleteAction("DeleteInGrid").DeleteMethod("POST")
+                     )
+                     .DataSourceOptions(x=>x.Filter("['IdFather','=','"+@Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+                     .Editing(editing => editing.Mode(GridEditMode.Batch).AllowAdding(!Model.Entity.IsNew).AllowUpdating(true).AllowDeleting(true))
+                     .OnInitNewRow(Prefix + "OnInitNewRowDetalleDataGrid")
+                     .OnRowInserted("OnRowInsertedDetalleDataGrid").OnRowUpdated("OnRowUpdatedDetalleDataGrid").OnRowRemoved("OnRowRemovedDetalleDataGrid").OnDataErrorOccurred("OnDataErrorOccurredDetalleDataGrid")
+                     .Columns(columns =>
+                     {
+                         columns.AddFor(m => m.ServiciosId)
+                             .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("PreciosServicios.ServiciosId")))
+                             .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("PreciosServicios.ServiciosId")))
+                                 .Lookup(lookup => lookup
+                                 .DataSource(d => d.Mvc().LoadMethod("POST").Controller("PreciosServicios").LoadAction("GetServiciosId").Key("Id"))
+                                 .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                 .ValueExpr("Id").DisplayExpr("Id"));
+                         columns.AddFor(m => m.ListaPreciosId)
+                             .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("PreciosServicios.ListaPreciosId")))
+                             .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("PreciosServicios.ListaPreciosId")))
+                                 .Lookup(lookup => lookup
+                                 .DataSource(d => d.Mvc().LoadMethod("POST").Controller("PreciosServicios").LoadAction("GetListaPreciosId").Key("Id"))
+                                 .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                 .ValueExpr("Id").DisplayExpr("Id"));
+                         columns.AddFor(m => m.Precio).Format("#,##0.##")
+                             .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("PreciosServicios.Precio")));
+                 })
+             )
+            </div>
+        </div>
+    </div>
+*@
+
+<div id="@(Prefix)Importador" class="row">
+    <div class="col-md-12">
+        @(Html.DControls().Popup()
+            .ID($"{Prefix}PopupCargarDatos")
+            .Width(800)
+            .Height(300)
+            .ShowTitle(true)
+            .Title(DApp.DefaultLanguage.GetResource("DEAFULT.CargarDatosPlantilla"))
+            .Visible(false)
+            .DragEnabled(false)
+            .CloseOnOutsideClick(false)
+            .OnHidden($"{Prefix}PopupOnHidden")
+            .ContentTemplate(new TemplateName($"{Prefix}TemplateCargarDatos"))
+        )
+
+        @using (Html.DevExtreme().NamedTemplate($"{Prefix}TemplateCargarDatos"))
+        {
+            <div id="@(Prefix)Errores" class="text-danger text-sm-left"></div>
+            <div id="@(Prefix)FileUploaderDiv" style="max-height: 100%;overflow: auto;">
+                <div style="margin-left:10px;">
+                    @(Html.DControls().CheckBox()
+                        .ID($"{Prefix}ModificaRegistros")
+                        .Text(DApp.DefaultLanguage.GetResource("DEAFULT.ModificaRegistros"))
+                        .OnValueChanged($"{Prefix}ModificaRegistrosOnValueChanged")
+                    )
+                </div>
+                @(Html.DControls().FileUploader()
+                    .ID($"{Prefix}FileUploaderCargarDatos")
+                    .Name("ArchivoPlantillaDatos")
+                    .Multiple(false)
+                    .Accept(".xlsx")
+                    .MaxFileSize(1000000)
+                    .AllowedFileExtensions(new[] { ".xlsx" })
+                    .UploadMode(FileUploadMode.UseButtons)
+                    .UploadUrl(Url.Action("CargarPlantillaDatos", Prefix, new { idListaPrecios = Model.Entity.Id }))
+                    .OnUploadStarted($"{Prefix}FileUploaderCargarDatosOnUploadStarted")
+                    .OnUploaded($"{Prefix}FileUploaderCargarDatosOnUploaded")
+                    .OnUploadError($"{Prefix}FileUploaderCargarDatosOnUploadError")
+                )
+            </div>
+        }
+    </div>
+</div>

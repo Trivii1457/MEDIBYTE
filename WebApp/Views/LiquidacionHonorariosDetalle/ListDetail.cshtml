@@ -1,0 +1,173 @@
+@*  Remplazar FATHERModel por el modelo del padre al que pertenece   *@
+
+@model LiquidacionHonorariosModel
+@{
+    string Prefix = "LiquidacionHonorariosDetalle";
+    string UrlOnClick = Url.Action("EditDetail", "LiquidacionHonorariosDetalle");
+    string UrlNew = Url.Action("NewDetail", "LiquidacionHonorariosDetalle", new { IdFather = Model.Entity.Id });
+
+    var DataGridDetailConfig = new DataGridConfiguration<LiquidacionHonorariosDetalle>(Prefix)
+        .Exports(true, true);
+}
+
+<script>
+    function @(Prefix)Liquidar()
+    {
+        var selectedData = $("#LiquidacionHonorariosDetalleLiquidacionGrid").dxDataGrid("instance").getSelectedRowsData();
+        if (selectedData.length <= 0) {
+            DevExpress.ui.notify("Error: Debe escoger al menos una liquidación", "error", 4000);
+            return false;
+        }
+
+        showLoadIndicator();
+        $.ajax({
+            url: '@Url.Action("Liquidar", "LiquidacionHonorarios")',
+            data: JSON.stringify(selectedData),
+            contentType: "application/json",
+            type: 'POST',
+            success: function (data) {
+                hideLoadIndicator();
+                $("#mainPanel").html(data);
+                DevExpress.ui.notify("Proceso realizado satisfactoriamente.","info");
+            },
+            error: function (xhr) {
+                hideLoadIndicator();
+                DevExpress.ui.notify("Error: " + xhr.responseText,"error");
+            }
+        });
+    }
+</script>
+
+@* ------------ Descomentar el siguiente codigo si es una edicion en maestro --------------- *@
+
+@if (Model.Entity.EstadosId == 10064)
+{
+    DataGridDetailConfig.AddButtons(new List<ButtonToolbar>
+    {
+        new ButtonToolbar
+        {
+            Action = $"{Prefix}Liquidar",
+            Icon = "showpanel",
+            Text = DApp.DefaultLanguage.GetResource("DEAFULT.Liquidar"),
+            LocateInMenu = ToolbarItemLocateInMenuMode.Auto,
+            Location = ToolbarItemLocation.After
+        }
+    });
+
+<div class="card cardDeatil">
+    <div class="card-body">
+        <div class="box-body table-responsive no-padding">
+            @(Html.DControls().DataGridSimple<LiquidacionHonorariosDetalle>(DataGridDetailConfig)
+                    .ID("LiquidacionHonorariosDetalleLiquidacionGrid")
+                    //.DataSource(d => d.Mvc().LoadMethod("POST").Controller("LiquidacionHonorariosDetalle").LoadAction("GetDetalleALiquidar").Key("Id")
+                    //    .LoadParams(new { liquidacionId = Model.Entity.Id })
+                    //)
+                    .DataSource(Model.LiquidacionHonorariosDetalle)
+                    .RemoteOperations(false)
+                    //.DataSourceOptions(d => d.Filter("['Estados.Tipo','=','ATENCIONES']"))
+                    .Editing(x => x.AllowUpdating(true).AllowAdding(false).AllowDeleting(false).Mode(GridEditMode.Cell))
+                    .Columns(columns =>
+                    {
+                        columns.AddFor(m => m.AdmisionesServiciosPrestados.Admisiones.ProgramacionCitas.Consecutivo).Caption(DApp.DefaultLanguage.GetResource("Atenciones.ConsecutivoCita"));
+                        columns.AddFor(m => m.AdmisionesServiciosPrestados.AdmisionesId).Caption(DApp.DefaultLanguage.GetResource("Atenciones.ConsecutivoAdmision"));
+                        columns.AddFor(m => m.AdmisionesServiciosPrestados.Admisiones.Pacientes.NumeroIdentificacion);
+                        columns.AddFor(m => m.AdmisionesServiciosPrestados.Admisiones.Pacientes.NombreCompleto);
+                        columns.AddFor(m => m.AdmisionesServiciosPrestados.Atenciones.FechaAtencion).AllowEditing(false);
+                        columns.AddFor(m => m.AtencionesResultado.FechaLectura).AllowEditing(false);
+                        columns.AddFor(m => m.AdmisionesServiciosPrestados.Servicios.Nombre).AllowEditing(false);
+                        columns.AddFor(m => m.AdmisionesServiciosPrestados.Cantidad).AllowEditing(false);
+                        columns.AddFor(m => m.Empleados.NombreCompleto).AllowEditing(false);
+                        columns.AddFor(m => m.Valor).AllowEditing(true);
+                        //columns.AddFor(m => m.AdmisionesServiciosPrestados.ValorTotal).AllowEditing(true);
+                        columns.AddFor(m => m.EsLectura).AllowEditing(false);
+                    })
+                )
+        </div>
+        <div id="LiquidacionHonorariosDetalleMainPanelForm"></div>
+    </div>
+</div>
+}
+else
+{
+<div class="card cardDeatil">
+    <div class="card-body">
+        <div class="box-body table-responsive no-padding">
+            @(Html.DControls().DataGridSimple<LiquidacionHonorariosDetalle>(DataGridDetailConfig)
+                    .ID("LiquidacionHonorariosDetalleDetalleDataGrid")
+                    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("LiquidacionHonorariosDetalle").LoadAction("Get").Key("Id"))
+                    .DataSourceOptions(x=>x.Filter("['LiquidacionHonorariosId','=','" + @Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+                    .Columns(columns =>
+                    {
+                        columns.AddFor(m => m.AdmisionesServiciosPrestados.Admisiones.ProgramacionCitas.Consecutivo).Caption(DApp.DefaultLanguage.GetResource("Atenciones.ConsecutivoCita"));
+                        columns.AddFor(m => m.AdmisionesServiciosPrestados.AdmisionesId).Caption(DApp.DefaultLanguage.GetResource("Atenciones.ConsecutivoAdmision"));
+                        columns.AddFor(m => m.AdmisionesServiciosPrestados.Admisiones.Pacientes.NumeroIdentificacion);
+                        columns.AddFor(m => m.AdmisionesServiciosPrestados.Admisiones.Pacientes.NombreCompleto);
+                        columns.AddFor(m => m.AdmisionesServiciosPrestados.Atenciones.FechaAtencion);
+                        columns.AddFor(m => m.AtencionesResultado.FechaLectura);
+                        columns.AddFor(m => m.AdmisionesServiciosPrestados.Servicios.Nombre);
+                        columns.AddFor(m => m.AdmisionesServiciosPrestados.Cantidad).AllowEditing(false);
+                        columns.AddFor(m => m.Empleados.NombreCompleto);
+                        columns.AddFor(m => m.Valor);
+                        //columns.AddFor(m => m.AdmisionesServiciosPrestados.ValorTotal).AllowEditing(true);
+                        columns.AddFor(m => m.EsLectura);
+                    })
+                )
+        </div>
+        <div id="LiquidacionHonorariosDetalleMainPanelForm"></div>
+    </div>
+</div>
+}
+
+@* ------------ Descomentar el siguiente codigo si es una edicion en grilla y COMENTAR LOS METODOS OnClick y New del DataGridDetailConfig --------------- *@
+@*
+    <script>
+         function @(Prefix)OnInitNewRowDetalleDataGrid(model) {
+             model = GetAuditoryData(model);
+             model.data.IdFather = "@Model.Entity.Id"; // Cambiar IdFather por el campo foraneo hacia el padre
+         }
+    </script>
+    <div class="card cardDeatil">
+        <div class="card-body">
+            <div class="box-body table-responsive no-padding">
+                 @(Html.DControls().DataGridSimple<LiquidacionHonorariosDetalle>(DataGridDetailConfig)
+                     .ID("LiquidacionHonorariosDetalleDetalleDataGrid")
+                     .DataSource(d => d.Mvc().LoadMethod("POST").Controller("LiquidacionHonorariosDetalle").LoadAction("Get").Key("Id")
+                         .InsertAction("AddInGrid").InsertMethod("POST").UpdateAction("ModifyInGrid").UpdateMethod("POST").DeleteAction("DeleteInGrid").DeleteMethod("POST")
+                     )
+                     .DataSourceOptions(x=>x.Filter("['IdFather','=','"+@Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+                     .Editing(editing => editing.Mode(GridEditMode.Batch).AllowAdding(!Model.Entity.IsNew).AllowUpdating(true).AllowDeleting(true))
+                     .OnInitNewRow(Prefix + "OnInitNewRowDetalleDataGrid")
+                     .OnRowInserted("OnRowInsertedDetalleDataGrid").OnRowUpdated("OnRowUpdatedDetalleDataGrid").OnRowRemoved("OnRowRemovedDetalleDataGrid").OnDataErrorOccurred("OnDataErrorOccurredDetalleDataGrid")
+                     .Columns(columns =>
+                     {
+                         columns.AddFor(m => m.LiquidacionHonorariosId)
+                             .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("LiquidacionHonorariosDetalle.LiquidacionHonorariosId")))
+                             .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("LiquidacionHonorariosDetalle.LiquidacionHonorariosId")))
+                                 .Lookup(lookup => lookup
+                                 .DataSource(d => d.Mvc().LoadMethod("POST").Controller("LiquidacionHonorariosDetalle").LoadAction("GetLiquidacionHonorariosId").Key("Id"))
+                                 .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                 .ValueExpr("Id").DisplayExpr("Id"));
+                         columns.AddFor(m => m.EmpleadosId)
+                             .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("LiquidacionHonorariosDetalle.EmpleadosId")))
+                             .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("LiquidacionHonorariosDetalle.EmpleadosId")))
+                                 .Lookup(lookup => lookup
+                                 .DataSource(d => d.Mvc().LoadMethod("POST").Controller("LiquidacionHonorariosDetalle").LoadAction("GetEmpleadosId").Key("Id"))
+                                 .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                 .ValueExpr("Id").DisplayExpr("Id"));
+                         columns.AddFor(m => m.Valor).Format("#,##0.##")
+                             .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("LiquidacionHonorariosDetalle.Valor")));
+                         columns.AddFor(m => m.AdmisionesServiciosPrestadosId)
+                             .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("LiquidacionHonorariosDetalle.AdmisionesServiciosPrestadosId")))
+                             .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("LiquidacionHonorariosDetalle.AdmisionesServiciosPrestadosId")))
+                                 .Lookup(lookup => lookup
+                                 .DataSource(d => d.Mvc().LoadMethod("POST").Controller("LiquidacionHonorariosDetalle").LoadAction("GetAdmisionesServiciosPrestadosId").Key("Id"))
+                                 .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                 .ValueExpr("Id").DisplayExpr("Id"));
+                         columns.AddFor(m => m.EsLectura)
+                             .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("LiquidacionHonorariosDetalle.EsLectura")));
+                 })
+             )
+            </div>
+        </div>
+    </div>
+*@

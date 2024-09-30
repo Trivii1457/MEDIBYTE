@@ -1,0 +1,31 @@
+@{ 
+    string Prefix = "Audit";
+    string UrlClick = Url.Action("Edit", "Audit");
+    string UrlNew = Url.Action("New", "Audit");
+
+    var DataGridConfig = new DataGridConfiguration<Audit>(Prefix)
+        .OnClick(UrlClick, new { Id = "Id" })
+        //.New(UrlNew,DApp.ActionViewSecurity(Context,UrlNew))
+        .Exports(true,true).SetStorage()
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("Audits"), "mainPanel");
+} 
+
+<div class="box-body table-responsive no-padding"> 
+@(Html.DControls().DataGridSimple<Audit>(DataGridConfig)
+    .ID("AuditDataGrid")
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Audit").LoadAction("Get").Key("Id"))
+    .Columns(columns =>
+    {
+        columns.AddFor(m => m.Id).Caption(DApp.GetResource("Audit.Consecutivo")).SortOrder(SortOrder.Desc);
+        columns.AddFor(m => m.TableName);
+        columns.AddFor(m => m.Action);
+        columns.AddFor(m => m.TransactionDate).Format(DApp.DefaultLanguage.DateTimeFormat);
+        columns.AddFor(m => m.CreatedBy);
+        columns.AddFor(m => m.UpdatedBy);
+        columns.AddFor(m => m.KeyValues);
+        columns.AddFor(m => m.OldValues);
+        columns.AddFor(m => m.NewValues);
+        
+    })
+) 
+</div> 

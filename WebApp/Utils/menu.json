@@ -1,0 +1,352 @@
+[
+  {
+    "Module": "MODULE.ESTUCTURACION",
+    "Icon": "fa fa-wrench",
+    "Options": [
+      {
+        "Name": "Empresas",
+        "Resource": "Empresas"
+      },
+      {
+        "Name": "ParametrosGenerales",
+        "Resource": "ParametrosGenerales"
+      },
+      {
+        "Name": "Documentos",
+        "Resource": "Documentos"
+      },
+      {
+        "Name": "ConfiguracionEnvioEmail",
+        "Resource": "ConfiguracionEnvioEmail"
+      },
+      {
+        "Name": "Festivos",
+        "Resource": "Festivos"
+      },
+      {
+        "Name": "CategoriasServicios",
+        "Resource": "CategoriasServicios"
+      },
+      {
+        "Name": "Bancos",
+        "Resource": "Bancos"
+      },
+      {
+        "Name": "MediosPago",
+        "Resource": "MediosPago"
+      },
+      {
+        "Name": "FormasPagos",
+        "Resource": "FormasPagos"
+      },
+      {
+        "Name": "Cajas",
+        "Resource": "Cajas"
+      }
+    ]
+  },
+  {
+    "Module": "MODULE.FACTURACION",
+    "Icon": "fa fa-usd",
+    "Options": [
+      {
+        "Name": "FacturasGeneracion",
+        "Resource": "Generacion"
+      },
+      {
+        "Name": "RadicacionCuentas",
+        "Resource": "Radicacion"
+      },
+      {
+        "Name": "Facturas",
+        "Resource": "Facturas"
+      },
+      {
+        "Name": "CausalesGlosas",
+        "Resource": "CausalesGlosas"
+      },
+      {
+        "Name": "Glosas",
+        "Resource": "Glosas"
+      },
+      {
+        "Name": "Recaudos",
+        "Resource": "Recaudos"
+      },
+      {
+        "Name": "CiclosCajas",
+        "Resource": "CiclosCajas"
+      },
+      {
+        "Name": "Notas",
+        "Resource": "Notas"
+      },
+      {
+        "Name": "Rips",
+        "Resource": "Rips"
+      },
+      {
+        "Name": "NotasConceptos",
+        "Resource": "NotasConceptos"
+      },
+      {
+        "Name": "EventosDIAN",
+        "Resource": "EventosDIAN"
+      },
+      {
+        "Name": "AdmisionesCorrecion",
+        "Resource": "AdmisionesCorrecion"
+      }
+    ]
+  },
+  {
+    "Module": "MODULE.IPS",
+    "Icon": "fa fa-hospital-o",
+    "Options": [
+      {
+        "Name": "Empleados",
+        "Resource": "Empleados"
+      },
+      {
+        "Name": "Sedes",
+        "Resource": "Sedes"
+      },
+      {
+        "Name": "Servicios",
+        "Resource": "Servicios"
+      },
+      {
+        "Name": "Consultorios",
+        "Resource": "Consultorios"
+      },
+      {
+        "Name": "ListaPrecios",
+        "Resource": "ListaPrecios"
+      },
+      {
+        "Name": "Convenios",
+        "Resource": "Convenios"
+      }
+    ]
+  },
+  {
+    "Module": "MODULE.ASISTENCIAL",
+    "Icon": "fa fa-heartbeat",
+    "Options": [
+      {
+        "Name": "ProgramacionAgenda",
+        "Resource": "AgendaMedica"
+      },
+      {
+        "Name": "ProgramacionCitas",
+        "Resource": "ProgramacionCitas"
+      },
+      {
+        "Name": "Admisiones",
+        "Resource": "Admisiones"
+      },
+      {
+        "Name": "AutorizacionAdmisionesDescuentos",
+        "Resource": "AutorizacionAdmisionesDescuentos"
+      },
+      {
+        "Name": "Atenciones",
+        "Resource": "Atenciones"
+      }
+    ]
+  },
+  {
+    "Module": "MODULE.OPERATIVO",
+    "Icon": "fa fa-cogs",
+    "Options": [
+      {
+        "Name": "Pacientes",
+        "Resource": "Pacientes"
+      },
+      {
+        "Name": "Entidades",
+        "Resource": "Entidades"
+      },
+      {
+        "Name": "AdministracionHonorarios",
+        "Resource": "AdministracionHonorarios"
+      },
+      {
+        "Name": "LiquidacionHonorarios",
+        "Resource": "LiquidacionHonorarios"
+      },
+      {
+        "Name": "AdmisionesServiciosPrestados",
+        "Resource": "AdmisionesServiciosPrestados"
+      },
+      {
+        "Name": "AtencionesLectura",
+        "Resource": "AtencionesLectura"
+      },
+      {
+        "Name": "AtencionesResultado",
+        "Resource": "AtencionesResultado"
+      },
+      {
+        "Name": "EntregaResultados",
+        "Resource": "EntregaResultados"
+      },
+      {
+        "Name": "ImagenesDiagnosticas",
+        "Resource": "ImagenesDiagnosticas"
+      },
+      {
+        "Name": "VisorDicom",
+        "Resource": "VisorDicom"
+      }
+
+    ]
+  },
+  {
+    "Module": "MODULE.SECURITY",
+    "Icon": "fa fa-lock",
+    "Options": [
+      {
+        "Name": "Profile",
+        "Resource": "Profiles"
+      },
+      {
+        "Name": "User",
+        "Resource": "Users"
+      },
+      {
+        "Name": "Audit",
+        "Resource": "Audit"
+      }
+    ]
+  },
+  {
+    "Module": "MODULE.HC",
+    "Icon": "fa fa-heartbeat",
+    "Options": [
+      {
+        "Name": "HCPreguntas",
+        "Resource": "HCPreguntas"
+      },
+      {
+        "Name": "HCTipos",
+        "Resource": "HCTipos"
+      },
+      {
+        "Name": "OrdenesMedicamentos",
+        "Resource": "OrdenesMedicamentos"
+      },
+      {
+        "Name": "OrdenesServicios",
+        "Resource": "OrdenesServicios"
+      },
+      {
+        "Name": "Incapacidades",
+        "Resource": "Incapacidades"
+      },
+      {
+        "Name": "IndicacionesMedicas",
+        "Resource": "IndicacionesMedicas"
+      },
+      {
+        "Name": "HistoriasClinicas",
+        "Resource": "HistoriasClinicas"
+      },
+      {
+        "Name": "AdicionOrdenes",
+        "Resource": "AdicionOrdenes"
+      },
+      {
+        "Name": "IncapacidadesOrigenes",
+        "Resource": "IncapacidadesOrigenes"
+      },
+      {
+        "Name": "Medicamentos",
+        "Resource": "Medicamentos"
+      },
+      {
+        "Name": "MedicamentosConcentraciones",
+        "Resource": "MedicamentosConcentraciones"
+      },
+      {
+        "Name": "MedicamentosFormasFarmaceuticas",
+        "Resource": "MedicamentosFormasFarmaceuticas"
+      },
+      {
+        "Name": "MedicamentosViaAdministracion",
+        "Resource": "MedicamentosViaAdministracion"
+      },
+      {
+        "Name": "HistoriasClinicasNotasAclaratorias",
+        "Resource": "HistoriasClinicasNotasAclaratorias"
+      }
+    ]
+  },
+  {
+    "Module": "MODULE.DATOSFIJOS",
+    "Icon": "fa fa-gavel",
+    "Options": [
+      {
+        "Name": "CategoriasIngresos",
+        "Resource": "CategoriasIngresos"
+      },
+      {
+        "Name": "TiposAfiliados",
+        "Resource": "TiposAfiliados"
+      },
+      {
+        "Name": "Cups",
+        "Resource": "Cups"
+      },
+      {
+        "Name": "RangoEdad",
+        "Resource": "RangoEdad"
+      },
+      {
+        "Name": "CausasExternas",
+        "Resource": "CausasExternas"
+      },
+      {
+        "Name": "TiposAtencion",
+        "Resource": "TiposAtencion"
+      },
+      {
+        "Name": "Especialidades",
+        "Resource": "Especialidades"
+      },
+      {
+        "Name": "TiposServicios",
+        "Resource": "TiposServicios"
+      },
+      {
+        "Name": "TiposContratos",
+        "Resource": "TiposContratos"
+      },
+      {
+        "Name": "Profesiones",
+        "Resource": "Profesiones"
+      },
+      {
+        "Name": "Paises",
+        "Resource": "Paises"
+      },
+      {
+        "Name": "Departamentos",
+        "Resource": "Departamentos"
+      },
+      {
+        "Name": "TiposDiagnosticos",
+        "Resource": "TiposDiagnosticos"
+      },
+      {
+        "Name": "Parentescos",
+        "Resource": "Parentescos"
+      },
+      {
+        "Name": "MediosEntregas",
+        "Resource": "MediosEntregas"
+      }
+
+    ]
+  }
+]

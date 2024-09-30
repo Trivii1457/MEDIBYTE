@@ -1,0 +1,143 @@
+@*  Remplazar FATHERModel por el modelo del padre al que pertenece   *@ 
+@* 
+@model FATHERModel 
+@{ 
+    string Prefix = "HistoriasClinicas"; 
+    string UrlOnClick = Url.Action("EditDetail", "HistoriasClinicas"); 
+    string UrlNew = Url.Action("NewDetail", "HistoriasClinicas", new { IdFather = Model.Entity.Id }); 
+
+    var DataGridDetailConfig = new DataGridConfiguration<HistoriasClinicas>(Prefix) 
+        .OnClick(UrlOnClick, new { Id = "Id" }, Prefix + "MainPanelForm") 
+        .New(UrlNew,Model.Entity.IsNew,Prefix + "MainPanelForm") 
+        .Exports(true,true); 
+} 
+*@ 
+
+
+@* ------------ Descomentar el siguiente codigo si es una edicion en maestro --------------- *@
+@* 
+
+<div class="card cardDeatil"> 
+    <div class="card-body">
+        <div class="box-body table-responsive no-padding"> 
+        @(Html.DControls().DataGridSimple<HistoriasClinicas>(DataGridDetailConfig) 
+            .ID("HistoriasClinicasDetalleDataGrid") 
+            .DataSource(d => d.Mvc().LoadMethod("POST").Controller("HistoriasClinicas").LoadAction("Get").Key("Id")) 
+            .DataSourceOptions(x=>x.Filter("['IdFather','=','"+@Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+            .Columns(columns => 
+            { 
+             columns.AddFor(m => m.Consecutivo); 
+             columns.AddFor(m => m.Admisiones.Id); 
+             columns.AddFor(m => m.FechaApertura); 
+             columns.AddFor(m => m.Empleados.Id); 
+             columns.AddFor(m => m.MotivoConsulta); 
+             columns.AddFor(m => m.AntecedentesFamiliar); 
+             columns.AddFor(m => m.AntecedentesPersonal); 
+             columns.AddFor(m => m.EnfermedadActual); 
+             columns.AddFor(m => m.PlanManejo); 
+             columns.AddFor(m => m.Estados.Id); 
+             columns.AddFor(m => m.HCTipos.Id); 
+             columns.AddFor(m => m.Pacientes.Id); 
+             columns.AddFor(m => m.EsControl); 
+             columns.AddFor(m => m.HistoriasClinicas.Id); 
+             columns.AddFor(m => m.Peso); 
+             columns.AddFor(m => m.Altura); 
+            }) 
+        ) 
+        </div> 
+        <div id="HistoriasClinicasMainPanelForm"></div> 
+    </div> 
+</div> 
+*@ 
+
+
+@* ------------ Descomentar el siguiente codigo si es una edicion en grilla y COMENTAR LOS METODOS OnClick y New del DataGridDetailConfig --------------- *@
+@* 
+<script> 
+     function @(Prefix)OnInitNewRowDetalleDataGrid(model) { 
+         model = GetAuditoryData(model); 
+         model.data.IdFather = "@Model.Entity.Id"; // Cambiar IdFather por el campo foraneo hacia el padre 
+     } 
+</script> 
+<div class="card cardDeatil"> 
+    <div class="card-body">
+        <div class="box-body table-responsive no-padding"> 
+             @(Html.DControls().DataGridSimple<HistoriasClinicas>(DataGridDetailConfig) 
+                 .ID("HistoriasClinicasDetalleDataGrid") 
+                 .DataSource(d => d.Mvc().LoadMethod("POST").Controller("HistoriasClinicas").LoadAction("Get").Key("Id") 
+                     .InsertAction("AddInGrid").InsertMethod("POST").UpdateAction("ModifyInGrid").UpdateMethod("POST").DeleteAction("DeleteInGrid").DeleteMethod("POST") 
+                 ) 
+                 .DataSourceOptions(x=>x.Filter("['IdFather','=','"+@Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+                 .Editing(editing => editing.Mode(GridEditMode.Batch).AllowAdding(!Model.Entity.IsNew).AllowUpdating(true).AllowDeleting(true)) 
+                 .OnInitNewRow(Prefix + "OnInitNewRowDetalleDataGrid") 
+                 .OnRowInserted("OnRowInsertedDetalleDataGrid").OnRowUpdated("OnRowUpdatedDetalleDataGrid").OnRowRemoved("OnRowRemovedDetalleDataGrid").OnDataErrorOccurred("OnDataErrorOccurredDetalleDataGrid") 
+                 .Columns(columns => 
+                 { 
+                     columns.AddFor(m => m.Consecutivo) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("HistoriasClinicas.Consecutivo"))) 
+                         .ValidationRules(rules => rules.AddStringLength().Min(0).Max(45).Message(DApp.GetStringLengthResource("HistoriasClinicas.Consecutivo", 45))) 
+                     ; 
+                     columns.AddFor(m => m.AdmisionesId) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("HistoriasClinicas.AdmisionesId"))) 
+                         .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("HistoriasClinicas.AdmisionesId"))) 
+                             .Lookup(lookup => lookup 
+                             .DataSource(d => d.Mvc().LoadMethod("POST").Controller("HistoriasClinicas").LoadAction("GetAdmisionesId").Key("Id")) 
+                             .DataSourceOptions(o => o.Paginate(true).PageSize(10)) 
+                             .ValueExpr("Id").DisplayExpr("Id")); 
+                     columns.AddFor(m => m.FechaApertura).Format(DApp.DefaultLanguage.DateFormat) 
+                     columns.AddFor(m => m.ProfesionalId) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("HistoriasClinicas.ProfesionalId"))) 
+                         .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("HistoriasClinicas.ProfesionalId"))) 
+                             .Lookup(lookup => lookup 
+                             .DataSource(d => d.Mvc().LoadMethod("POST").Controller("HistoriasClinicas").LoadAction("GetProfesionalId").Key("Id")) 
+                             .DataSourceOptions(o => o.Paginate(true).PageSize(10)) 
+                             .ValueExpr("Id").DisplayExpr("Id")); 
+                     columns.AddFor(m => m.MotivoConsulta) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("HistoriasClinicas.MotivoConsulta"))) 
+                     ; 
+                     columns.AddFor(m => m.AntecedentesFamiliar) 
+                     ; 
+                     columns.AddFor(m => m.AntecedentesPersonal) 
+                     ; 
+                     columns.AddFor(m => m.EnfermedadActual) 
+                     ; 
+                     columns.AddFor(m => m.PlanManejo) 
+                     ; 
+                     columns.AddFor(m => m.EstadosId) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("HistoriasClinicas.EstadosId"))) 
+                         .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("HistoriasClinicas.EstadosId"))) 
+                             .Lookup(lookup => lookup 
+                             .DataSource(d => d.Mvc().LoadMethod("POST").Controller("HistoriasClinicas").LoadAction("GetEstadosId").Key("Id")) 
+                             .DataSourceOptions(o => o.Paginate(true).PageSize(10)) 
+                             .ValueExpr("Id").DisplayExpr("Id")); 
+                     columns.AddFor(m => m.HCTiposId) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("HistoriasClinicas.HCTiposId"))) 
+                         .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("HistoriasClinicas.HCTiposId"))) 
+                             .Lookup(lookup => lookup 
+                             .DataSource(d => d.Mvc().LoadMethod("POST").Controller("HistoriasClinicas").LoadAction("GetHCTiposId").Key("Id")) 
+                             .DataSourceOptions(o => o.Paginate(true).PageSize(10)) 
+                             .ValueExpr("Id").DisplayExpr("Id")); 
+                     columns.AddFor(m => m.PacientesId) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("HistoriasClinicas.PacientesId"))) 
+                         .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("HistoriasClinicas.PacientesId"))) 
+                             .Lookup(lookup => lookup 
+                             .DataSource(d => d.Mvc().LoadMethod("POST").Controller("HistoriasClinicas").LoadAction("GetPacientesId").Key("Id")) 
+                             .DataSourceOptions(o => o.Paginate(true).PageSize(10)) 
+                             .ValueExpr("Id").DisplayExpr("Id")); 
+                     columns.AddFor(m => m.EsControl) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("HistoriasClinicas.EsControl"))); 
+                     columns.AddFor(m => m.HistoriaClinicaPrincipal) 
+                             .Lookup(lookup => lookup 
+                             .DataSource(d => d.Mvc().LoadMethod("POST").Controller("HistoriasClinicas").LoadAction("GetHistoriaClinicaPrincipal").Key("Id")) 
+                             .DataSourceOptions(o => o.Paginate(true).PageSize(10)) 
+                             .ValueExpr("Id").DisplayExpr("Id")); 
+                     columns.AddFor(m => m.Peso).Format("#,##0.##") 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("HistoriasClinicas.Peso"))); 
+                     columns.AddFor(m => m.Altura).Format("#,##0.##") 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("HistoriasClinicas.Altura"))); 
+             }) 
+         ) 
+        </div> 
+    </div> 
+</div> 
+*@ 

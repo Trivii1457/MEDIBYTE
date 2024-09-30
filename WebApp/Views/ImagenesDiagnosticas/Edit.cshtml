@@ -1,0 +1,94 @@
+@model ImagenesDiagnosticasModel 
+@{
+    string Prefix = "ImagenesDiagnosticas"; 
+
+    string UrlSave = Url.Action("Edit", "ImagenesDiagnosticas"); 
+    string UrlNew = Url.Action("New", "ImagenesDiagnosticas"); 
+    string UrlDelete = Url.Action("Delete", "ImagenesDiagnosticas", new { Id = Model.Entity.Id }); 
+    string UrlBack = Url.Action("ListPartial", "ImagenesDiagnosticas"); 
+
+    var ToolbarConfig = new ToolbarConfiguration(Prefix) 
+        .Title(DApp.DefaultLanguage.GetResource("ImagenesDiagnosticas")) 
+        .Save(DApp.ActionViewSecurity(Context, UrlSave),Model.Entity.IsNew) 
+        .New(UrlNew, DApp.ActionViewSecurity(Context, UrlNew)) 
+        .Delete(UrlDelete,DApp.ActionViewSecurity(Context,UrlDelete),UrlBack,Model.Entity.IsNew) 
+        .Back(UrlBack); 
+}
+
+<partial name="ViewJS.cshtml" model="Model" view-data="ViewData" /> 
+
+@(Html.DControls().Toolbar(ToolbarConfig)) 
+
+<div> 
+    <div id = "ImagenesDiagnosticasMainPanelForm"> 
+        <form id = "@(Prefix)Form" asp-controller="ImagenesDiagnosticas" asp-action="Edit" class="form-horizontal" data-ajax-mode="replace" data-ajax-update="#mainPanel" data-ajax-success="@(Prefix)FormSuccess" data-ajax-failure="@(Prefix)FormFailure" data-ajax="true"> 
+            @(Html.DControls().ValidationSummary().ValidationGroup(Prefix + "ValidationGroup").ElementAttr("class","ErrorValidationSummary")) 
+            @using (Html.DevExtreme().ValidationGroup(Prefix + "ValidationGroup")) 
+            { 
+                @(Html.DControls().CheckBoxFor(m => m.Entity.IsNew).ID(Prefix + "IsNew").Visible(false)) 
+                @(Html.DControls().NumberBoxFor(m => m.Entity.Id).ID(Prefix + "Id").Visible(false)) 
+                @(Html.DControls().TextBoxFor(m => m.Entity.UpdatedBy).ID(Prefix + "UpdatedBy").Visible(false)) 
+                @(Html.DControls().DateBoxFor(m => m.Entity.LastUpdate).ID(Prefix + "LastUpdate").Type(DateBoxType.DateTime).Visible(false)) 
+                @(Html.DControls().TextBoxFor(m => m.Entity.CreatedBy).ID(Prefix + "CreatedBy").Visible(false)) 
+                @(Html.DControls().DateBoxFor(m => m.Entity.CreationDate).ID(Prefix + "CreationDate").Type(DateBoxType.DateTime).Visible(false)) 
+
+                @(Html.DControls().Form<ImagenesDiagnosticasModel>()
+                    .ID("ImagenesDiagnosticasModelForm").LabelLocation(FormLabelLocation.Top).ShowValidationSummary(false).FormData(Model)
+                    .Items(items =>
+                    {
+                        items.AddGroup().ColCount(12).Caption(DApp.DefaultLanguage.GetResource("DEFAULT.INFORMATIONGENERAL"))
+                            .Items(groupItems =>{
+                                groupItems.AddSimpleFor(m => m.Entity.PacientesId).ColSpan(9)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("ImagenesDiagnosticas.PacientesId")))
+                                 .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("ImagenesDiagnosticas.PacientesId")))
+                                      .Editor(e => e.SelectBox().ID(Prefix + "PacientesId")
+                                      .DataSource(d => d.Mvc().LoadMethod("POST").Controller("ImagenesDiagnosticas").LoadAction("GetPacientesId").Key("Id"))
+                                      .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                      .ValueExpr("Id").DisplayExpr("NombreCompleto").SearchExpr("PrimerNombre", "SegundoNombre", "PrimerApellido", "SegundoApellido", "NumeroIdentificacion")
+                                      .SearchEnabled(true).ShowClearButton(true)
+                                 );
+                                groupItems.AddSimpleFor(m => m.Entity.Fecha).ColSpan(3)
+                                  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("ImagenesDiagnosticas.Fecha")))
+                                      .Editor(e=>e.DateBox().ID(Prefix + "Fecha").Type(DateBoxType.DateTime)
+                                      .DisplayFormat(DApp.DefaultLanguage.DateTimeFormat)
+                                      .ReadOnly(true)
+                                    );
+                                groupItems.AddSimpleFor(m => m.Entity.ServiciosId).ColSpan(12)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("ImagenesDiagnosticas.ServiciosId")))
+                                 .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("ImagenesDiagnosticas.ServiciosId")))
+                                      .Editor(e => e.SelectBox().ID(Prefix + "ServiciosId")
+                                      .DataSource(d => d.Mvc().LoadMethod("POST").Controller("ImagenesDiagnosticas").LoadAction("GetServiciosId").Key("Id"))
+                                      .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                      .ValueExpr("Id").DisplayExpr("DescripcionCompleta").SearchExpr("Nombre")
+                                      .SearchEnabled(true).ShowClearButton(true)
+                                 );
+                                groupItems.AddSimpleFor(m => m.Entity.Observaciones).ColSpan(12)
+                                 .ValidationRules(rules => rules.AddStringLength().Min(0).Max(1000).Message(DApp.GetStringLengthResource("ImagenesDiagnosticas.Observaciones", 1000)))
+                                      .Editor(e => e.TextArea().ID(Prefix + "Observaciones"));
+                            });
+                    })
+                ) 
+            } 
+        </form> 
+
+        @* Si el maestro maneja detalle descomentar el siguiente codigo y remplazar la palabra "MAESTRODETALLE" *@
+ 
+        <div> 
+           <ul class="nav nav-tabs" role="tablist"> 
+               <li role="presentation" class="active"> 
+                   <a href="#ImagenesDiagnosticasDetalle" aria-controls="ImagenesDiagnosticasDetalle" role="tab" data-toggle="tab">
+                       @DApp.DefaultLanguage.GetResource("ImagenesDiagnosticasDetalle")
+                   </a> 
+               </li> 
+           </ul> 
+           <div class="tab-content"> 
+               <div role="tabpanel" class="tab-pane active" id="ImagenesDiagnosticasDetalle">
+                   <partial name="../ImagenesDiagnosticasDetalle/ListDetail.cshtml" model=Model view-data="ViewData" />
+               </div>
+           </div>
+        </div>
+        
+
+    </div> 
+</div> 
+

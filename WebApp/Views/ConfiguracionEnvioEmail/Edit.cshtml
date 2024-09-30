@@ -1,0 +1,138 @@
+@model ConfiguracionEnvioEmailModel 
+@{
+    string Prefix = "ConfiguracionEnvioEmail";
+
+    string UrlSave = Url.Action("Edit", "ConfiguracionEnvioEmail");
+    string UrlNew = Url.Action("New", "ConfiguracionEnvioEmail");
+    string UrlDelete = Url.Action("Delete", "ConfiguracionEnvioEmail", new { Id = Model.Entity.Id });
+    string UrlBack = Url.Action("ListPartial", "ConfiguracionEnvioEmail");
+
+    var ToolbarConfig = new ToolbarConfiguration(Prefix)
+        .Title(DApp.DefaultLanguage.GetResource("ConfiguracionEnvioEmail"))
+        .Save(DApp.ActionViewSecurity(Context, UrlSave),Model.Entity.IsNew)
+        //.New(UrlNew, DApp.ActionViewSecurity(Context, UrlNew))
+        .Delete(UrlDelete,DApp.ActionViewSecurity(Context,UrlDelete),UrlBack,Model.Entity.IsNew)
+        .AddButtons(new List<ButtonToolbar>()
+        {
+            new ButtonToolbar
+            {
+                Action = $"{Prefix}ProbarEnvioCorreo",
+                Text = @DApp.DefaultLanguage.GetResource("ConfiguracionEnvioEmail.ProbarEnvio"),
+                Disabled = Model.Entity.IsNew,
+                Location = ToolbarItemLocation.After,
+                LocateInMenu = ToolbarItemLocateInMenuMode.Auto,
+                Icon = "email"
+            }
+        })
+        .Back(UrlBack);
+
+    var DataGridDetailConfig = new DataGridConfiguration<EnviaEmailLog>(Prefix)
+        .Exports(true, true);
+
+}
+
+<partial name="ViewJS.cshtml" model="Model" view-data="ViewData" /> 
+
+@(Html.DControls().Toolbar(ToolbarConfig)) 
+
+<div> 
+    <div id = "ConfiguracionEnvioEmailMainPanelForm"> 
+        <form id = "@(Prefix)Form" asp-controller="ConfiguracionEnvioEmail" asp-action="Edit" class="form-horizontal" data-ajax-mode="replace" data-ajax-update="#mainPanel" data-ajax-success="@(Prefix)FormSuccess" data-ajax-failure="@(Prefix)FormFailure" data-ajax="true"> 
+            @(Html.DControls().ValidationSummary().ValidationGroup(Prefix + "ValidationGroup").ElementAttr("class","ErrorValidationSummary")) 
+            @using (Html.DevExtreme().ValidationGroup(Prefix + "ValidationGroup")) 
+            { 
+                @(Html.DControls().CheckBoxFor(m => m.Entity.IsNew).ID(Prefix + "IsNew").Visible(false)) 
+                @(Html.DControls().NumberBoxFor(m => m.Entity.Id).ID(Prefix + "Id").Visible(false)) 
+                @(Html.DControls().TextBoxFor(m => m.Entity.UpdatedBy).ID(Prefix + "UpdatedBy").Visible(false)) 
+                @(Html.DControls().DateBoxFor(m => m.Entity.LastUpdate).ID(Prefix + "LastUpdate").Type(DateBoxType.DateTime).Visible(false)) 
+                @(Html.DControls().TextBoxFor(m => m.Entity.CreatedBy).ID(Prefix + "CreatedBy").Visible(false)) 
+                @(Html.DControls().DateBoxFor(m => m.Entity.CreationDate).ID(Prefix + "CreationDate").Type(DateBoxType.DateTime).Visible(false)) 
+
+                @(Html.DControls().Form<ConfiguracionEnvioEmailModel>()
+                    .ID("ConfiguracionEnvioEmailModelForm").LabelLocation(FormLabelLocation.Top).ShowValidationSummary(false).FormData(Model)
+                    .Items(items =>
+                    {
+                        items.AddGroup().ColCount(12).Caption(DApp.DefaultLanguage.GetResource("DEFAULT.INFORMATIONGENERAL"))
+                            .Items(groupItems =>{
+                                groupItems.AddSimpleFor(m => m.Entity.Origen).ColSpan(4)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("ConfiguracionEnvioEmail.Origen")))
+                                 .ValidationRules(rules => rules.AddStringLength().Min(0).Max(50).Message(DApp.GetStringLengthResource("ConfiguracionEnvioEmail.Origen", 50)))
+                                      .Editor(e => e.TextBox().ID(Prefix + "Origen").ReadOnly(true));
+
+                                groupItems.AddEmpty().ColSpan(8);
+
+                                groupItems.AddSimpleFor(m => m.Entity.CorreoElectronico).ColSpan(6)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("ConfiguracionEnvioEmail.CorreoElectronico")))
+                                 .ValidationRules(rules => rules.AddStringLength().Min(0).Max(150).Message(DApp.GetStringLengthResource("ConfiguracionEnvioEmail.CorreoElectronico", 150)))
+                                      .Editor(e => e.TextBox().ID(Prefix + "CorreoElectronico").ShowClearButton(true));
+                                groupItems.AddSimpleFor(m => m.Entity.Contrasena).ColSpan(6)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("ConfiguracionEnvioEmail.Contraseña")))
+                                 .ValidationRules(rules => rules.AddStringLength().Min(0).Max(150).Message(DApp.GetStringLengthResource("ConfiguracionEnvioEmail.Contraseña", 150)))
+                                      .Editor(e => e.TextBox().Mode(TextBoxMode.Password).ID(Prefix + "Contrasena").ShowClearButton(true)
+                                      //.Buttons(buttons =>
+                                      //{
+                                      //    buttons.Add()
+                                      //        .Name($"{Prefix}BotonCambiarModoPassword")
+                                      //        .Location(TextEditorButtonLocation.After)
+                                      //        .Widget(w => w.Button()
+                                      //            .Type(ButtonType.Normal)
+                                      //            .Icon(Url.Content("~/images/eye_open_icon.png"))
+                                      //            .OnClick($"{Prefix}OnClickBotonCambiarModoPassword")
+                                      //        );
+                                      //})
+                                      );
+                                groupItems.AddSimpleFor(m => m.Entity.ServidorSMTP).ColSpan(4)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("ConfiguracionEnvioEmail.ServidorSMTP")))
+                                 .ValidationRules(rules => rules.AddStringLength().Min(0).Max(150).Message(DApp.GetStringLengthResource("ConfiguracionEnvioEmail.ServidorSMTP", 150)))
+                                      .Editor(e => e.TextBox().ID(Prefix + "ServidorSMTP").ShowClearButton(true));
+
+                                groupItems.AddSimpleFor(m => m.Entity.Puerto).ColSpan(2).ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("ConfiguracionEnvioEmail.Puerto")));
+                                groupItems.AddSimpleFor(m => m.Entity.UsaSSL).Label(x=>x.Visible(false)).ColSpan(2)
+                                      .Editor(e=>e.CheckBox().ID(Prefix + "UsaSSL").Text(DApp.DefaultLanguage.GetResource("ConfiguracionEnvioEmail.UsaSSL")));
+
+                            });
+                    })
+                ) 
+            } 
+        </form> 
+
+        @* Si el maestro maneja detalle descomentar el siguiente codigo y remplazar la palabra "MAESTRODETALLE" *@ 
+        <div> 
+           <ul class="nav nav-tabs" role="tablist"> 
+               <li role="presentation" class="active"> 
+                   <a href="#EnviaEmailLog" aria-controls="EnviaEmailLog" role="tab" data-toggle="tab"> 
+                       @DApp.DefaultLanguage.GetResource("EnviaEmailLog") 
+                   </a> 
+               </li> 
+           </ul> 
+           <div class="tab-content"> 
+               <div role="tabpanel" class="tab-pane active" id="EnviaEmailLog">
+                   <div class="card cardDeatil">
+                       <div class="card-body">
+                           <div class="box-body table-responsive no-padding">
+                               @(Html.DControls().DataGridSimple<EnviaEmailLog>(DataGridDetailConfig)
+                                    .ID("ConfiguracionEnvioEmailLogGrid")
+                                    .DataSource(d => d.Mvc().LoadMethod("POST").Controller(Prefix).LoadAction("GetLog").Key("Id"))
+                                    .DataSourceOptions(x=>x.Filter("['Origen','=','" + @Model.Entity.Origen+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+                                    .Columns(columns =>
+                                    {
+                                        columns.AddFor(m => m.CreationDate).Format(DApp.DefaultLanguage.DateTimeFormat).Caption(DApp.DefaultLanguage.GetResource("EnviaEmailLog.CreationDate")).SortOrder(SortOrder.Desc);
+                                        columns.AddFor(m => m.CorreoEnvia);
+                                        columns.AddFor(m => m.Asunto);
+                                        columns.AddFor(m => m.CorreosDestinatarios);
+                                        columns.AddFor(m => m.Exitoso);
+                                        columns.AddFor(m => m.Error);
+                                        columns.AddFor(m => m.ErrorDeDatos);
+                                    })
+                                )
+                           </div>
+                           <div id="GlosasMainPanelForm"></div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+        </div>
+
+    </div> 
+</div> 
+

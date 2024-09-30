@@ -1,0 +1,34 @@
+@{ 
+    string Prefix = "ProgramacionAgenda";
+    string UrlClick = Url.Action("Edit", "ProgramacionAgenda");
+    string UrlNew = Url.Action("New", "ProgramacionAgenda");
+
+    var DataGridConfig = new DataGridConfiguration<ProgramacionAgenda>(Prefix)
+        .OnClick(UrlClick, new { Id = "Id" })
+        .New(UrlNew,DApp.ActionViewSecurity(Context,UrlNew))
+        .Exports(true,true).SetStorage()
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("ProgramacionAgenda"), "mainPanel");
+} 
+
+<div class="box-body table-responsive no-padding"> 
+@(Html.DControls().DataGridSimple<ProgramacionAgenda>(DataGridConfig)
+    .ID("ProgramacionAgendaDataGrid")
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("ProgramacionAgenda").LoadAction("Get").Key("Id"))
+    .Columns(columns =>
+    {
+        columns.AddFor(m => m.Consecutivo).SortOrder(SortOrder.Desc);
+        columns.AddFor(m => m.FechaInicio).Caption("Fecha y Hora Inicial").Format(DApp.DefaultLanguage.DateTimeFormat);
+        columns.AddFor(m => m.FechaFinal).Caption("Fecha y Hora Final").Format(DApp.DefaultLanguage.DateTimeFormat);
+        //columns.AddFor(m => m.FechaInicio).Caption("Hora Inicial").Format(DApp.DefaultLanguage.TimeFormat);
+        //columns.AddFor(m => m.FechaFinal).Caption("Hora Final").Format(DApp.DefaultLanguage.TimeFormat);
+        columns.AddFor(m => m.Observaciones);
+        columns.AddFor(m => m.Lunes);
+        columns.AddFor(m => m.Martes);
+        columns.AddFor(m => m.Miercoles);
+        columns.AddFor(m => m.Jueves);
+        columns.AddFor(m => m.Viernes);
+        columns.AddFor(m => m.Sabado);
+        columns.AddFor(m => m.Domingo);
+    })
+) 
+</div> 

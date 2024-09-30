@@ -1,0 +1,101 @@
+@*  Remplazar FATHERModel por el modelo del padre al que pertenece   *@ 
+ 
+@model NotasModel 
+@{ 
+    string Prefix = "NotasDetalles"; 
+    string UrlOnClick = Url.Action("EditDetail", "NotasDetalles"); 
+    string UrlNew = Url.Action("NewDetail", "NotasDetalles", new { IdFather = Model.Entity.Id }); 
+
+    var DataGridDetailConfig = new DataGridConfiguration<NotasDetalles>(Prefix) 
+        .OnClick(UrlOnClick, new { Id = "Id" }, Prefix + "MainPanelForm") 
+        .New(UrlNew,Model.Entity.IsNew,Prefix + "MainPanelForm") 
+        .Exports(true,true); 
+} 
+ 
+
+
+@* ------------ Descomentar el siguiente codigo si es una edicion en maestro --------------- *@
+ 
+
+<div class="card cardDeatil"> 
+    <div class="card-body">
+        <div class="box-body table-responsive no-padding"> 
+        @(Html.DControls().DataGridSimple<NotasDetalles>(DataGridDetailConfig) 
+            .ID("NotasDetallesDetalleDataGrid") 
+            .DataSource(d => d.Mvc().LoadMethod("POST").Controller("NotasDetalles").LoadAction("Get").Key("Id")) 
+            .DataSourceOptions(x=>x.Filter("['NotasId','=','"+@Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+            .Columns(columns => 
+            { 
+             columns.AddFor(m => m.NroLinea); 
+             columns.AddFor(m => m.Servicios.Nombre); 
+             columns.AddFor(m => m.Cantidad); 
+             columns.AddFor(m => m.ValorServicio); 
+             columns.AddFor(m => m.SubTotal); 
+             columns.AddFor(m => m.PorcDescuento); 
+             columns.AddFor(m => m.PorcImpuesto); 
+             columns.AddFor(m => m.ValorTotal); 
+            }) 
+        ) 
+        </div> 
+        <div id="NotasDetallesMainPanelForm"></div> 
+    </div> 
+</div> 
+ 
+
+
+@* ------------ Descomentar el siguiente codigo si es una edicion en grilla y COMENTAR LOS METODOS OnClick y New del DataGridDetailConfig --------------- *@
+@* 
+<script> 
+     function @(Prefix)OnInitNewRowDetalleDataGrid(model) { 
+         model = GetAuditoryData(model); 
+         model.data.IdFather = "@Model.Entity.Id"; // Cambiar IdFather por el campo foraneo hacia el padre 
+     } 
+</script> 
+<div class="card cardDeatil"> 
+    <div class="card-body">
+        <div class="box-body table-responsive no-padding"> 
+             @(Html.DControls().DataGridSimple<NotasDetalles>(DataGridDetailConfig) 
+                 .ID("NotasDetallesDetalleDataGrid") 
+                 .DataSource(d => d.Mvc().LoadMethod("POST").Controller("NotasDetalles").LoadAction("Get").Key("Id") 
+                     .InsertAction("AddInGrid").InsertMethod("POST").UpdateAction("ModifyInGrid").UpdateMethod("POST").DeleteAction("DeleteInGrid").DeleteMethod("POST") 
+                 ) 
+                 .DataSourceOptions(x=>x.Filter("['IdFather','=','"+@Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+                 .Editing(editing => editing.Mode(GridEditMode.Batch).AllowAdding(!Model.Entity.IsNew).AllowUpdating(true).AllowDeleting(true)) 
+                 .OnInitNewRow(Prefix + "OnInitNewRowDetalleDataGrid") 
+                 .OnRowInserted("OnRowInsertedDetalleDataGrid").OnRowUpdated("OnRowUpdatedDetalleDataGrid").OnRowRemoved("OnRowRemovedDetalleDataGrid").OnDataErrorOccurred("OnDataErrorOccurredDetalleDataGrid") 
+                 .Columns(columns => 
+                 { 
+                     columns.AddFor(m => m.NotasId) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("NotasDetalles.NotasId"))) 
+                         .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("NotasDetalles.NotasId"))) 
+                             .Lookup(lookup => lookup 
+                             .DataSource(d => d.Mvc().LoadMethod("POST").Controller("NotasDetalles").LoadAction("GetNotasId").Key("Id")) 
+                             .DataSourceOptions(o => o.Paginate(true).PageSize(10)) 
+                             .ValueExpr("Id").DisplayExpr("Id")); 
+                     columns.AddFor(m => m.NroLinea).Format("#,##0.##") 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("NotasDetalles.NroLinea"))); 
+                     columns.AddFor(m => m.ServiciosId) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("NotasDetalles.ServiciosId"))) 
+                         .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("NotasDetalles.ServiciosId"))) 
+                             .Lookup(lookup => lookup 
+                             .DataSource(d => d.Mvc().LoadMethod("POST").Controller("NotasDetalles").LoadAction("GetServiciosId").Key("Id")) 
+                             .DataSourceOptions(o => o.Paginate(true).PageSize(10)) 
+                             .ValueExpr("Id").DisplayExpr("Id")); 
+                     columns.AddFor(m => m.Cantidad).Format("#,##0.##") 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("NotasDetalles.Cantidad"))); 
+                     columns.AddFor(m => m.PorcDescuento).Format("#,##0.##") 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("NotasDetalles.PorcDescuento"))); 
+                     columns.AddFor(m => m.PorcImpuesto).Format("#,##0.##") 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("NotasDetalles.PorcImpuesto"))); 
+                     columns.AddFor(m => m.ValorServicio).Format("#,##0.##") 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("NotasDetalles.ValorServicio"))); 
+                     columns.AddFor(m => m.SubTotal).Format("#,##0.##") 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("NotasDetalles.SubTotal"))); 
+                     columns.AddFor(m => m.ValorTotal).Format("#,##0.##") 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("NotasDetalles.ValorTotal"))); 
+             }) 
+         ) 
+        </div> 
+    </div> 
+</div> 
+*@ 

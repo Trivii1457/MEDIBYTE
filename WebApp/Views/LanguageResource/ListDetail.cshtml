@@ -1,0 +1,69 @@
+@*  Remplazar FATHERModel por el modelo del padre al que pertenece   *@ 
+ 
+@model LanguagesModel 
+@{ 
+    string Prefix = "LanguageResource";
+    string UrlOnClick = Url.Action("EditDetail", "LanguageResource");
+    string UrlNew = Url.Action("NewDetail", "LanguageResource", new { IdFather = Model.Entity.Id });
+
+    var DataGridDetailConfig = new DataGridConfiguration<Language.LanguageResource>(Prefix)
+        //.OnClick(UrlOnClick, new { Id = "Id" }, Prefix + "MainPanelForm")
+        //.New(UrlNew,Model.Entity.IsNew,Prefix + "MainPanelForm") 
+        .Exports(true,true);
+} 
+ 
+
+
+@* ------------ Descomentar el siguiente codigo si es una edicion en maestro --------------- *@
+@* 
+
+<div class="card cardDeatil"> 
+    <div class="card-body">
+        <div class="box-body table-responsive no-padding"> 
+        @(Html.DControls().DataGridSimple<LanguageResource>(DataGridDetailConfig) 
+            .ID("LanguageResourceDetalleDataGrid") 
+            .DataSource(d => d.Mvc().LoadMethod("POST").Controller("LanguageResource").LoadAction("Get").Key("Id")) 
+            .DataSourceOptions(x=>x.Filter("['IdFather','=','"+@Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+            .Columns(columns => 
+            { 
+             columns.AddFor(m => m.Languages.Id); 
+             columns.AddFor(m => m.ResourceKey); 
+             columns.AddFor(m => m.ResourceValue); 
+             columns.AddFor(m => m.Active); 
+            }) 
+        ) 
+        </div> 
+        <div id="LanguageResourceMainPanelForm"></div> 
+    </div> 
+</div> 
+*@ 
+
+
+@* ------------ Descomentar el siguiente codigo si es una edicion en grilla y COMENTAR LOS METODOS OnClick y New del DataGridDetailConfig --------------- *@
+ 
+<div class="card cardDeatil"> 
+    <div class="card-body">
+        <div class="box-body table-responsive no-padding"> 
+             @(Html.DControls().DataGridSimple<Language.LanguageResource>(DataGridDetailConfig)
+                 .ID("LanguageResourceDetalleDataGrid")
+                 .DataSource(d => d.Mvc().LoadMethod("POST").Controller("LanguageResource").LoadAction("Get").Key("Id")
+                     .InsertAction("AddInGrid").InsertMethod("POST").UpdateAction("ModifyInGrid").UpdateMethod("POST").DeleteAction("DeleteInGrid").DeleteMethod("POST")
+                 )
+                 .Editing(editing => editing.Mode(GridEditMode.Batch).AllowAdding(!Model.Entity.IsNew).AllowUpdating(true).AllowDeleting(true))
+                 .OnRowInserted("OnRowInsertedDetalleDataGrid").OnRowUpdated("OnRowUpdatedDetalleDataGrid").OnRowRemoved("OnRowRemovedDetalleDataGrid").OnDataErrorOccurred("OnDataErrorOccurredDetalleDataGrid")
+                 .Columns(columns =>
+                 {
+                     columns.AddFor(m => m.Id)
+                        .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("LanguageResources.ResourceKey")))
+                        .ValidationRules(rules => rules.AddStringLength().Min(0).Max(255).Message(DApp.GetStringLengthResource("LanguageResources.ResourceKey", 255)))
+                     ;
+                     columns.AddFor(m => m.Description)
+                        .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("LanguageResources.ResourceValue")))
+                        .ValidationRules(rules => rules.AddStringLength().Min(0).Max(1024).Message(DApp.GetStringLengthResource("LanguageResources.ResourceValue", 1024)))
+                     ;
+                 })
+         ) 
+        </div> 
+    </div> 
+</div> 
+ 

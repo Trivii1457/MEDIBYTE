@@ -1,0 +1,23 @@
+@{ 
+    string Prefix = "HCTiposPreguntas"; 
+    string UrlClick = Url.Action("Edit", "HCTiposPreguntas"); 
+    string UrlNew = Url.Action("New", "HCTiposPreguntas"); 
+
+    var DataGridConfig = new DataGridConfiguration<HCTiposPreguntas>(Prefix) 
+        .OnClick(UrlClick, new { Id = "Id" }) 
+        .New(UrlNew,DApp.ActionViewSecurity(Context,UrlNew)) 
+        .Exports(true,true) 
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("HCTiposPreguntas"), "mainPanel"); 
+} 
+
+<div class="box-body table-responsive no-padding"> 
+@(Html.DControls().DataGridSimple<HCTiposPreguntas>(DataGridConfig) 
+    .ID("HCTiposPreguntasDataGrid") 
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("HCTiposPreguntas").LoadAction("Get").Key("Id")) 
+    .Columns(columns => 
+    { 
+        columns.AddFor(m => m.HCTipos.Id); 
+        columns.AddFor(m => m.HCPreguntas.Id); 
+    }) 
+) 
+</div> 

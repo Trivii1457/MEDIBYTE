@@ -1,0 +1,38 @@
+@{
+    string Prefix = "Glosas";
+    string UrlClick = Url.Action("Edit", "Glosas");
+    string UrlNew = Url.Action("New", "Glosas");
+
+    var DataGridConfig = new DataGridConfiguration<Glosas>(Prefix)
+        .OnClick(UrlClick, new { Id = "Id" })
+        .New(UrlNew, DApp.ActionViewSecurity(Context, UrlNew))
+        .Exports(true, true).SetStorage()
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("Glosas"), "mainPanel");
+}
+
+    <partial name="ViewJS.cshtml" model="Model" view-data="ViewData" />
+
+<div class="box-body table-responsive no-padding">
+    @(Html.DControls().DataGridSimple<Glosas>(DataGridConfig)
+    .ID("GlosasDataGrid")
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Glosas").LoadAction("Get").Key("Id"))
+    .Columns(columns =>
+    {
+        columns.AddFor(m => m.FacturasId)
+                        .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Glosas.FacturasId")))
+                        .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Glosas.FacturasId")))
+                            .Lookup(lookup => lookup
+                            .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Glosas").LoadAction("GetFacturasId").Key("Id"))
+                            .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                            .ValueExpr("Id").DisplayExpr(new JS(Prefix + "DisplayExprFacturaId")));
+        columns.AddFor(m => m.ValorGlosado);
+        columns.AddFor(m => m.CausalesGlosas.Descripcion);
+        //columns.AddFor(m => m.ValorAceptado);
+        //columns.AddFor(m => m.ValorGlosadoFinal);
+        columns.AddFor(m => m.ValorAceptado).Format("#,##0.##")
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Glosas.ValorAceptado")));
+        columns.AddFor(m => m.ValorGlosadoFinal).Format("#,##0.##")
+            .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Glosas.ValorGlosadoFinal")));
+    })
+)
+</div>

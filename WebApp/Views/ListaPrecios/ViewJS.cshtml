@@ -1,0 +1,91 @@
+@model ListaPreciosModel 
+@{
+    string Prefix = "ListaPrecios";
+    string PrefixDuplicar = "ListaPreciosDuplicar";
+}
+
+    <script>
+
+    function @(Prefix)ShowPopUpDuplicar(e) {
+        $("#@(Prefix)DuplicarPopUp").dxPopup("instance").show();
+        //$("#@(PrefixDuplicar)Id").dxNumberBox("instance").option("value");
+    }
+    function @(Prefix)OnChangeValueEstado(e) {
+        if (e.value == 53) {
+            $("#@(Prefix)Porcentaje").dxNumberBox("instance").option("value", 0);
+            $("#@(Prefix)Porcentaje").dxNumberBox("instance").option("readOnly", true);
+            $("#@(Prefix)Valor").dxNumberBox("instance").option("readOnly", false);
+        }
+        else if (e.value == 54) {
+            $("#@(Prefix)Valor").dxNumberBox("instance").option("value", 0);
+            $("#@(Prefix)Valor").dxNumberBox("instance").option("readOnly", true);
+            $("#@(Prefix)Porcentaje").dxNumberBox("instance").option("readOnly", false);
+        }
+
+
+    }
+    function @(Prefix)OnChangeValueEstadoDuplicar(e) {
+        if (e.value == 53) {
+            $("#@(PrefixDuplicar)PorcentajeDuplicar").dxNumberBox("instance").option("value", 0);
+            $("#@(PrefixDuplicar)PorcentajeDuplicar").dxNumberBox("instance").option("readOnly", true);
+            $("#@(PrefixDuplicar)ValorDuplicar").dxNumberBox("instance").option("readOnly", false);
+        }
+        else if (e.value == 54) {
+            $("#@(PrefixDuplicar)ValorDuplicar").dxNumberBox("instance").option("value", 0);
+            $("#@(PrefixDuplicar)ValorDuplicar").dxNumberBox("instance").option("readOnly", true);
+            $("#@(PrefixDuplicar)PorcentajeDuplicar").dxNumberBox("instance").option("readOnly", false);
+        }
+
+
+    }
+
+    function @(Prefix)FormSuccess(data)
+    {
+        hideLoadIndicator();
+        if ('@ViewData.ModelState.IsValid' == 'True')
+        {
+            if ("@ViewBag.Accion" == "Delete") {
+                DevExpress.ui.notify("Registro eliminado correctamente.","info");
+            } else if ("@ViewBag.Accion" == "Save") {
+                DevExpress.ui.notify("Registro guardado correctamente.","info");
+            }else if ("@ViewBag.Accion" == "Duplicate") {
+                DevExpress.ui.notify("Registro duplicado correctamente.","info");
+            }
+            else {
+                DevExpress.ui.notify("Error no accion en submit.","info");
+            }
+        }
+    }
+
+    function @(Prefix)FormFailure(data)
+    {
+        hideLoadIndicator();
+        DevExpress.ui.notify("Error en el formulario","error");
+    }
+
+    function @(Prefix)FormSuccessDetail(data)
+    {
+        hideLoadIndicator();
+        if ('@ViewData.ModelState.IsValid' == 'True')
+        {
+            $("#ListaPreciosDetalleDataGrid").dxDataGrid("instance").refresh();
+            if ("@ViewBag.Accion" == "Delete") {
+                DevExpress.ui.notify("Registro eliminado correctamente.","info");
+            } else if ("@ViewBag.Accion" == "Save") {
+                DevExpress.ui.notify("Registro guardado correctamente.","info");
+            }else if ("@ViewBag.Accion" == "Duplicate") {
+                DevExpress.ui.notify("Registro duplicado correctamente.","info");
+            }
+            else {
+                DevExpress.ui.notify("Error no accion en submit.","info");
+            }
+        }
+    }
+
+    function @(Prefix)FormFailureDetail(data)
+    {
+        hideLoadIndicator();
+        DevExpress.ui.notify("Error en el formulario","error");
+    }
+
+    </script>

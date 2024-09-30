@@ -1,0 +1,30 @@
+@{ 
+    string Prefix = "NotasDetalles"; 
+    string UrlClick = Url.Action("Edit", "NotasDetalles"); 
+    string UrlNew = Url.Action("New", "NotasDetalles"); 
+
+    var DataGridConfig = new DataGridConfiguration<NotasDetalles>(Prefix) 
+        .OnClick(UrlClick, new { Id = "Id" }) 
+        .New(UrlNew,DApp.ActionViewSecurity(Context,UrlNew)) 
+        .Exports(true,true) 
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("NotasDetalles"), "mainPanel"); 
+} 
+
+<div class="box-body table-responsive no-padding"> 
+@(Html.DControls().DataGridSimple<NotasDetalles>(DataGridConfig) 
+    .ID("NotasDetallesDataGrid") 
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("NotasDetalles").LoadAction("Get").Key("Id")) 
+    .Columns(columns => 
+    { 
+        columns.AddFor(m => m.Notas.Id); 
+        columns.AddFor(m => m.NroLinea); 
+        columns.AddFor(m => m.Servicios.Id); 
+        columns.AddFor(m => m.Cantidad); 
+        columns.AddFor(m => m.PorcDescuento); 
+        columns.AddFor(m => m.PorcImpuesto); 
+        columns.AddFor(m => m.ValorServicio); 
+        columns.AddFor(m => m.SubTotal); 
+        columns.AddFor(m => m.ValorTotal); 
+    }) 
+) 
+</div> 

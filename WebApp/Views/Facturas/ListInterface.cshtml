@@ -1,0 +1,72 @@
+@{
+    string Prefix = "Facturas";
+    string UrlClick = Url.Action("Edit", "Facturas");
+    string UrlNew = Url.Action("New", "Facturas");
+
+    var DataGridConfig = new DataGridConfiguration<Facturas>(Prefix)
+        //.OnClick(UrlClick, new { Id = "Id" })
+        //.New(UrlNew,DApp.ActionViewSecurity(Context,UrlNew))
+        .Exports(true, true).SetStorage()
+        .AddButtons(new List<ButtonToolbar>
+        {
+            new ButtonToolbar
+            {
+                Action = $"{Prefix}GenerateFileToCobol",
+                Icon = "download",
+                Text = DApp.DefaultLanguage.GetResource("Facturas.GenerateFileToCobol"),
+                LocateInMenu = ToolbarItemLocateInMenuMode.Auto,
+                Location = ToolbarItemLocation.After
+            }
+        })
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("Facturas"), "mainPanel");
+}
+
+<script>
+    function @(Prefix)GenerateFileToCobol() {
+        var facturasId = $("#FacturasDataGrid").dxDataGrid("instance").getSelectedRowKeys();
+        if (facturasId != null && facturasId.length > 0) {
+            showLoadIndicator();
+            $.ajax({
+                url: "@Url.Action("GenerateFileToCobol", Prefix)",
+                data: { ids: facturasId },
+                type: 'POST',
+                success: function (data) {
+                    hideLoadIndicator();
+                    console.log(data);
+                    DescargarArchivo("@Url.Action("DownloadZipFileToCobol", Prefix)", data);
+                },
+                error: function (xhr) {
+                    hideLoadIndicator();
+                    DevExpress.ui.notify("Error: " + xhr.responseText, "error", 4000);
+                }
+            });
+        } else {
+            DevExpress.ui.notify("Seleccione al menos una factura.", "error");
+        }
+    }
+</script>
+
+<div class="box-body table-responsive no-padding">
+    @(Html.DControls().DataGridSimple<Facturas>(DataGridConfig)
+        .ID("FacturasDataGrid")
+        .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Facturas").LoadAction("Get").Key("Id"))
+        .RemoteOperations(true)
+        .Columns(columns =>
+         {
+             columns.AddFor(m => m.Documentos.Prefijo);
+             columns.AddFor(m => m.NroConsecutivo);
+             columns.AddFor(m => m.Fecha).SortOrder(SortOrder.Desc);
+
+             columns.AddFor(m => m.Entidades.Nombre).Caption(DApp.DefaultLanguage.GetResource("Facturas.AdquirienteJuridico"));
+             columns.AddFor(m => m.Pacientes.NombreCompleto).Caption(DApp.DefaultLanguage.GetResource("Facturas.AdquirienteNatural"));
+             columns.AddFor(m => m.Sedes.Nombre).Caption(DApp.DefaultLanguage.GetResource("Facturas.Sede"));
+
+             columns.AddFor(m => m.ValorCopagoCuotaModeradora);
+             columns.AddFor(m => m.ValorTotal);
+             columns.AddFor(m => m.Saldo);
+             columns.AddFor(m => m.Estados.Nombre);
+             columns.AddFor(m => m.TieneNotas);
+             columns.AddFor(m => m.DIANResponse);
+         })
+)
+</div>

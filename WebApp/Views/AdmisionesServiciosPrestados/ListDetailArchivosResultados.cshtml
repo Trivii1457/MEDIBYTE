@@ -1,0 +1,145 @@
+@*  Remplazar FATHERModel por el modelo del padre al que pertenece   *@
+
+@model AdmisionesServiciosPrestadosModel
+@{
+    string Prefix = "AdmisionesServiciosPrestadosArchivos";
+    string UrlOnClick = Url.Action("EditDetail", "AdmisionesServiciosPrestadosArchivos");
+    string UrlNew = Url.Action("NewDetail", "AdmisionesServiciosPrestadosArchivos", new { IdFather = Model.Entity.Id });
+
+    var DataGridDetailConfig = new DataGridConfiguration<AdmisionesServiciosPrestadosArchivos>(Prefix)
+        //.OnClick(UrlOnClick, new { Id = "Id" }, Prefix + "MainPanelForm")
+        //.New(UrlNew,Model.Entity.IsNew,Prefix + "MainPanelForm")
+        .AddButtons(new List<ButtonToolbar>{
+            new ButtonToolbar(){
+                Id=$"{Prefix}ButtonCargarImagenDiagnostica",
+                Text=DApp.DefaultLanguage.GetResource("AdmisionesServiciosPrestadosArchivos.CargarArchivos"),
+                Action=$"{Prefix}MostrarCargueImagenDiagnostica",
+                Icon="upload",
+                LocateInMenu=ToolbarItemLocateInMenuMode.Always,
+                Disabled = Model.Entity.IsNew
+            },
+        })
+        .Exports(true, true);
+}
+
+<script>
+    function @(Prefix)MostrarCargueImagenDiagnostica(data)
+    {
+        $("#@(Prefix)PopupArchivoResultado").dxPopup("instance").show();
+    }
+    function @(Prefix)FileUploaderArchivoResultadoOnUploadStarted(data)
+    {
+        showLoadIndicator();
+        $("#@(Prefix)Errores").html("");
+    }
+    function @(Prefix)FileUploaderArchivoResultadoOnUploaded(data)
+    {
+        hideLoadIndicator();
+        $("#AdmisionesServiciosPrestadosArchivosDetalleDataGrid").dxDataGrid("instance").refresh();
+    }
+    function @(Prefix)FileUploaderArchivoResultadoOnUploadError(data)
+    {
+        console.log("OnUploadError", data);
+        hideLoadIndicator();
+        try {
+            var result = JSON.parse(data.request.response);
+            if (result.TieneErrores) {
+                var htmlError = "<ul>";
+                for (var i = 0; i < result.Errores.length; i++) {
+                    htmlError += "<li>" + result.Errores[i] + "</li>"
+                }
+                htmlError += "</ul>";
+                $("#@(Prefix)Errores").html(htmlError);
+            }
+        }
+        catch (err) {
+            $("#@(Prefix)Errores").html(data.request.response);
+        }
+
+    }
+    function @(Prefix)PopupOnHidden(data)
+    {
+        $("#@(Prefix)FileUploaderArchivoResultado").dxFileUploader("instance").reset();
+    }
+
+    function @(Prefix)EliminarArchivoResultado(id)
+    {
+        showLoadIndicator();
+        $.ajax({
+            url: '@Url.Action("EliminarArchivoResultado", "AdmisionesServiciosPrestadosArchivos")',
+            data: { id: id},
+            type: 'POST',
+            success: function (data) {
+                hideLoadIndicator();
+                $("#AdmisionesServiciosPrestadosArchivosDetalleDataGrid").dxDataGrid("instance").refresh();
+                DevExpress.ui.notify("Archivo eliminado satisfactoriamente.", "info");
+            },
+            error: function (xhr) {
+                hideLoadIndicator();
+                DevExpress.ui.notify("Error: " + xhr.status + " | " + xhr.statusText, "error", 10000);
+            }
+        });
+    }
+
+</script>
+
+@* ------------ Descomentar el siguiente codigo si es una edicion en maestro --------------- *@
+<div class="card">
+    <div class="card-body">
+        <div class="box-body table-responsive no-padding">
+            @(Html.DControls().DataGridSimple<AdmisionesServiciosPrestadosArchivos>(DataGridDetailConfig)
+            .ID("AdmisionesServiciosPrestadosArchivosDetalleDataGrid")
+            .DataSource(d => d.Mvc().LoadMethod("POST").Controller("AdmisionesServiciosPrestadosArchivos").LoadAction("Get").Key("Id"))
+            .Paging(x=>x.PageSize(5))
+            .DataSourceOptions(x=>x.Filter("['AdmisionesServiciosPrestadosId','=','" + @Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+            .Columns(columns =>
+            {
+                columns.AddFor(m => m.Nombre);
+                columns.Add().Width("50").Caption("").Alignment(HorizontalAlignment.Center).CellTemplate(
+                @<text>
+                <a href="/AdmisionesServiciosPrestadosArchivos/DescargarArchivoResultado/<%- data.Id %>" target="_blank"><i class="fa fa-cloud-download" aria-hidden="true"></i></a>
+                </text>);
+                columns.Add().Width("50").Caption("").Alignment(HorizontalAlignment.Center).CellTemplate(
+                @<text>
+                <a href="javascript:void(0);" onclick="@(Prefix)EliminarArchivoResultado(<%- data.Id %>)"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                </text>);
+            })
+        )
+        </div>
+        <div id="AdmisionesServiciosPrestadosArchivosMainPanelForm"></div>
+    </div>
+</div>
+
+@(Html.DevExtreme().Popup()
+    .ID($"{Prefix}PopupArchivoResultado")
+    .Width(800)
+    .Height(350)
+    .ShowTitle(true)
+    .Title(DApp.DefaultLanguage.GetResource("AdmisionesServiciosPrestadosArchivos.PopupArchivoResultado"))
+    .Visible(false)
+    .DragEnabled(false)
+    .CloseOnOutsideClick(false)
+    .OnHidden($"{Prefix}PopupOnHidden")
+    .ContentTemplate(new TemplateName($"{Prefix}TemplateArchivoResultado"))
+)
+
+@using (Html.DevExtreme().NamedTemplate($"{Prefix}TemplateArchivoResultado"))
+{
+    <div id="@(Prefix)Errores" class="text-danger text-sm-left"></div>
+    <div id="@(Prefix)FileUploaderDiv" style="max-height: 100%;overflow: auto;">
+        @(Html.DevExtreme().FileUploader()
+            .ID($"{Prefix}FileUploaderArchivoResultado")
+            .Name("ArchivoResultado")
+            .Multiple(true)
+            .Accept("*")
+            .MaxFileSize(3000000) @*3 Megas*@
+            .UploadMode(FileUploadMode.UseButtons)
+            .UploadUrl(Url.Action("CargarArchivoResultado", "AdmisionesServiciosPrestadosArchivos", new { admisionesServiciosPrestadosId = @Model.Entity.Id }))
+            .OnUploadStarted($"{Prefix}FileUploaderArchivoResultadoOnUploadStarted")
+            .OnUploaded($"{Prefix}FileUploaderArchivoResultadoOnUploaded")
+            .OnUploadError($"{Prefix}FileUploaderArchivoResultadoOnUploadError")
+        )
+    </div>
+
+}
+

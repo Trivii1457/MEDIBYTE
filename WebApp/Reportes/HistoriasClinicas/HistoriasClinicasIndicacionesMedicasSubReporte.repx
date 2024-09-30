@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<XtraReportsLayoutSerializer SerializerVersion="20.2.6.0" Ref="1" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v20.2, Version=20.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="HistoriasClinicasIndicacionesMedicasSubReporte" Margins="44, 31, 0, 0" PageWidth="850" PageHeight="1100" Version="20.2" EventsInfo="|HistoriasClinicasIndicacionesMedicasSubReporte,BeforePrint,AtencionesResultadoReporte_BeforePrint;GroupHeader1,BeforePrint,GroupHeader1_BeforePrint" FilterString="[HC_ID] = ?pHC_ID" DataMember="IndicacionesMedicasDetalles_1" DataSource="#Ref-0" Font="Arial, 9.75pt" BorderColor="WhiteSmoke">
+  <Extensions>
+    <Item1 Ref="2" Key="VSReportExtInfo" Value=".repx" />
+  </Extensions>
+  <Parameters>
+    <Item1 Ref="4" Visible="false" Description="pHC_ID" ValueInfo="0" Name="pHC_ID" Type="#Ref-3" />
+  </Parameters>
+  <Bands>
+    <Item1 Ref="5" ControlType="TopMarginBand" Name="TopMargin" HeightF="0" />
+    <Item2 Ref="6" ControlType="BottomMarginBand" Name="BottomMargin" HeightF="0" />
+    <Item3 Ref="7" ControlType="DetailBand" Name="Detail" HeightF="47.4265">
+      <Controls>
+        <Item1 Ref="8" ControlType="XRTable" Name="table1" SizeF="775,47.4265" LocationFloat="0,0" Font="Calibri, 8.25pt, style=Bold, charSet=0" Padding="2,2,0,0,96" BorderColor="Gray" Borders="All" BorderWidth="0.5">
+          <Rows>
+            <Item1 Ref="9" ControlType="XRTableRow" Name="tableRow5" Weight="11.5">
+              <Cells>
+                <Item1 Ref="10" ControlType="XRTableCell" Name="tableCell9" Weight="1.8267843266969084" Multiline="true" Text="Servicio" TextAlignment="MiddleCenter">
+                  <StylePriority Ref="11" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="12" ControlType="XRTableCell" Name="tableCell15" Weight="0.1732156733030914" Multiline="true" Text="Cantidad" TextAlignment="MiddleCenter" Font="Calibri, 8.25pt, style=Bold, charSet=0">
+                  <StylePriority Ref="13" UseFont="false" UseTextAlignment="false" />
+                </Item2>
+              </Cells>
+            </Item1>
+            <Item2 Ref="14" ControlType="XRTableRow" Name="tableRow6" Weight="11.5">
+              <Cells>
+                <Item1 Ref="15" ControlType="XRTableCell" Name="tableCell12" Weight="1.8267844842069891" CanGrow="false" Text="tableCell4" TextAlignment="MiddleLeft" WordWrap="false" Font="Calibri, 8.25pt, charSet=0">
+                  <ExpressionBindings>
+                    <Item1 Ref="16" EventName="BeforePrint" PropertyName="Text" Expression="[HCID_SERVICIO]" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="17" UseFont="false" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="18" ControlType="XRTableCell" Name="tableCell17" Weight="0.17321551579301076" CanGrow="false" TextFormatString="{0:#,#}" Text="tableCell17" TextAlignment="MiddleCenter" WordWrap="false" Font="Calibri, 8.25pt">
+                  <ExpressionBindings>
+                    <Item1 Ref="19" EventName="BeforePrint" PropertyName="Text" Expression="[HCID_CANTIDAD]" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="20" UseFont="false" UseTextAlignment="false" />
+                </Item2>
+              </Cells>
+            </Item2>
+            <Item3 Ref="21" ControlType="XRTableRow" Name="tableRow8" Weight="11.5">
+              <Cells>
+                <Item1 Ref="22" ControlType="XRTableCell" Name="tableCell19" Weight="2" Multiline="true" TextAlignment="TopLeft" Font="Calibri, 8.25pt, charSet=0">
+                  <ExpressionBindings>
+                    <Item1 Ref="23" EventName="BeforePrint" PropertyName="Text" Expression="Concat('Observaciones: ', IsNull([HCID_OBSERVACIONES],''))" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="24" UseFont="false" UseTextAlignment="false" />
+                </Item1>
+              </Cells>
+            </Item3>
+          </Rows>
+          <StylePriority Ref="25" UseFont="false" UseBorderColor="false" UseBorders="false" UseBorderWidth="false" />
+        </Item1>
+      </Controls>
+      <ExpressionBindings>
+        <Item1 Ref="26" EventName="BeforePrint" PropertyName="Visible" Expression="Iif([DataSource.RowCount] == 0, False, True)" />
+      </ExpressionBindings>
+    </Item3>
+    <Item4 Ref="27" ControlType="GroupHeaderBand" Name="GroupHeader1" HeightF="52.2647324">
+      <GroupFields>
+        <Item1 Ref="28" FieldName="HCI_ID" />
+      </GroupFields>
+      <Controls>
+        <Item1 Ref="29" ControlType="XRTable" Name="table2" SizeF="775,47.4265" LocationFloat="0,4.83823252" Font="Calibri, 8.25pt, style=Bold, charSet=0" Padding="2,2,0,0,96" BorderColor="Gray" Borders="All" BorderWidth="0.5">
+          <Rows>
+            <Item1 Ref="30" ControlType="XRTableRow" Name="tableRow3" Weight="11.5">
+              <Cells>
+                <Item1 Ref="31" ControlType="XRTableCell" Name="tableCell3" Weight="2" CanGrow="false" Text="Indicación medica" TextAlignment="MiddleCenter" Font="Calibri, 9pt, style=Bold, charSet=0" ForeColor="Black" BackColor="LightBlue">
+                  <StylePriority Ref="32" UseFont="false" UseForeColor="false" UseBackColor="false" UseTextAlignment="false" />
+                </Item1>
+              </Cells>
+            </Item1>
+            <Item2 Ref="33" ControlType="XRTableRow" Name="tableRow2" Weight="11.5">
+              <Cells>
+                <Item1 Ref="34" ControlType="XRTableCell" Name="tableCell6" Weight="0.533628664734543" Multiline="true" Text="Fecha" TextAlignment="MiddleCenter">
+                  <StylePriority Ref="35" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="36" ControlType="XRTableCell" Name="tableCell8" Weight="1.4663713352654568" Multiline="true" Text="Número orden" TextAlignment="MiddleCenter">
+                  <StylePriority Ref="37" UseTextAlignment="false" />
+                </Item2>
+              </Cells>
+            </Item2>
+            <Item3 Ref="38" ControlType="XRTableRow" Name="tableRow4" Weight="11.5">
+              <Cells>
+                <Item1 Ref="39" ControlType="XRTableCell" Name="tableCell4" Weight="0.533628664734543" TextFormatString="{0:d/MM/yyyy}" Multiline="true" TextAlignment="MiddleCenter" Font="Calibri, 8.25pt, charSet=0">
+                  <ExpressionBindings>
+                    <Item1 Ref="40" EventName="BeforePrint" PropertyName="Text" Expression="[HCI_FECHA]" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="41" UseFont="false" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="42" ControlType="XRTableCell" Name="tableCell5" Weight="1.4663713352654568" Multiline="true" Text="tableCell5" TextAlignment="MiddleCenter" Font="Calibri, 8.25pt">
+                  <ExpressionBindings>
+                    <Item1 Ref="43" EventName="BeforePrint" PropertyName="Text" Expression="[HCI_NUMERO_ORDEN]" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="44" UseFont="false" UseTextAlignment="false" />
+                </Item2>
+              </Cells>
+            </Item3>
+          </Rows>
+          <StylePriority Ref="45" UseFont="false" UseBorderColor="false" UseBorders="false" UseBorderWidth="false" />
+        </Item1>
+      </Controls>
+      <ExpressionBindings>
+        <Item1 Ref="46" EventName="BeforePrint" PropertyName="Visible" Expression="Iif([DataSource.RowCount] == 0, False, True)" />
+      </ExpressionBindings>
+    </Item4>
+  </Bands>
+  <ComponentStorage>
+    <Item1 Ref="0" ObjectType="DevExpress.DataAccess.Sql.SqlDataSource,DevExpress.DataAccess.v20.2" Name="FuenteDatos" Base64="PFNxbERhdGFTb3VyY2UgTmFtZT0iRnVlbnRlRGF0b3MiPjxDb25uZWN0aW9uIE5hbWU9IkNPTkVYSU9OX1JFUE9SVEVSSUEiIEZyb21BcHBDb25maWc9InRydWUiIC8+PFF1ZXJ5IFR5cGU9IlNlbGVjdFF1ZXJ5IiBOYW1lPSJJbmRpY2FjaW9uZXNNZWRpY2FzRGV0YWxsZXNfMSI+PFRhYmxlcz48VGFibGUgTmFtZT0iSW5kaWNhY2lvbmVzTWVkaWNhc0RldGFsbGVzIiBYPSIzMCIgWT0iMzAiIFdpZHRoPSIyMjAiIEhlaWdodD0iMjYzIiAvPjxUYWJsZSBOYW1lPSJJbmRpY2FjaW9uZXNNZWRpY2FzIiBYPSIyODAiIFk9IjMwIiBXaWR0aD0iMjQwIiBIZWlnaHQ9IjI2MyIgLz48UmVsYXRpb24gVHlwZT0iSW5uZXIiIFBhcmVudD0iSW5kaWNhY2lvbmVzTWVkaWNhc0RldGFsbGVzIiBOZXN0ZWQ9IkluZGljYWNpb25lc01lZGljYXMiPjxLZXlDb2x1bW4gUGFyZW50PSJJbmRpY2FjaW9uZXNNZWRpY2FzSWQiIE5lc3RlZD0iSWQiIC8+PC9SZWxhdGlvbj48L1RhYmxlcz48Q29sdW1ucz48Q29sdW1uIFRhYmxlPSJJbmRpY2FjaW9uZXNNZWRpY2FzIiBOYW1lPSJIaXN0b3JpYXNDbGluaWNhc0lkIiBBbGlhcz0iSENfSUQiIC8+PENvbHVtbiBUYWJsZT0iSW5kaWNhY2lvbmVzTWVkaWNhcyIgTmFtZT0iSWQiIEFsaWFzPSJIQ0lfSUQiIC8+PENvbHVtbiBUYWJsZT0iSW5kaWNhY2lvbmVzTWVkaWNhcyIgTmFtZT0iRmVjaGEiIEFsaWFzPSJIQ0lfRkVDSEEiIC8+PENvbHVtbiBUYWJsZT0iSW5kaWNhY2lvbmVzTWVkaWNhcyIgTmFtZT0iTnJvT3JkZW4iIEFsaWFzPSJIQ0lfTlVNRVJPX09SREVOIiAvPjxDb2x1bW4gVGFibGU9IkluZGljYWNpb25lc01lZGljYXNEZXRhbGxlcyIgTmFtZT0iU2VydmljaW8iIEFsaWFzPSJIQ0lEX1NFUlZJQ0lPIiAvPjxDb2x1bW4gVGFibGU9IkluZGljYWNpb25lc01lZGljYXNEZXRhbGxlcyIgTmFtZT0iQ2FudGlkYWQiIEFsaWFzPSJIQ0lEX0NBTlRJREFEIiAvPjxDb2x1bW4gVGFibGU9IkluZGljYWNpb25lc01lZGljYXNEZXRhbGxlcyIgTmFtZT0iT2JzZXJ2YWNpb25lcyIgQWxpYXM9IkhDSURfT0JTRVJWQUNJT05FUyIgLz48L0NvbHVtbnM+PC9RdWVyeT48UmVzdWx0U2NoZW1hPjxEYXRhU2V0IE5hbWU9IkZ1ZW50ZURhdG9zIj48VmlldyBOYW1lPSJJbmRpY2FjaW9uZXNNZWRpY2FzRGV0YWxsZXNfMSI+PEZpZWxkIE5hbWU9IkhDX0lEIiBUeXBlPSJJbnQ2NCIgLz48RmllbGQgTmFtZT0iSENJX0lEIiBUeXBlPSJJbnQ2NCIgLz48RmllbGQgTmFtZT0iSENJX0ZFQ0hBIiBUeXBlPSJEYXRlVGltZSIgLz48RmllbGQgTmFtZT0iSENJX05VTUVST19PUkRFTiIgVHlwZT0iSW50NjQiIC8+PEZpZWxkIE5hbWU9IkhDSURfU0VSVklDSU8iIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iSENJRF9DQU5USURBRCIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iSENJRF9PQlNFUlZBQ0lPTkVTIiBUeXBlPSJTdHJpbmciIC8+PC9WaWV3PjwvRGF0YVNldD48L1Jlc3VsdFNjaGVtYT48Q29ubmVjdGlvbk9wdGlvbnMgQ2xvc2VDb25uZWN0aW9uPSJ0cnVlIiAvPjwvU3FsRGF0YVNvdXJjZT4=" />
+  </ComponentStorage>
+  <ObjectStorage>
+    <Item1 ObjectType="DevExpress.XtraReports.Serialization.ObjectStorageInfo, DevExpress.XtraReports.v20.2" Ref="3" Content="System.Int64" Type="System.Type" />
+  </ObjectStorage>
+</XtraReportsLayoutSerializer>

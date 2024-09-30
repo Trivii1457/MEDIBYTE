@@ -1,0 +1,29 @@
+@{ 
+    string Prefix = "Filiales";
+    string UrlClick = Url.Action("Edit", "Filiales");
+    string UrlNew = Url.Action("New", "Filiales");
+
+    var DataGridConfig = new DataGridConfiguration<Filiales>(Prefix)
+        .OnClick(UrlClick, new { Id = "Id" })
+        .New(UrlNew,DApp.ActionViewSecurity(Context,UrlNew))
+        .Exports(true,true).SetStorage()
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("Filiales"), "mainPanel");
+} 
+
+<div class="box-body table-responsive no-padding"> 
+@(Html.DControls().DataGridSimple<Filiales>(DataGridConfig) 
+    .ID("FilialesDataGrid") 
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Filiales").LoadAction("Get").Key("Id")) 
+    .Columns(columns => 
+    { 
+        columns.AddFor(m => m.EntidadesId); 
+        columns.AddFor(m => m.Nombre); 
+        columns.AddFor(m => m.CorreoElectronico); 
+        columns.AddFor(m => m.Fax); 
+        columns.AddFor(m => m.PaginaWeb); 
+        columns.AddFor(m => m.Direccion); 
+        columns.AddFor(m => m.EstadosId); 
+        columns.AddFor(m => m.CiudadesId); 
+    }) 
+) 
+</div> 

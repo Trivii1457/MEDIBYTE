@@ -1,0 +1,28 @@
+﻿@{ 
+    string Prefix = "Profile"; 
+    string UrlClick = Url.Action("Edit", "Profile"); 
+    string UrlNew = Url.Action("New", "Profile"); 
+
+    var DataGridConfig = new DataGridConfiguration<Profile>(Prefix) 
+        .OnClick(UrlClick, new { Id = "Id" }) 
+        .New(UrlNew,DApp.ActionViewSecurity(Context,UrlNew)) 
+        .Exports(true,true) 
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("Profiles"), "mainPanel"); 
+} 
+
+<div class="box-body table-responsive no-padding"> 
+@(Html.DControls().DataGridSimple<Profile>(DataGridConfig) 
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Profile").LoadAction("Get").Key("Id")) 
+    .Columns(columns => 
+    { 
+        columns.AddFor(m => m.Id).Visible(false); 
+        columns.AddFor(m => m.Description); 
+        columns.AddFor(m => m.SecurityPolicy); 
+        columns.AddFor(m => m.IsActive); 
+        columns.AddFor(m => m.UpdatedBy).Visible(false); 
+        columns.AddFor(m => m.LastUpdate).Visible(false); 
+        columns.AddFor(m => m.CreatedBy).Visible(false); 
+        columns.AddFor(m => m.CreationDate).Visible(false); 
+    }) 
+) 
+</div> 

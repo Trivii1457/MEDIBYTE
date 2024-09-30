@@ -1,0 +1,33 @@
+﻿@{
+    string Prefix = "AdmisionesCorrecion";
+    string UrlClick = Url.Action("Edit", "AdmisionesCorrecion");
+
+    var DataGridConfig = new DataGridConfiguration<Atenciones>(Prefix)
+        .OnClick(UrlClick, new { Id = "Admisiones.Id" })
+        .Exports(true, true).SetStorage()
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("AdmisionesCorrecion"), "mainPanel");
+}
+
+<div class="box-body table-responsive no-padding">
+    @(Html.DControls().DataGridSimple<Atenciones>(DataGridConfig)
+    .ID("AdmisionesCorrecionDataGrid")
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("AdmisionesCorrecion").LoadAction("Get").Key("Admisiones.Id"))
+    .Columns(columns =>
+    {
+        columns.AddFor(m => m.Admisiones.Id).Caption(DApp.DefaultLanguage.GetResource("Admisiones.Consecutivo"));
+        columns.AddFor(m => m.Admisiones.CreatedBy);
+        columns.AddFor(m => m.Admisiones.Pacientes.NumeroIdentificacion);
+        columns.AddFor(m => m.Admisiones.Pacientes.NombreCompleto);
+        columns.AddFor(m => m.Admisiones.ProgramacionCitas.Entidades.Nombre);
+        columns.AddFor(m => m.Admisiones.Convenios.Nombre);
+        columns.AddFor(m => m.FechaAtencion);
+
+        columns.AddFor(m => m.Admisiones.CreationDate).Format(DApp.DefaultLanguage.DateFormat).Caption(DApp.DefaultLanguage.GetResource("ProgramacionCitas.AdmisionFecha")).SortOrder(SortOrder.Desc);
+        columns.AddFor(m => m.Admisiones.CreationDate).Format(DApp.DefaultLanguage.TimeFormat).Caption(DApp.DefaultLanguage.GetResource("ProgramacionCitas.AdmisionHora"));
+
+        columns.AddFor(m => m.Admisiones.ProgramacionCitas.Consultorios.Nombre);
+        columns.AddFor(m => m.Admisiones.ProgramacionCitas.Empleados.NombreCompleto);
+
+    })
+)
+</div> 

@@ -1,0 +1,93 @@
+@model TiposContratosModel 
+@{
+    string Prefix = "TiposContratos"; 
+
+    string UrlSave = Url.Action("Edit", "TiposContratos"); 
+    string UrlNew = Url.Action("New", "TiposContratos"); 
+    string UrlDelete = Url.Action("Delete", "TiposContratos", new { Id = Model.Entity.Id }); 
+    string UrlBack = Url.Action("ListPartial", "TiposContratos"); 
+
+    var ToolbarConfig = new ToolbarConfiguration(Prefix) 
+        .Title(DApp.DefaultLanguage.GetResource("TiposContratos")) 
+        .Save(DApp.ActionViewSecurity(Context, UrlSave),Model.Entity.IsNew) 
+        .New(UrlNew, DApp.ActionViewSecurity(Context, UrlNew)) 
+        .Delete(UrlDelete,DApp.ActionViewSecurity(Context,UrlDelete),UrlBack,Model.Entity.IsNew) 
+        .Back(UrlBack); 
+}
+
+<partial name="ViewJS.cshtml" model="Model" view-data="ViewData" /> 
+
+@(Html.DControls().Toolbar(ToolbarConfig)) 
+
+<div> 
+    <div id = "TiposContratosMainPanelForm"> 
+        <form id="@(Prefix)Form" asp-controller="TiposContratos" asp-action="Edit" class="form-horizontal" data-ajax-mode="replace" data-ajax-update="#mainPanel" data-ajax-success="@(Prefix)FormSuccess" data-ajax-failure="@(Prefix)FormFailure" data-ajax="true">
+            @(Html.DControls().ValidationSummary().ValidationGroup(Prefix + "ValidationGroup").ElementAttr("class", "ErrorValidationSummary"))
+            @using (Html.DevExtreme().ValidationGroup(Prefix + "ValidationGroup"))
+            {
+                @(Html.DControls().CheckBoxFor(m => m.Entity.IsNew).ID(Prefix + "IsNew").Visible(false))
+                @(Html.DControls().NumberBoxFor(m => m.Entity.Id).ID(Prefix + "Id").Visible(false))
+                @(Html.DControls().TextBoxFor(m => m.Entity.UpdatedBy).ID(Prefix + "UpdatedBy").Visible(false))
+                @(Html.DControls().DateBoxFor(m => m.Entity.LastUpdate).ID(Prefix + "LastUpdate").Type(DateBoxType.DateTime).Visible(false))
+                @(Html.DControls().TextBoxFor(m => m.Entity.CreatedBy).ID(Prefix + "CreatedBy").Visible(false))
+                @(Html.DControls().DateBoxFor(m => m.Entity.CreationDate).ID(Prefix + "CreationDate").Type(DateBoxType.DateTime).Visible(false))
+
+                @(Html.DControls().Form<TiposContratosModel>()
+                    .ID("TiposContratosModelForm").LabelLocation(FormLabelLocation.Top).ShowValidationSummary(false).FormData(Model)
+                    .Items(items =>
+                    {
+                         items.AddGroup().ColCount(2).Caption(DApp.DefaultLanguage.GetResource("DEFAULT.INFORMATIONGENERAL"))
+                             .Items(groupItems =>
+                                     {
+                                groupItems.AddSimpleFor(m => m.Entity.Nombre)
+                                .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("TiposContratos.Nombre")))
+                                .ValidationRules(rules => rules.AddStringLength().Min(0).Max(150).Message(DApp.GetStringLengthResource("TiposContratos.Nombre", 150)))
+                                     .Editor(e => e.TextBox().ID(Prefix + "Nombre").ShowClearButton(true));
+                         });
+                    })
+                )
+            }
+            
+        </form> 
+
+        @* Si el maestro maneja detalle descomentar el siguiente codigo y remplazar la palabra "VISTADETALLE" y "RECURSODETALLE" *@
+        @*<nav> 
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">
+                    @DApp.DefaultLanguage.GetResource("RECURSODETALLE")
+                </a>
+            </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                <partial name="../VISTADETALLE/ListDetail.cshtml" model=Model view-data="ViewData" />
+            </div>
+        </div>*@
+
+    </div> 
+</div> 
+
+<script lang = "javascript"> 
+
+    function @(Prefix)FormSuccess(data) 
+    { 
+        hideLoadIndicator(); 
+        if ('@ViewData.ModelState.IsValid' == 'True') 
+        { 
+            if ("@ViewBag.Accion" == "Delete") {
+                DevExpress.ui.notify("Registro eliminado correctamente.","info"); 
+            } else if ("@ViewBag.Accion" == "Save") {
+                DevExpress.ui.notify("Registro guardado correctamente.","info"); 
+            } else {
+                DevExpress.ui.notify("Error no accion en submit.","info"); 
+            }
+        } 
+    } 
+
+    function @(Prefix)FormFailure(data) 
+    { 
+        hideLoadIndicator(); 
+        DevExpress.ui.notify("Error en el formulario","error"); 
+    } 
+
+</script>

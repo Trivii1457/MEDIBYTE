@@ -1,0 +1,110 @@
+@model ParametrosGeneralesModel
+@{
+    string Prefix = "ParametrosGenerales";
+    string UrlCambiarEstados = Url.Action("CambiarEstadoAtencion", Prefix, new { id = Model.Entity.Id });
+}
+
+<script>
+
+    $(function () {
+        @(Prefix)OnValueChangedHabilitarAnteciones();
+    });
+
+    function @(Prefix)OnClickCambiarEstadoAtencion(data)
+    {
+        var consecutivoCita = $("#@(Prefix)ConsecutivoCita").dxNumberBox("instance").option("value");
+        var consecutivoAdmision = $("#@(Prefix)ConsecutivoAdmision").dxNumberBox("instance").option("value");
+        var detalleAnulacion = $("#@(Prefix)DetalleAnulacion").dxTextArea("instance").option("value");
+
+        if (consecutivoCita <= 0 || consecutivoCita == "" || consecutivoCita == null ||
+            consecutivoAdmision <= 0 || consecutivoAdmision == "" || consecutivoAdmision == null ||
+            detalleAnulacion == "" || detalleAnulacion == null) {
+            DevExpress.ui.notify("Error: Los consecutivos y el motivo de anulación son obligatorios.", "error", 4000);
+            return false;
+        }
+
+        var result = DevExpress.ui.dialog.confirm("<i>¿Seguro de cambiar el estado \"Antendida\" a \"Anulada en atención\"?</i>", "Confirmar");
+        result.done(function (dialogResult) {
+            if (!dialogResult) {
+                return false;
+            }
+
+            showLoadIndicator();
+                $.ajax({
+                    url: "@UrlCambiarEstados",
+                    data: { consecutivoCita: consecutivoCita, consecutivoAdmision: consecutivoAdmision, detalleAnulacion: detalleAnulacion},
+                    type: 'POST',
+                    success: function (data) {
+                        hideLoadIndicator();
+                        DevExpress.ui.notify("El cambio de estado se realizo satisfactoriamente.", "info");
+                    },
+                    error: function (xhr) {
+                        console.log(xhr);
+                        hideLoadIndicator();
+                        if (xhr.responseText == "" || xhr.responseText == null)
+                            DevExpress.ui.notify("Error: " + xhr.status + " - " + xhr.statusText, "error", 4000);
+                        else
+                            DevExpress.ui.notify("Error: " + xhr.responseText, "error", 4000);
+                    }
+                });
+        });
+    }
+
+    function @(Prefix)OnValueChangedHabilitarAnteciones()
+    {
+        var habilitar = $("#@(Prefix)HabilitarAnteciones").dxCheckBox("instance").option("value");
+        if (habilitar) {
+            $("#@(Prefix)FechaDesdeAtenciones").dxDateBox("instance").option("readOnly", false);
+            $("#@(Prefix)FechaHastaAtenciones").dxDateBox("instance").option("readOnly", false);
+        } else {
+            $("#@(Prefix)FechaDesdeAtenciones").dxDateBox("instance").option("value", new Date());
+            $("#@(Prefix)FechaHastaAtenciones").dxDateBox("instance").option("value", new Date());
+            $("#@(Prefix)FechaDesdeAtenciones").dxDateBox("instance").option("readOnly", true);
+            $("#@(Prefix)FechaHastaAtenciones").dxDateBox("instance").option("readOnly", true);
+        }
+    }
+
+    function @(Prefix)FormSuccess(data)
+    {
+        hideLoadIndicator();
+        if ('@ViewData.ModelState.IsValid' == 'True')
+        {
+            if ("@ViewBag.Accion" == "Delete") {
+                DevExpress.ui.notify("Registro eliminado correctamente.","info");
+            } else if ("@ViewBag.Accion" == "Save") {
+                DevExpress.ui.notify("Registro guardado correctamente.","info");
+            } else {
+                DevExpress.ui.notify("Error no accion en submit.","info");
+            }
+        }
+    }
+
+    function @(Prefix)FormFailure(data)
+    {
+        hideLoadIndicator();
+        DevExpress.ui.notify("Error en el formulario","error");
+    }
+
+    function @(Prefix)FormSuccessDetail(data)
+    {
+        hideLoadIndicator();
+        if ('@ViewData.ModelState.IsValid' == 'True')
+        {
+            $("#ParametrosGeneralesDetalleDataGrid").dxDataGrid("instance").refresh();
+            if ("@ViewBag.Accion" == "Delete") {
+                DevExpress.ui.notify("Registro eliminado correctamente.","info");
+            } else if ("@ViewBag.Accion" == "Save") {
+                DevExpress.ui.notify("Registro guardado correctamente.","info");
+            } else {
+                DevExpress.ui.notify("Error no accion en submit.","info");
+            }
+        }
+    }
+
+    function @(Prefix)FormFailureDetail(data)
+    {
+        hideLoadIndicator();
+        DevExpress.ui.notify("Error en el formulario","error");
+    }
+
+</script>

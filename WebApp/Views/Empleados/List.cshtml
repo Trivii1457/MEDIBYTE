@@ -1,0 +1,159 @@
+@{
+    string Prefix = "Empleados";
+    string UrlClick = Url.Action("Edit", "Empleados");
+    string UrlNew = Url.Action("New", "Empleados");
+
+    var DataGridConfig = new DataGridConfiguration<Empleados>(Prefix)
+        .OnClick(UrlClick, new { Id = "Id" })
+        .New(UrlNew, DApp.ActionViewSecurity(Context, UrlNew))
+        .Exports(true, true).SetStorage()
+        .AddButtons(new List<ButtonToolbar>
+        {
+            new ButtonToolbar
+            {
+                Action = $"{Prefix}DescargarPlantilla",
+                Icon = "download",
+                Text = DApp.DefaultLanguage.GetResource("DEAFULT.DescargarPlantilla"),
+                LocateInMenu = ToolbarItemLocateInMenuMode.Always,
+                Location = ToolbarItemLocation.Before
+            },
+            new ButtonToolbar
+            {
+                Action = $"{Prefix}MostrarCargarPlantillaDatos",
+                Icon = "xlsxfile",
+                Text = DApp.DefaultLanguage.GetResource("DEAFULT.CargarDatosPlantilla"),
+                LocateInMenu = ToolbarItemLocateInMenuMode.Always,
+                Location = ToolbarItemLocation.Before
+            }
+                })
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("Empleados"), "mainPanel");
+}
+
+<script>
+
+    function @(Prefix)DescargarPlantilla(){
+        DescargarArchivo("@Url.Action("DescargarPlantilla", Prefix)");
+    }
+
+    function @(Prefix)MostrarCargarPlantillaDatos(data)
+    {
+        $("#@(Prefix)PopupCargarDatos").dxPopup("instance").show();
+    }
+
+    function @(Prefix)FileUploaderCargarDatosOnUploadStarted(data)
+    {
+        showLoadIndicator();
+        $("#@(Prefix)Errores").html("");
+    }
+
+    function @(Prefix)FileUploaderCargarDatosOnUploaded(data)
+    {
+        hideLoadIndicator();
+        try {
+            var result = JSON.parse(data.request.response);
+            if (result.pathFileError) {
+                DescargarArchivo("@Url.Action("DescargarArchivoErrores", Prefix)", result.pathFileError);
+            }
+            $("#@(Prefix)DataGrid").dxDataGrid("instance").refresh();
+        } catch (e) {
+            $("#@(Prefix)Errores").html(data.request.response);
+        }
+    }
+
+    function @(Prefix)FileUploaderCargarDatosOnUploadError(data)
+    {
+        hideLoadIndicator();
+
+        try {
+            var result = JSON.parse(data.request.response);
+            if (result.TieneErrores) {
+                var htmlError = "<ul>";
+                for (var i = 0; i < result.Errores.length; i++) {
+                    htmlError += "<li>" + result.Errores[i] + "</li>"
+                }
+                htmlError += "</ul>";
+                $("#@(Prefix)Errores").html(htmlError);
+            }
+        }
+        catch (err) {
+            $("#@(Prefix)Errores").html(data.request.response);
+        }
+
+    }
+
+    function @(Prefix)PopupOnHidden(data)
+    {
+        $("#@(Prefix)ModificaRegistros").dxCheckBox("instance").option("value",false);
+        $("#@(Prefix)FileUploaderCargarDatos").dxFileUploader("instance").reset();
+    }
+
+    function @(Prefix)ModificaRegistrosOnValueChanged(data)
+    {
+        var modificaRegistros = $("#@(Prefix)ModificaRegistros").dxCheckBox("instance").option("value");
+        var fileUploader = $("#@(Prefix)FileUploaderCargarDatos").dxFileUploader("instance");
+        var url = fileUploader.option("uploadUrl");
+        url = updateQueryStringParameter(url, "modificaRegistros", modificaRegistros);
+        fileUploader.option("uploadUrl", url);
+    }
+
+</script>
+
+<div class="box-body table-responsive no-padding">
+    @(Html.DControls().DataGridSimple<Empleados>(DataGridConfig)
+            .ID("EmpleadosDataGrid")
+            .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Empleados").LoadAction("Get").Key("Id"))
+            .RemoteOperations(false)
+            .FilterRow(x=>x.Visible(true))
+            .Columns(columns =>
+            {
+                columns.AddFor(m => m.TiposIdentificacion.Nombre).Caption(DApp.GetResource("Empleados.TipoIdentificacion"));
+                columns.AddFor(m => m.NumeroIdentificacion).Caption(DApp.GetResource("Empleados.NumeroIdentificacion"));
+                columns.AddFor(m => m.NombreCompleto).Caption(DApp.GetResource("Empleados.NombresApellidos")).ShowInColumnChooser(false);
+         columns.AddFor(m => m.TipoEmplead.Nombre).Caption(DApp.GetResource("Empleados.TipoEmpleados"));
+     })
+        )
+</div>
+
+<div id="@(Prefix)Importador" class="row">
+    <div class="col-md-12">
+        @(Html.DControls().Popup()
+            .ID($"{Prefix}PopupCargarDatos")
+            .Width(800)
+            .Height(300)
+            .ShowTitle(true)
+            .Title(DApp.DefaultLanguage.GetResource("DEAFULT.CargarDatosPlantilla"))
+            .Visible(false)
+            .DragEnabled(false)
+            .CloseOnOutsideClick(false)
+            .OnHidden($"{Prefix}PopupOnHidden")
+            .ContentTemplate(new TemplateName($"{Prefix}TemplateCargarDatos"))
+        )
+
+        @using (Html.DevExtreme().NamedTemplate($"{Prefix}TemplateCargarDatos"))
+        {
+            <div id="@(Prefix)Errores" class="text-danger text-sm-left"></div>
+            <div id="@(Prefix)FileUploaderDiv" style="max-height: 100%;overflow: auto;">
+                <div style="margin-left:10px;">
+                    @(Html.DControls().CheckBox()
+                        .ID($"{Prefix}ModificaRegistros")
+                        .Text(DApp.DefaultLanguage.GetResource("DEAFULT.ModificaRegistros"))
+                        .OnValueChanged($"{Prefix}ModificaRegistrosOnValueChanged")
+                    )
+                </div>
+                @(Html.DControls().FileUploader()
+                    .ID($"{Prefix}FileUploaderCargarDatos")
+                    .Name("ArchivoPlantillaDatos")
+                    .Multiple(false)
+                    .Accept(".xlsx")
+                    .MaxFileSize(1000000)
+                    .AllowedFileExtensions(new[] { ".xlsx" })
+                    .UploadMode(FileUploadMode.UseButtons)
+                    .UploadUrl(Url.Action("CargarPlantillaDatos", Prefix))
+                    .OnUploadStarted($"{Prefix}FileUploaderCargarDatosOnUploadStarted")
+                    .OnUploaded($"{Prefix}FileUploaderCargarDatosOnUploaded")
+                    .OnUploadError($"{Prefix}FileUploaderCargarDatosOnUploadError")
+                )
+            </div>
+        }
+    </div>
+</div>

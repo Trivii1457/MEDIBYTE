@@ -1,0 +1,117 @@
+@model AuditModel 
+@{
+    string Prefix = "Audit"; 
+
+    string UrlSave = Url.Action("Edit", "Audit"); 
+    string UrlNew = Url.Action("New", "Audit"); 
+    string UrlDelete = Url.Action("Delete", "Audit", new { Id = Model.Entity.Id }); 
+    string UrlBack = Url.Action("ListPartial", "Audit"); 
+
+    var ToolbarConfig = new ToolbarConfiguration(Prefix) 
+        .Title(DApp.DefaultLanguage.GetResource("Audits")) 
+        //.Save(DApp.ActionViewSecurity(Context, UrlSave),Model.Entity.IsNew) 
+        //.New(UrlNew, DApp.ActionViewSecurity(Context, UrlNew)) 
+        //.Delete(UrlDelete,DApp.ActionViewSecurity(Context,UrlDelete),UrlBack,Model.Entity.IsNew) 
+        .Back(UrlBack); 
+}
+
+<partial name="ViewJS.cshtml" model="Model" view-data="ViewData" /> 
+
+@(Html.DControls().Toolbar(ToolbarConfig)) 
+
+<div> 
+    <div id="AuditMainPanelForm">
+        <form id="@(Prefix)Form" asp-controller="Audit" asp-action="Edit" class="form-horizontal" data-ajax-mode="replace" data-ajax-update="#mainPanel" data-ajax-success="@(Prefix)FormSuccess" data-ajax-failure="@(Prefix)FormFailure" data-ajax="true">
+            @(Html.DControls().ValidationSummary().ValidationGroup(Prefix + "ValidationGroup").ElementAttr("class","ErrorValidationSummary"))
+            @using (Html.DevExtreme().ValidationGroup(Prefix + "ValidationGroup"))
+            {
+                @(Html.DControls().CheckBoxFor(m => m.Entity.IsNew).ID(Prefix + "IsNew").Visible(false))
+                @(Html.DControls().TextBoxFor(m => m.Entity.UpdatedBy).ID(Prefix + "UpdatedBy").Visible(false))
+                @(Html.DControls().DateBoxFor(m => m.Entity.LastUpdate).ID(Prefix + "LastUpdate").Type(DateBoxType.DateTime).Visible(false))
+                @(Html.DControls().TextBoxFor(m => m.Entity.CreatedBy).ID(Prefix + "CreatedBy").Visible(false))
+                @(Html.DControls().DateBoxFor(m => m.Entity.CreationDate).ID(Prefix + "CreationDate").Type(DateBoxType.DateTime).Visible(false))
+
+                @(Html.DControls().Form<AuditModel>().ReadOnly(true)
+                    .ID("AuditModelForm").LabelLocation(FormLabelLocation.Top).ShowValidationSummary(false).FormData(Model)
+                    .Items(items =>
+                    {
+                        items.AddGroup().ColCount(12).Caption(DApp.DefaultLanguage.GetResource("DEFAULT.INFORMATIONGENERAL"))
+                            .Items(groupItems =>{
+                                groupItems.AddSimpleFor(m => m.Entity.Id).ColSpan(2).Label(x=>x.Text(DApp.GetResource("Audit.Consecutivo")))
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Audit.Consecutivo")))
+                                      .Editor(e => e.NumberBox().ID(Prefix + "Id"));
+                                groupItems.AddSimpleFor(m => m.Entity.TableName).ColSpan(4)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Audits.TableName")))
+                                 .ValidationRules(rules => rules.AddStringLength().Min(0).Max(255).Message(DApp.GetStringLengthResource("Audits.TableName", 255)))
+                                      .Editor(e => e.TextBox().ID(Prefix + "TableName"));
+                                groupItems.AddSimpleFor(m => m.Entity.Action).ColSpan(3)
+                                 .ValidationRules(rules => rules.AddStringLength().Min(0).Max(50).Message(DApp.GetStringLengthResource("Audits.Action", 50)))
+                                      .Editor(e => e.TextBox().ID(Prefix + "Action"));
+                                groupItems.AddSimpleFor(m => m.Entity.TransactionDate).ColSpan(3)
+                                  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Audits.TransactionDate")))
+                                      .Editor(e=>e.DateBox().ID(Prefix + "TransactionDate")
+                                      .DisplayFormat(DApp.DefaultLanguage.DateTimeFormat));
+                                groupItems.AddSimpleFor(m => m.Entity.KeyValues).ColSpan(3)
+                                 .ValidationRules(rules => rules.AddStringLength().Min(0).Max(255).Message(DApp.GetStringLengthResource("Audits.KeyValues", 255)))
+                                      .Editor(e => e.TextBox().ID(Prefix + "KeyValues"));
+                                groupItems.AddSimpleFor(m => m.Entity.CreatedBy).ColSpan(3)
+                                 .ValidationRules(rules => rules.AddStringLength().Min(0).Max(50).Message(DApp.GetStringLengthResource("Audits.Action", 50)))
+                                      .Editor(e => e.TextBox().ID(Prefix + "CreatedBy"));
+                                groupItems.AddSimpleFor(m => m.Entity.UpdatedBy).ColSpan(3)
+                                 .ValidationRules(rules => rules.AddStringLength().Min(0).Max(50).Message(DApp.GetStringLengthResource("Audits.Action", 50)))
+                                      .Editor(e => e.TextBox().ID(Prefix + "UpdatedBy"));
+                            });
+                    })
+                )
+            }
+        </form>
+        <div class="container">
+            <div class="row">
+                <div class="col-6">
+                    <h2>Valores Anteriores</h2>
+                    @(Html.DevExtreme().DataGrid()
+                        .ID("gridContainer1")
+                        .Columns(columns => {
+                            columns.Add().DataField("Column").Caption(DApp.GetResource("Audit.Column"));
+                            columns.Add().DataField("Value").Caption(DApp.GetResource("Audit.Value"));
+                        })
+                        .DataSource(Model.Entity.ListOldValues )
+                        .ShowBorders(true)
+                    )
+                </div>
+                <div class="col-6">
+                    <h2>Valores Nuevos</h2>
+                    @(Html.DevExtreme().DataGrid()
+                        .ID("gridContainer2")
+                        .Columns(columns => {
+                            columns.Add().DataField("Column").Caption(DApp.GetResource("Audit.Column"));
+                            columns.Add().DataField("Value").Caption(DApp.GetResource("Audit.Value"));
+                        })
+                        .DataSource(Model.Entity.ListNewValues )
+                        .ShowBorders(true)
+                    )
+                </div>
+            </div>
+        </div>
+
+        @* Si el maestro maneja detalle descomentar el siguiente codigo y remplazar la palabra "MAESTRODETALLE" *@
+        @*
+        <div>
+           <ul class="nav nav-tabs" role="tablist">
+               <li role="presentation" class="active">
+                   <a href="#MAESTRODETALLE" aria-controls="MAESTRODETALLE" role="tab" data-toggle="tab">
+                       @DApp.DefaultLanguage.GetResource("MAESTRODETALLE")
+                   </a>
+               </li>
+           </ul>
+           <div class="tab-content">
+               <div role="tabpanel" class="tab-pane active" id="MAESTRODETALLE">
+                   <partial name="../MAESTRODETALLE/ListDetail.cshtml" model=Model view-data="ViewData" />
+               </div>
+           </div>
+        </div>
+        *@
+
+    </div>
+        </div> 
+

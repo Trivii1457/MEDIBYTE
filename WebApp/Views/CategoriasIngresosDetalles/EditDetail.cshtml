@@ -1,0 +1,60 @@
+@model CategoriasIngresosDetallesModel 
+@{
+    string Prefix = "CategoriasIngresosDetalles"; 
+    string UrlDelete = Url.Action("DeleteDetail", "CategoriasIngresosDetalles", new { Id = Model.Entity.Id }); 
+
+    var toolbarDetailconfig = new ToolbarDetailConfiguration(Prefix).Delete(UrlDelete).Save().Cancel(); 
+} 
+
+<partial name="ViewJS.cshtml" model="Model" view-data="ViewData" /> 
+
+<div>@(Html.DControls().Toolbar(toolbarDetailconfig))</div>
+
+<div> 
+     <form id="@(Prefix)Form" asp-controller="CategoriasIngresosDetalles" asp-action="EditDetail" class="form-horizontal" data-ajax-mode="replace" data-ajax-update="#CategoriasIngresosDetallesMainPanelForm" data-ajax-success="@(Prefix)FormSuccessDetail" data-ajax-failure="@(Prefix)FormFailureDetail" data-ajax="true"> 
+         @(Html.DControls().ValidationSummary().ValidationGroup(Prefix + "ValidationGroup").ElementAttr("class","ErrorValidationSummary")) 
+         @using (Html.DevExtreme().ValidationGroup(Prefix + "ValidationGroupDetail")) 
+         { 
+             @(Html.DControls().CheckBoxFor(m => m.Entity.IsNew).ID(Prefix + "IsNew").Visible(false)) 
+                @(Html.DControls().NumberBoxFor(m => m.Entity.Id).ID(Prefix + "Id").Visible(false)) 
+                @(Html.DControls().NumberBoxFor(m => m.Entity.CategoriasIngresosId).ID(Prefix + "CategoriasIngresosId").Visible(false)) 
+                @(Html.DControls().TextBoxFor(m => m.Entity.UpdatedBy).ID(Prefix + "UpdatedBy").Visible(false)) 
+                @(Html.DControls().DateBoxFor(m => m.Entity.LastUpdate).ID(Prefix + "LastUpdate").Type(DateBoxType.DateTime).Visible(false)) 
+                @(Html.DControls().TextBoxFor(m => m.Entity.CreatedBy).ID(Prefix + "CreatedBy").Visible(false)) 
+                @(Html.DControls().DateBoxFor(m => m.Entity.CreationDate).ID(Prefix + "CreationDate").Type(DateBoxType.DateTime).Visible(false)) 
+
+                @(Html.DControls().Form<CategoriasIngresosDetallesModel>()
+                    .ID("CategoriasIngresosDetallesModelForm").LabelLocation(FormLabelLocation.Top).ShowValidationSummary(false).FormData(Model)
+                    .Items(items =>
+                    {
+                        items.AddGroup().ColCount(12).Caption(DApp.DefaultLanguage.GetResource("DEFAULT.INFORMATIONGENERAL"))
+                            .Items(groupItems =>{
+                                groupItems.AddSimpleFor(m => m.Entity.FechaInicial).ColSpan(3)
+                                  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("CategoriasIngresosDetalles.FechaInicial")))
+                                      .Editor(e=>e.DateBox().ID(Prefix + "FechaInicial")
+                                      .DisplayFormat(DApp.DefaultLanguage.DateFormat).Placeholder(DateTime.Now.ToString(DApp.DefaultLanguage.DateFormat)).ShowClearButton(true).UseMaskBehavior(true));
+                                groupItems.AddSimpleFor(m => m.Entity.FechaFinal).ColSpan(3)
+                                  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("CategoriasIngresosDetalles.FechaFinal")))
+                                      .Editor(e=>e.DateBox().ID(Prefix + "FechaFinal")
+                                      .DisplayFormat(DApp.DefaultLanguage.DateFormat).Placeholder(DateTime.Now.ToString(DApp.DefaultLanguage.DateFormat)).ShowClearButton(true).UseMaskBehavior(true));
+                                groupItems.AddEmpty().ColSpan(6);
+                                groupItems.AddSimpleFor(m => m.Entity.CuotaModeradora).ColSpan(3)
+                                .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("CategoriasIngresosDetalles.CuotaModeradora")))
+                                    .Editor(e=>e.NumberBox().ID(Prefix + "CuotaModeradora").Format("#,##0.##").ShowClearButton(true).ShowSpinButtons(true));
+                                groupItems.AddSimpleFor(m => m.Entity.PorcentajeCopago).ColSpan(3)
+                                  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("CategoriasIngresosDetalles.PorcentajeCopago")))
+                                      .Editor(e=>e.NumberBox().ID(Prefix + "PorcentajeCopago").Format("#,##0.##").ShowClearButton(true).ShowSpinButtons(true));
+                                groupItems.AddSimpleFor(m => m.Entity.CopagoMaximoEvento).ColSpan(3)
+                                  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("CategoriasIngresosDetalles.CopagoMaximoEvento")))
+                                      .Editor(e=>e.NumberBox().ID(Prefix + "CopagoMaximoEvento").Format("#,##0.##").ShowClearButton(true).ShowSpinButtons(true));
+                                groupItems.AddSimpleFor(m => m.Entity.CopagoMaximoAno).ColSpan(3)
+                                  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("CategoriasIngresosDetalles.CopagoMaximoAno")))
+                                      .Editor(e=>e.NumberBox().ID(Prefix + "CopagoMaximoAno").Format("#,##0.##").ShowClearButton(true).ShowSpinButtons(true));
+                            });
+                    })
+             ) 
+         } 
+         <div asp-validation-summary="All" class="text-danger" id="@(Prefix)ListError"></div> 
+     </form> 
+</div> 
+

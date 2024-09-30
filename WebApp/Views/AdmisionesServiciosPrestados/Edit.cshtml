@@ -1,0 +1,59 @@
+@model AdmisionesServiciosPrestadosModel 
+@{
+    string Prefix = "AdmisionesServiciosPrestados"; 
+
+    string UrlSave = Url.Action("Edit", "AdmisionesServiciosPrestados"); 
+    string UrlNew = Url.Action("New", "AdmisionesServiciosPrestados"); 
+    string UrlDelete = Url.Action("Delete", "AdmisionesServiciosPrestados", new { Id = Model.Entity.Id }); 
+    string UrlBack = Url.Action("ListPartial", "AdmisionesServiciosPrestados"); 
+
+    var ToolbarConfig = new ToolbarConfiguration(Prefix) 
+        .Title(DApp.DefaultLanguage.GetResource("AdmisionesServiciosPrestados")) 
+        //.Save(DApp.ActionViewSecurity(Context, UrlSave),Model.Entity.IsNew) 
+        //.New(UrlNew, DApp.ActionViewSecurity(Context, UrlNew)) 
+        //.Delete(UrlDelete,DApp.ActionViewSecurity(Context,UrlDelete),UrlBack,Model.Entity.IsNew) 
+        .Back(UrlBack); 
+}
+
+<partial name="ViewJS.cshtml" model="Model" view-data="ViewData" /> 
+
+@(Html.DControls().Toolbar(ToolbarConfig)) 
+
+<div> 
+    <div id="AdmisionesServiciosPrestadosMainPanelForm">
+        
+        <div class="card" style="margin-top:20px;">
+            <div class="card-header">
+                @DApp.DefaultLanguage.GetResource("AdmisionesServiciosPrestados.ArchivosResultados")
+            </div>
+            <partial name="ListDetailArchivosResultados.cshtml" model="Model" view-data="ViewData" />
+        </div>
+        
+        <div class="card" style="margin-top:20px;">
+            <div class="card-header">
+                @DApp.DefaultLanguage.GetResource("AdmisionesServiciosPrestados.ImagenesDiagnosticas")
+            </div>
+            <partial name="ListDetailImagenesDiagnosticas.cshtml" model="Model" view-data="ViewData" />
+        </div>
+
+        @* Si el maestro maneja detalle descomentar el siguiente codigo y remplazar la palabra "MAESTRODETALLE" *@
+        @*
+        <div>
+           <ul class="nav nav-tabs" role="tablist">
+               <li role="presentation" class="active">
+                   <a href="#MAESTRODETALLE" aria-controls="MAESTRODETALLE" role="tab" data-toggle="tab">
+                       @DApp.DefaultLanguage.GetResource("MAESTRODETALLE")
+                   </a>
+               </li>
+           </ul>
+           <div class="tab-content">
+               <div role="tabpanel" class="tab-pane active" id="MAESTRODETALLE">
+                   <partial name="../MAESTRODETALLE/ListDetail.cshtml" model=Model view-data="ViewData" />
+               </div>
+           </div>
+        </div>
+        *@
+
+    </div> 
+</div> 
+

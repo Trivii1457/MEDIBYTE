@@ -1,0 +1,23 @@
+@{ 
+    string Prefix = "TiposAfiliados"; 
+    string UrlClick = Url.Action("Edit", "TiposAfiliados"); 
+    string UrlNew = Url.Action("New", "TiposAfiliados"); 
+
+    var DataGridConfig = new DataGridConfiguration<TiposAfiliados>(Prefix) 
+        .OnClick(UrlClick, new { Id = "Id" }) 
+        .New(UrlNew,DApp.ActionViewSecurity(Context,UrlNew)) 
+        .Exports(true,true) 
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("TiposAfiliados"), "mainPanel"); 
+} 
+
+<div class="box-body table-responsive no-padding"> 
+@(Html.DControls().DataGridSimple<TiposAfiliados>(DataGridConfig) 
+    .ID("TiposAfiliadosDataGrid") 
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("TiposAfiliados").LoadAction("Get").Key("Id")) 
+    .Columns(columns => 
+    { 
+        columns.AddFor(m => m.Codigo); 
+        columns.AddFor(m => m.Nombre);        
+    }) 
+) 
+</div> 

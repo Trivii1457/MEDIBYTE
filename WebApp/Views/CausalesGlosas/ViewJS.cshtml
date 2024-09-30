@@ -1,0 +1,51 @@
+@model CausalesGlosasModel 
+@{
+    string Prefix = "CausalesGlosas"; 
+}
+
+<script>
+
+    function @(Prefix)FormSuccess(data) 
+    { 
+        hideLoadIndicator(); 
+        if ('@ViewData.ModelState.IsValid' == 'True') 
+        { 
+            if ("@ViewBag.Accion" == "Delete") {
+                DevExpress.ui.notify("Registro eliminado correctamente.","info"); 
+            } else if ("@ViewBag.Accion" == "Save") {
+                DevExpress.ui.notify("Registro guardado correctamente.","info"); 
+            } else {
+                DevExpress.ui.notify("Error no accion en submit.","info"); 
+            }
+        } 
+    } 
+
+    function @(Prefix)FormFailure(data) 
+    { 
+        hideLoadIndicator(); 
+        DevExpress.ui.notify("Error en el formulario","error"); 
+    } 
+
+    function @(Prefix)FormSuccessDetail(data) 
+    { 
+        hideLoadIndicator(); 
+        if ('@ViewData.ModelState.IsValid' == 'True') 
+        { 
+            $("#CausalesGlosasDetalleDataGrid").dxDataGrid("instance").refresh();
+            if ("@ViewBag.Accion" == "Delete") {
+                DevExpress.ui.notify("Registro eliminado correctamente.","info"); 
+            } else if ("@ViewBag.Accion" == "Save") {
+                DevExpress.ui.notify("Registro guardado correctamente.","info"); 
+            } else {
+                DevExpress.ui.notify("Error no accion en submit.","info"); 
+            }
+        } 
+    } 
+
+    function @(Prefix)FormFailureDetail(data) 
+    { 
+        hideLoadIndicator(); 
+        DevExpress.ui.notify("Error en el formulario","error"); 
+    } 
+
+</script>

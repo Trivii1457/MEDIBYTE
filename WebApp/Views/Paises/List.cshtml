@@ -1,0 +1,23 @@
+@{ 
+    string Prefix = "Paises"; 
+    string UrlClick = Url.Action("Edit", "Paises"); 
+    string UrlNew = Url.Action("New", "Paises"); 
+
+    var DataGridConfig = new DataGridConfiguration<Paises>(Prefix) 
+        .OnClick(UrlClick, new { Id = "Id" }) 
+        .New(UrlNew,DApp.ActionViewSecurity(Context,UrlNew)) 
+        .Exports(true,true) 
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("Paises"), "mainPanel"); 
+} 
+
+<div class="box-body table-responsive no-padding"> 
+@(Html.DControls().DataGridSimple<Paises>(DataGridConfig) 
+    .ID("PaisesDataGrid") 
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Paises").LoadAction("Get").Key("Id")) 
+    .Columns(columns => 
+    { 
+        columns.AddFor(m => m.Codigo); 
+        columns.AddFor(m => m.Nombre);       
+    }) 
+) 
+</div> 

@@ -1,0 +1,85 @@
+@model FestivosModel
+@{
+    string Prefix = "Festivos";
+    string UrlClick = Url.Action("Edit", "Festivos");
+    string UrlNew = Url.Action("New", "Festivos");
+
+    var DataGridDetailConfig = new DataGridConfiguration<Festivos>(Prefix)
+        //.OnClick(UrlOnClick, new { Id = "Id" }, Prefix + "MainPanelForm")
+        //.New(UrlNew, Model.Entity.IsNew)
+        .Exports(true, true);
+
+    var ToolbarConfig = new ToolbarConfiguration(Prefix)
+        .Title(DApp.DefaultLanguage.GetResource("Festivos"))
+        .AddButtons(new List<ButtonToolbar>()
+        {
+            new ButtonToolbar
+            {
+                Action = "MostrarPopupFestivosGenerados",
+                Text = @DApp.DefaultLanguage.GetResource("Festivos.GenerarFestivos"),
+                Location = ToolbarItemLocation.After,
+                LocateInMenu = ToolbarItemLocateInMenuMode.Auto,
+                Icon = "sorted"
+            }
+        });
+}
+
+<partial name="ViewJS.cshtml" model="Model" view-data="ViewData" />
+
+@(Html.DControls().Toolbar(ToolbarConfig))
+
+<div class="box-body table-responsive no-padding">
+    @(Html.DControls().DataGridSimple<Festivos>(DataGridDetailConfig)
+            .ID("FestivosDataGrid")
+            .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Festivos").LoadAction("Get").Key("Id")
+                .InsertAction("AddInGrid").InsertMethod("POST").DeleteAction("DeleteInGrid").DeleteMethod("POST")
+            )
+            .FilterRow(x=>x.Visible(false))
+            .Editing(editing => editing.Mode(GridEditMode.Batch).AllowAdding(true).AllowUpdating(false).AllowDeleting(true))
+            .OnRowInserted("OnRowInsertedDetalleDataGrid").OnRowUpdated("OnRowUpdatedDetalleDataGrid").OnRowRemoved("OnRowRemovedDetalleDataGrid").OnDataErrorOccurred("OnDataErrorOccurredDetalleDataGrid")
+            .Columns(columns =>
+            {
+                columns.AddFor(m => m.Dia).Format("dd/MMMM/yyyy").Width("30%")
+                    .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Festivos.Dia")));
+                columns.AddFor(m => m.Descripcion).Width("70%")
+                         .ValidationRules(rules => rules.AddStringLength().Min(0).Max(250).Message(DApp.GetStringLengthResource("Festivos.Descripcion", 250)));
+            })
+    )
+</div>
+
+@(Html.DControls().Popup()
+                .ID("PopupFestivosGenerados")
+                .Width(800).Height(650)
+                .ShowTitle(true).Title("Festivos").ShowCloseButton(true)
+                .Visible(false).DragEnabled(false).FullScreen(false)
+                .ContentTemplate(new TemplateName("TemplateReporteria"))
+    )
+@using (Html.DevExtreme().NamedTemplate("TemplateReporteria"))
+{
+    <div class="text-secondary text-sm-left">Traera los festivos de un año con base en la ley 51 de 1983. Si el dia festivo ya existe no sera actualizado.</div>
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" id="@(Prefix)Anio" placeholder="Año" aria-label="Año" aria-describedby="BotonConsultarFestivos">
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" id="BotonConsultarFestivos" onclick="GetFestivosPorAnio()">Consultar</button>
+        </div>
+    </div>
+    <div class="box-body table-responsive no-padding">
+        @(Html.DControls().DataGridSimple<Dominus.Backend.Data.DiaFestivo>()
+            .ID($"{Prefix}FestivosGeneradosDataGrid")
+            .FilterRow(filterRow => filterRow.Visible(false))
+            .HeaderFilter(x=>x.Visible(false))
+            .AllowColumnReordering(false)
+            .Export(x=>x.AllowExportSelectedData(false).ExcelFilterEnabled(false))
+            .SearchPanel(x=>x.Visible(false))
+            .Selection(x=>x.AllowSelectAll(false))
+            .Columns(columns =>
+            {
+                columns.AddFor(m => m.Dia).Format("dd/MMMM/yyyy").Width("30%");
+                columns.AddFor(m => m.Descripcion).Width("70%");
+            })
+        )
+    </div>
+    <div>
+        <button class="btn btn-primary" onclick="SetFestivosPorAnio()">Agregar Festivos</button>
+    </div>
+}

@@ -1,0 +1,49 @@
+@model GenerosModel 
+@{
+    string Prefix = "Generos";
+    string UrlDelete = Url.Action("DeleteDetail", "Generos", new { Id = Model.Entity.Id });
+
+    //var toolbarDetailconfig = new ToolbarDetailConfiguration(Prefix, UrlDelete); 
+}
+
+<partial name="ViewJS.cshtml" model="Model" view-data="ViewData" /> 
+
+<div> 
+    <div> 
+        <form id="@(Prefix)Form" asp-controller="Generos" asp-action="EditDetail" class="form-horizontal" data-ajax-mode="replace" data-ajax-update="#GenerosMainPanelForm" data-ajax-success="@(Prefix)FormSuccessDetail" data-ajax-failure="@(Prefix)FormFailureDetail" data-ajax="true">
+            @(Html.DControls().ValidationSummary().ValidationGroup(Prefix + "ValidationGroup").ElementAttr("class", "ErrorValidationSummary"))
+            @using (Html.DevExtreme().ValidationGroup())
+            {
+                @(Html.DControls().CheckBoxFor(m => m.Entity.IsNew).ID(Prefix + "IsNew").Visible(false))
+                @(Html.DControls().NumberBoxFor(m => m.Entity.Id).ID(Prefix + "Id").Visible(false))
+                @(Html.DControls().TextBoxFor(m => m.Entity.UpdatedBy).ID(Prefix + "UpdatedBy").Visible(false))
+                @(Html.DControls().DateBoxFor(m => m.Entity.LastUpdate).ID(Prefix + "LastUpdate").Type(DateBoxType.DateTime).Visible(false))
+                @(Html.DControls().TextBoxFor(m => m.Entity.CreatedBy).ID(Prefix + "CreatedBy").Visible(false))
+                @(Html.DControls().DateBoxFor(m => m.Entity.CreationDate).ID(Prefix + "CreationDate").Type(DateBoxType.DateTime).Visible(false))
+
+                @(Html.DControls().Form<GenerosModel>()
+                    .ID("GenerosModelForm").LabelLocation(FormLabelLocation.Top).ShowValidationSummary(false).FormData(Model)
+                    .Items(items =>
+                    {
+                        items.AddGroup().ColCount(4).Caption(DApp.DefaultLanguage.GetResource("DEFAULT.INFORMATIONGENERAL"))
+                            .Items(groupItems =>
+                                    {
+                                groupItems.AddSimpleFor(m => m.Entity.Codigo).ColSpan(1)
+                               .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Generos.Codigo")))
+                               .ValidationRules(rules => rules.AddStringLength().Min(0).Max(5).Message(DApp.GetStringLengthResource("Generos.Codigo", 5)))
+                                    .Editor(e => e.TextBox().ID(Prefix + "Codigo").ShowClearButton(true));
+                                groupItems.AddSimpleFor(m => m.Entity.Nombre).ColSpan(3)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Generos.Nombre")))
+                                 .ValidationRules(rules => rules.AddStringLength().Min(0).Max(45).Message(DApp.GetStringLengthResource("Generos.Nombre", 45)))
+                                      .Editor(e => e.TextBox().ID(Prefix + "Nombre").ShowClearButton(true));
+                                groupItems.AddGroup().ColCount(12);
+                                     //.Items(groupButtons => toolbarDetailconfig.GetButtonsDetail<GenerosModel>(groupButtons));
+                             });
+                    })
+                )
+            }
+            
+        </form> 
+    </div> 
+</div> 
+

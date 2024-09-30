@@ -1,0 +1,58 @@
+{
+  "_from": "devexpress-reporting@19.1-next",
+  "_id": "devexpress-reporting@19.1.6",
+  "_inBundle": false,
+  "_integrity": "sha512-vOM17S5yQRqW3AoMgeKt7lNbJtPLnJbmambki7/+Hoc/224iwvWBS+pEVnYmP0v8fpYGy7Q6KN+Su4ynQJ1ShQ==",
+  "_location": "/devexpress-reporting",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "devexpress-reporting@19.1-next",
+    "name": "devexpress-reporting",
+    "escapedName": "devexpress-reporting",
+    "rawSpec": "19.1-next",
+    "saveSpec": null,
+    "fetchSpec": "19.1-next"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/devexpress-reporting/-/devexpress-reporting-19.1.6.tgz",
+  "_shasum": "a52891dbd5842d8bfe23b4aa0e09e40102f6df2a",
+  "_spec": "devexpress-reporting@19.1-next",
+  "_where": "D:\\SIESA\\PORTAL\\Fontend\\Mvc.WebReports\\WebReports",
+  "author": {
+    "name": "Developer Express Inc."
+  },
+  "bugs": {
+    "url": "https://www.devexpress.com/support/"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "ace-builds": "^1.3.0",
+    "jquery": "^3.1.1",
+    "jquery-ui": "^1.12.1",
+    "knockout": "~3.5.0"
+  },
+  "deprecated": false,
+  "description": "DevExpress Reporting provides the capability to develop a reporting application to create and customize reports.",
+  "devDependencies": {
+    "webpack": "^1.13.1"
+  },
+  "homepage": "https://www.devexpress.com/",
+  "keywords": [
+    "xtrareports",
+    "reports",
+    "analytics",
+    "reporting",
+    "devexpress"
+  ],
+  "license": "SEE LICENSE IN README.md",
+  "main": "./dx-reportdesigner.js",
+  "name": "devexpress-reporting",
+  "peerDependencies": {
+    "@devexpress/analytics-core": "19.1.6"
+  },
+  "version": "19.1.6"
+}

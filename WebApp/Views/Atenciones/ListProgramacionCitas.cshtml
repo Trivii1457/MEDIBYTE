@@ -1,0 +1,30 @@
+@{ 
+    string Prefix = "ListaCitasProgramadas";
+
+    var DataGridConfig = new DataGridConfiguration<ProgramacionCitas>(Prefix)
+        .Exports(true,true)
+        ;
+} 
+
+<div class="box-body table-responsive no-padding"> 
+@(Html.DControls().DataGridSimple<ProgramacionCitas>(DataGridConfig)
+    .ID("ListaCitasProgramadasDataGrid")
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Atenciones").LoadAction("GetListaCitasProgramadas").Key("Id"))
+    .SearchPanel(x=>x.Visible(false))
+    .Columns(columns =>
+    {
+        columns.AddFor(m => m.Consecutivo).SortOrder(SortOrder.Desc);
+        columns.AddFor(m => m.CreationDate).Caption(DApp.DefaultLanguage.GetResource("ProgramacionCitas.FechaAsignacion"));
+        columns.AddFor(m => m.FechaInicio).Format(DApp.DefaultLanguage.DateFormat).SortOrder(SortOrder.Desc);
+        columns.AddFor(m => m.FechaInicio).Format(DApp.DefaultLanguage.TimeFormat).Caption(DApp.DefaultLanguage.GetResource("ProgramacionCitas.HoraInicio"));
+        columns.AddFor(m => m.Pacientes.NumeroIdentificacion);
+        columns.AddFor(m => m.Pacientes.NombreCompleto);
+        columns.AddFor(m => m.Pacientes.FechaNacimiento);
+        columns.AddFor(m => m.Entidades.Nombre);
+        columns.AddFor(m => m.Servicios.Nombre);
+        columns.AddFor(m => m.Cantidad);
+        columns.AddFor(m => m.Observaciones);
+        columns.AddFor(m => m.Estados.Nombre);
+    })
+) 
+</div> 

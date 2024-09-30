@@ -1,0 +1,41 @@
+@{
+    string Prefix = "RadicacionCuentas";
+    string UrlClick = Url.Action("Edit", "RadicacionCuentas");
+    string UrlNew = Url.Action("New", "RadicacionCuentas");
+
+    var DataGridConfig = new DataGridConfiguration<RadicacionCuentas>(Prefix)
+        .OnClick(UrlClick, new { Id = "Id" })
+        .New(UrlNew, DApp.ActionViewSecurity(Context, UrlNew))
+        .Exports(true, true).SetStorage()
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("RadicacionCuentas"), "mainPanel");
+}
+
+
+
+<div class="box-body table-responsive no-padding">
+    @(Html.DControls().DataGridSimple<RadicacionCuentas>(DataGridConfig)
+    .ID("RadicacionCuentasDataGrid")
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("RadicacionCuentas").LoadAction("Get").Key("Id"))
+    .Columns(columns =>
+    {
+        columns.AddFor(m => m.Empresas.Id).Caption(DApp.GetResource("FacturasGeneracion.EmpresasId"))
+            .Lookup(lookup => lookup
+            .DataSource(d => d.Mvc().LoadMethod("POST").Controller("FacturasGeneracion").LoadAction("GetEmpresasId").Key("Id"))
+            .DisplayExpr("RazonSocial")
+            .ValueExpr("Id")
+            );
+        columns.AddFor(m => m.Sedes.Id).Caption(DApp.GetResource("FacturasGeneracion.SedesId")).Lookup(lookup => lookup
+            .DataSource(d => d.Mvc().LoadMethod("POST").Controller("FacturasGeneracion").LoadAction("GetSedesId").Key("Id"))
+            .DisplayExpr("Nombre")
+            .ValueExpr("Id")
+            );
+        columns.AddFor(m => m.Entidades.Id).Caption(DApp.GetResource("FacturasGeneracion.EntidadesId")).Lookup(lookup => lookup
+           .DataSource(d => d.Mvc().LoadMethod("POST").Controller("FacturasGeneracion").LoadAction("GetEntidadesId").Key("Id"))
+           .DisplayExpr("Nombre")
+           .ValueExpr("Id")
+           );
+
+        columns.AddFor(m => m.FechaRadicacion);
+    })
+)
+</div>

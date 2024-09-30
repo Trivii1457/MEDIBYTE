@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Custom\DIAN_UBL_Structures.cs" />
+    <Compile Remove="Custom\DIAN_UBL_StructuresCustom.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Serialize.Linq" Version="2.0.0" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Dominus">
+      <HintPath>..\Libs\Dominus.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

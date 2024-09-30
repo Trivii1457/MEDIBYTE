@@ -1,0 +1,64 @@
+@model OrdenesMedicamentosDetallesModel 
+@{
+    string Prefix = "OrdenesMedicamentosDetalles"; 
+    string UrlDelete = Url.Action("DeleteDetail", "OrdenesMedicamentosDetalles", new { Id = Model.Entity.Id }); 
+
+    var toolbarDetailconfig = new ToolbarDetailConfiguration(Prefix).Delete(UrlDelete,Model.Entity.IsNew,true).Save(true).Cancel(); 
+} 
+
+<partial name="ViewJS.cshtml" model="Model" view-data="ViewData" /> 
+
+<div>@(Html.DControls().Toolbar(toolbarDetailconfig))</div>
+
+<div> 
+    <form id="@(Prefix)Form" asp-controller="OrdenesMedicamentosDetalles" asp-action="EditDetail" class="form-horizontal" data-ajax-mode="replace" data-ajax-update="#OrdenesMedicamentosDetallesMainPanelForm" data-ajax-success="@(Prefix)FormSuccessDetail" data-ajax-failure="@(Prefix)FormFailureDetail" data-ajax="true">
+        @(Html.DControls().ValidationSummary().ValidationGroup(Prefix + "ValidationGroup").ElementAttr("class","ErrorValidationSummary"))
+        @using (Html.DevExtreme().ValidationGroup(Prefix + "ValidationGroupDetail"))
+        {
+            @(Html.DControls().CheckBoxFor(m => m.Entity.IsNew).ID(Prefix + "IsNew").Visible(false))
+            @(Html.DControls().NumberBoxFor(m => m.Entity.Id).ID(Prefix + "Id").Visible(false))
+            @(Html.DControls().TextBoxFor(m => m.Entity.UpdatedBy).ID(Prefix + "UpdatedBy").Visible(false))
+            @(Html.DControls().DateBoxFor(m => m.Entity.LastUpdate).ID(Prefix + "LastUpdate").Type(DateBoxType.DateTime).Visible(false))
+            @(Html.DControls().TextBoxFor(m => m.Entity.CreatedBy).ID(Prefix + "CreatedBy").Visible(false))
+            @(Html.DControls().DateBoxFor(m => m.Entity.CreationDate).ID(Prefix + "CreationDate").Type(DateBoxType.DateTime).Visible(false))
+
+            @(Html.DControls().NumberBoxFor(m => m.Entity.OrdenesMedicamentosId).ID(Prefix + "OrdenesMedicamentosId").Visible(false))
+
+            @(Html.DControls().Form<OrdenesMedicamentosDetallesModel>()
+                    .ID("OrdenesMedicamentosDetallesModelForm").LabelLocation(FormLabelLocation.Top).ShowValidationSummary(false).FormData(Model)
+                    .Items(items =>
+                    {
+                         items.AddGroup().ColCount(12).Caption(DApp.DefaultLanguage.GetResource("DEFAULT.INFORMATIONGENERAL"))
+                             .Items(groupItems =>{
+                                groupItems.AddSimpleFor(m => m.Entity.MedicamentosId).ColSpan(12)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("OrdenesMedicamentosDetalles.MedicamentosId")))
+                                 .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("OrdenesMedicamentosDetalles.MedicamentosId")))
+                                     .Editor(e => e.SelectBox().ID(Prefix + "MedicamentosId")
+                                     .DataSource(d => d.Mvc().LoadMethod("POST").Controller("OrdenesMedicamentosDetalles").LoadAction("GetMedicamentosId").Key("Id"))
+                                     .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                     .ValueExpr("Id").DisplayExpr("DisplayExpre").SearchExpr("Nombre")
+                                     .SearchEnabled(true).ShowClearButton(true)
+                                );
+                                groupItems.AddSimpleFor(m => m.Entity.Dosis).ColSpan(3)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("OrdenesMedicamentosDetalles.Dosis")))
+                                 .ValidationRules(rules => rules.AddStringLength().Min(0).Max(50).Message(DApp.GetStringLengthResource("OrdenesMedicamentosDetalles.Dosis", 50)))
+                                     .Editor(e => e.TextBox().ID(Prefix + "Dosis").ShowClearButton(true));
+                                groupItems.AddSimpleFor(m => m.Entity.Frecuencia).ColSpan(3)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("OrdenesMedicamentosDetalles.Frecuencia")));
+                                 groupItems.AddSimpleFor(m => m.Entity.DiasTratamiento).ColSpan(3)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("OrdenesMedicamentosDetalles.DiasTratamiento")));                                 
+                                 
+                                 groupItems.AddSimpleFor(m => m.Entity.Cantidad).ColSpan(3)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("OrdenesMedicamentosDetalles.Cantidad")))
+                                     .Editor(e=>e.NumberBox().ID(Prefix + "Cantidad").Format("#,##0.##").ShowClearButton(true).ShowSpinButtons(true));
+                                groupItems.AddSimpleFor(m => m.Entity.Observaciones).ColSpan(12)
+                                     .Editor(e => e.TextArea().ID(Prefix + "Observaciones"));
+
+                     });
+                 })
+             )
+        }
+        
+    </form> 
+</div> 
+

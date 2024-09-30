@@ -1,0 +1,53 @@
+﻿@*@model ProfileNavigationModel*@
+@model ProfileModel
+@{
+    string Prefix = "ProfileNavigationMaster";
+
+    var DataGridDetailConfig = new DataGridConfiguration<ProfileMethodModel>(Prefix)
+        .Exports(false,true);
+}
+
+<div>
+    <div id="ProfileNavigationMainPanelForm">
+        <div class="card">
+            <div class="card-body">
+                <div class="box-body table-responsive no-padding">
+                    @(Html.DControls().DataGridSimple<ProfileMethodModel>(DataGridDetailConfig)
+                        .ID("ProfileNavigationMasterDataGrid").Height(700)
+                        .Paging(x=>x.PageSize(15))
+                        .SearchPanel(x=>x.Visible(true).SearchVisibleColumnsOnly(true))
+                        .FilterRow(x=>x.Visible(false))
+                        .RemoteOperations(false).HighlightChanges(true).RepaintChangesOnly(true)
+                        .Editing(e=>e.AllowUpdating(true).AllowDeleting(false).AllowAdding(false).Mode(GridEditMode.Batch))
+                        .DataSource(d => d.Mvc().LoadMethod("GET")
+                            .Controller("ProfileNavigation")
+                            .LoadAction("GetNavigationMaster")
+                            .Key("MenuId","MenuActionId","ProfileId","MenuName","MenuActionName")
+                            .UpdateMethod("POST").UpdateAction("SetNavigationProfile")
+                            .LoadParams(new { ProfileId = Model.Entity.Id }))
+                        .Columns(columns =>
+                        {
+                            columns.AddFor(m => m.Module).AllowEditing(false).Caption(DApp.DefaultLanguage.GetResource("ProfileNavigation.Module")).SortOrder(SortOrder.Asc).SortIndex(0).GroupIndex(0);
+                            columns.AddFor(m => m.ResourceKeyMaster).AllowEditing(false).Caption(DApp.DefaultLanguage.GetResource("ProfileNavigation.ResourceKeyMaster")).SortOrder(SortOrder.Asc).SortIndex(1).GroupIndex(1);
+                            columns.AddFor(m => m.ResourceKeyMethod).AllowEditing(false).Caption(DApp.DefaultLanguage.GetResource("ProfileNavigation.ResourceKeyMethod"));
+                            columns.AddFor(m => m.HavePermision).AllowEditing(true).Caption(DApp.DefaultLanguage.GetResource("ProfileNavigation.HavePermision"));
+                            columns.AddFor(m => m.MenuId).Visible(false);
+                            columns.AddFor(m => m.MenuName).Visible(false);
+                            columns.AddFor(m => m.MenuActionId).SortOrder(SortOrder.Asc).SortIndex(2).Visible(false);
+                            columns.AddFor(m => m.MenuActionName).Visible(false);
+                            columns.AddFor(m => m.ProfileId).Visible(false);
+                        })
+                        .Grouping(grouping => grouping.AutoExpandAll(true))
+                        .GroupPanel(groupPanel => groupPanel.Visible(false))
+                        .Selection(s=>s.AllowSelectAll(false).Mode(SelectionMode.None))
+                    )
+                </div>
+                <div>
+                    <div id="ProfileNavigationMainPanelForm"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

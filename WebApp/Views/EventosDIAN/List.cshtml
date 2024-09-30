@@ -1,0 +1,37 @@
+@{ 
+    string Prefix = "EventosDIAN"; 
+    string UrlClick = Url.Action("Edit", "EventosDIAN"); 
+    string UrlNew = Url.Action("New", "EventosDIAN"); 
+
+    var DataGridConfig = new DataGridConfiguration<EventosDIAN>(Prefix) 
+        .OnClick(UrlClick, new { Id = "Id" }) 
+        //.New(UrlNew,DApp.ActionViewSecurity(Context,UrlNew)) 
+        .Exports(true,true) 
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("EventosDIAN"), "mainPanel"); 
+} 
+
+<div class="box-body table-responsive no-padding"> 
+@(Html.DControls().DataGridSimple<EventosDIAN>(DataGridConfig) 
+    .ID("EventosDIANDataGrid") 
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("EventosDIAN").LoadAction("Get").Key("Id")) 
+    .Columns(columns => 
+    { 
+        columns.AddFor(m => m.FechaEvento).SortOrder(SortOrder.Desc); 
+        @*columns.AddFor(m => m.TipoEvento); 
+        columns.AddFor(m => m.CodigoEvento); *@
+        columns.AddFor(m => m.Descripcion); 
+        columns.AddFor(m => m.NroId); 
+@*        columns.AddFor(m => m.Uri); *@
+        columns.AddFor(m => m.NumDocEmisor); 
+        columns.AddFor(m => m.NumDocReceptor); 
+        @*columns.AddFor(m => m.TipoDoc); 
+        columns.AddFor(m => m.SubtipoDoc); *@
+        
+        @*columns.AddFor(m => m.Uuid); *@
+        columns.AddFor(m => m.FechaEmision); 
+        columns.AddFor(m => m.Observacion); 
+        @*columns.AddFor(m => m.XmlDoc); 
+        columns.AddFor(m => m.Pdf); *@
+    }) 
+) 
+</div> 

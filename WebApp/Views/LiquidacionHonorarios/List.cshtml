@@ -1,0 +1,30 @@
+@{ 
+    string Prefix = "LiquidacionHonorarios"; 
+    string UrlClick = Url.Action("Edit", "LiquidacionHonorarios"); 
+    string UrlNew = Url.Action("New", "LiquidacionHonorarios"); 
+
+    var DataGridConfig = new DataGridConfiguration<LiquidacionHonorarios>(Prefix) 
+        .OnClick(UrlClick, new { Id = "Id" }) 
+        .New(UrlNew,DApp.ActionViewSecurity(Context,UrlNew)) 
+        .Exports(true,true) 
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("LiquidacionHonorarios"), "mainPanel"); 
+} 
+
+<div class="box-body table-responsive no-padding"> 
+@(Html.DControls().DataGridSimple<LiquidacionHonorarios>(DataGridConfig)
+    .ID("LiquidacionHonorariosDataGrid")
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("LiquidacionHonorarios").LoadAction("Get").Key("Id"))
+    .Columns(columns =>
+    {
+        columns.AddFor(m => m.Consecutivo);
+        columns.AddFor(m => m.Estados.Nombre);
+        columns.AddFor(m => m.FechaInicio);
+        columns.AddFor(m => m.FechaFinal);
+        columns.AddFor(m => m.ValorTotal);
+        columns.AddFor(m => m.Empleados.NombreCompleto);        
+        columns.AddFor(m => m.Observaciones);
+        columns.AddFor(m => m.CreatedBy);
+        columns.AddFor(m => m.DetalleAnulacion);
+    })
+) 
+</div> 

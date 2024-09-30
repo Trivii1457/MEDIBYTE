@@ -1,0 +1,93 @@
+@model HistoriasClinicasModel
+@{
+    string Prefix = "AdicionOrdenes";
+    string UrlBack = Url.Action("ListPartial", "AdicionOrdenes");
+
+    var ToolbarConfig = new ToolbarConfiguration(Prefix)
+        .Title(DApp.DefaultLanguage.GetResource("AdicionOrdenes"))
+        .AddButtons(new List<ButtonToolbar>()
+        {
+            new ButtonToolbar
+            {
+                Action = "ImprimirDocumentosAPacientes",
+                Text = @DApp.DefaultLanguage.GetResource("HistoriasClinicas.ImprimirDocumentosAPacientes"),
+                Disabled = (Model.Entity.IsNew),
+                Location = ToolbarItemLocation.After,
+                LocateInMenu = ToolbarItemLocateInMenuMode.Auto,
+                Icon = "print"
+            }
+        })
+        .Back(UrlBack);
+
+}
+
+<partial name="ViewJS.cshtml" model="Model" view-data="ViewData" />
+
+@(Html.DControls().Toolbar(ToolbarConfig))
+
+<div>
+    <div asp-validation-summary="All" class="ErrorValidationSummary"></div>
+    <div>
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active">
+                <a href="#OrdenesMedicamentos" aria-controls="OrdenesMedicamentos" role="tab" data-toggle="tab">
+                    @DApp.DefaultLanguage.GetResource("OrdenesMedicamentos")
+                </a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="OrdenesMedicamentos">
+                <partial name="../OrdenesMedicamentos/ListDetail.cshtml" model=Model view-data="ViewData" />
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active">
+                <a href="#OrdenesServicios" aria-controls="OrdenesServicios" role="tab" data-toggle="tab">
+                    @DApp.DefaultLanguage.GetResource("OrdenesServicios")
+                </a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="OrdenesMedicamentos">
+                <partial name="../OrdenesServicios/ListDetail.cshtml" model=Model view-data="ViewData" />
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active">
+                <a href="#IndicacionesMedicas" aria-controls="IndicacionesMedicas" role="tab" data-toggle="tab">
+                    @DApp.DefaultLanguage.GetResource("IndicacionesMedicas")
+                </a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="Incapacidades">
+                <partial name="../IndicacionesMedicas/ListDetail.cshtml" model=Model view-data="ViewData" />
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active">
+                <a href="#Incapacidades" aria-controls="Incapacidades" role="tab" data-toggle="tab">
+                    @DApp.DefaultLanguage.GetResource("Incapacidades")
+                </a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="Incapacidades">
+                <partial name="../Incapacidades/ListDetail.cshtml" model=Model view-data="ViewData" />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

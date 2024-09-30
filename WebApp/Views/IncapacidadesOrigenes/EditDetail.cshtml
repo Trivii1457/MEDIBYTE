@@ -1,0 +1,42 @@
+@model IncapacidadesOrigenesModel 
+@{
+    string Prefix = "IncapacidadesOrigenes"; 
+    string UrlDelete = Url.Action("DeleteDetail", "IncapacidadesOrigenes", new { Id = Model.Entity.Id }); 
+
+    var toolbarDetailconfig = new ToolbarDetailConfiguration(Prefix).Delete(UrlDelete).Save().Cancel(); 
+} 
+
+<partial name="ViewJS.cshtml" model="Model" view-data="ViewData" /> 
+
+<div>@(Html.DControls().Toolbar(toolbarDetailconfig))</div>
+
+<div> 
+     <form id="@(Prefix)Form" asp-controller="IncapacidadesOrigenes" asp-action="EditDetail" class="form-horizontal" data-ajax-mode="replace" data-ajax-update="#IncapacidadesOrigenesMainPanelForm" data-ajax-success="@(Prefix)FormSuccessDetail" data-ajax-failure="@(Prefix)FormFailureDetail" data-ajax="true"> 
+         @(Html.DControls().ValidationSummary().ValidationGroup(Prefix + "ValidationGroup").ElementAttr("class","ErrorValidationSummary")) 
+         @using (Html.DevExtreme().ValidationGroup(Prefix + "ValidationGroupDetail")) 
+         { 
+             @(Html.DControls().CheckBoxFor(m => m.Entity.IsNew).ID(Prefix + "IsNew").Visible(false)) 
+                @(Html.DControls().NumberBoxFor(m => m.Entity.Id).ID(Prefix + "Id").Visible(false)) 
+                @(Html.DControls().TextBoxFor(m => m.Entity.UpdatedBy).ID(Prefix + "UpdatedBy").Visible(false)) 
+                @(Html.DControls().DateBoxFor(m => m.Entity.LastUpdate).ID(Prefix + "LastUpdate").Type(DateBoxType.DateTime).Visible(false)) 
+                @(Html.DControls().TextBoxFor(m => m.Entity.CreatedBy).ID(Prefix + "CreatedBy").Visible(false)) 
+                @(Html.DControls().DateBoxFor(m => m.Entity.CreationDate).ID(Prefix + "CreationDate").Type(DateBoxType.DateTime).Visible(false)) 
+
+                @(Html.DControls().Form<IncapacidadesOrigenesModel>() 
+                    .ID("IncapacidadesOrigenesModelForm").LabelLocation(FormLabelLocation.Top).ShowValidationSummary(false).FormData(Model) 
+                    .Items(items => 
+                    { 
+                         items.AddGroup().ColCount(12).Caption(DApp.DefaultLanguage.GetResource("DEFAULT.INFORMATIONGENERAL"))
+                             .Items(groupItems =>{
+                                groupItems.AddSimpleFor(m => m.Entity.Descripcion).ColSpan(1) 
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("IncapacidadesOrigenes.Descripcion"))) 
+                                 .ValidationRules(rules => rules.AddStringLength().Min(0).Max(255).Message(DApp.GetStringLengthResource("IncapacidadesOrigenes.Descripcion", 255))) 
+                                     .Editor(e => e.TextBox().ID(Prefix + "Descripcion").ShowClearButton(true)); 
+                     }); 
+                 }) 
+             ) 
+         } 
+         <div asp-validation-summary="All" class="text-danger" id="@(Prefix)ListError"></div> 
+     </form> 
+</div> 
+

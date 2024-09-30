@@ -1,0 +1,43 @@
+@{ 
+    string Prefix = "Medicamentos";
+    string UrlClick = Url.Action("Edit", "Medicamentos");
+    string UrlNew = Url.Action("New", "Medicamentos");
+
+    var DataGridConfig = new DataGridConfiguration<Medicamentos>(Prefix)
+        .OnClick(UrlClick, new { Id = "Id" })
+        .New(UrlNew,DApp.ActionViewSecurity(Context,UrlNew))
+        .Exports(true,true).SetStorage()
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("Medicamentos"), "mainPanel");
+} 
+
+<div class="box-body table-responsive no-padding"> 
+@(Html.DControls().DataGridSimple<Medicamentos>(DataGridConfig)
+    .ID("MedicamentosDataGrid")
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Medicamentos").LoadAction("Get").Key("Id"))
+    .Columns(columns =>
+    {
+        columns.AddFor(m => m.Nombre);
+        columns.AddFor(m => m.ConcentracionesId)
+                          .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Medicamentos.ConcentracionesId")))
+                          .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Medicamentos.ConcentracionesId")))
+                              .Lookup(lookup => lookup
+                              .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Medicamentos").LoadAction("GetConcentracionesId").Key("Id"))
+                              .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                              .ValueExpr("Id").DisplayExpr("Nombre"));
+        columns.AddFor(m => m.FormasFarmaceuticasId)
+            .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Medicamentos.FormasFarmaceuticasId")))
+            .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Medicamentos.FormasFarmaceuticasId")))
+                .Lookup(lookup => lookup
+                .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Medicamentos").LoadAction("GetFormasFarmaceuticasId").Key("Id"))
+                .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                .ValueExpr("Id").DisplayExpr("Nombre"));
+        columns.AddFor(m => m.ViaAdministracionId)
+            .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Medicamentos.ViaAdministracionId")))
+            .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Medicamentos.ViaAdministracionId")))
+                .Lookup(lookup => lookup
+                .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Medicamentos").LoadAction("GetViaAdministracionId").Key("Id"))
+                .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                .ValueExpr("Id").DisplayExpr("Nombre"));
+    })
+) 
+</div> 

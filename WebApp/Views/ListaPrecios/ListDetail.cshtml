@@ -1,0 +1,100 @@
+@*  Remplazar FATHERModel por el modelo del padre al que pertenece   *@ 
+@* 
+@model FATHERModel 
+@{ 
+    string Prefix = "ListaPrecios"; 
+    string UrlOnClick = Url.Action("EditDetail", "ListaPrecios"); 
+    string UrlNew = Url.Action("NewDetail", "ListaPrecios", new { IdFather = Model.Entity.Id }); 
+
+    var DataGridDetailConfig = new DataGridConfiguration<ListaPrecios>(Prefix) 
+        .OnClick(UrlOnClick, new { Id = "Id" }, Prefix + "MainPanelForm") 
+        .New(UrlNew,Model.Entity.IsNew,Prefix + "MainPanelForm") 
+        .Exports(true,true); 
+} 
+*@ 
+
+
+@* ------------ Descomentar el siguiente codigo si es una edicion en maestro --------------- *@
+@* 
+
+<div class="card cardDeatil"> 
+    <div class="card-body">
+        <div class="box-body table-responsive no-padding"> 
+        @(Html.DControls().DataGridSimple<ListaPrecios>(DataGridDetailConfig) 
+            .ID("ListaPreciosDetalleDataGrid") 
+            .DataSource(d => d.Mvc().LoadMethod("POST").Controller("ListaPrecios").LoadAction("Get").Key("Id")) 
+            .DataSourceOptions(x=>x.Filter("['IdFather','=','"+@Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+            .Columns(columns => 
+            { 
+             columns.AddFor(m => m.Nombre); 
+             columns.AddFor(m => m.Empresas.Id); 
+             columns.AddFor(m => m.Porcentaje); 
+             columns.AddFor(m => m.Valor); 
+             columns.AddFor(m => m.ListaPrecios.Id); 
+             columns.AddFor(m => m.Tarifa); 
+             columns.AddFor(m => m.Estados.Id); 
+            }) 
+        ) 
+        </div> 
+        <div id="ListaPreciosMainPanelForm"></div> 
+    </div> 
+</div> 
+*@ 
+
+
+@* ------------ Descomentar el siguiente codigo si es una edicion en grilla y COMENTAR LOS METODOS OnClick y New del DataGridDetailConfig --------------- *@
+@* 
+<script> 
+     function @(Prefix)OnInitNewRowDetalleDataGrid(model) { 
+         model = GetAuditoryData(model); 
+         model.data.IdFather = "@Model.Entity.Id"; // Cambiar IdFather por el campo foraneo hacia el padre 
+     } 
+</script> 
+<div class="card cardDeatil"> 
+    <div class="card-body">
+        <div class="box-body table-responsive no-padding"> 
+             @(Html.DControls().DataGridSimple<ListaPrecios>(DataGridDetailConfig) 
+                 .ID("ListaPreciosDetalleDataGrid") 
+                 .DataSource(d => d.Mvc().LoadMethod("POST").Controller("ListaPrecios").LoadAction("Get").Key("Id") 
+                     .InsertAction("AddInGrid").InsertMethod("POST").UpdateAction("ModifyInGrid").UpdateMethod("POST").DeleteAction("DeleteInGrid").DeleteMethod("POST") 
+                 ) 
+                 .DataSourceOptions(x=>x.Filter("['IdFather','=','"+@Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+                 .Editing(editing => editing.Mode(GridEditMode.Batch).AllowAdding(!Model.Entity.IsNew).AllowUpdating(true).AllowDeleting(true)) 
+                 .OnInitNewRow(Prefix + "OnInitNewRowDetalleDataGrid") 
+                 .OnRowInserted("OnRowInsertedDetalleDataGrid").OnRowUpdated("OnRowUpdatedDetalleDataGrid").OnRowRemoved("OnRowRemovedDetalleDataGrid").OnDataErrorOccurred("OnDataErrorOccurredDetalleDataGrid") 
+                 .Columns(columns => 
+                 { 
+                     columns.AddFor(m => m.Nombre) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("ListaPrecios.Nombre"))) 
+                         .ValidationRules(rules => rules.AddStringLength().Min(0).Max(255).Message(DApp.GetStringLengthResource("ListaPrecios.Nombre", 255))) 
+                     ; 
+                     columns.AddFor(m => m.EmpresasId) 
+                             .Lookup(lookup => lookup 
+                             .DataSource(d => d.Mvc().LoadMethod("POST").Controller("ListaPrecios").LoadAction("GetEmpresasId").Key("Id")) 
+                             .DataSourceOptions(o => o.Paginate(true).PageSize(10)) 
+                             .ValueExpr("Id").DisplayExpr("Id")); 
+                     columns.AddFor(m => m.Porcentaje).Format("#,##0.##") 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("ListaPrecios.Porcentaje"))); 
+                     columns.AddFor(m => m.Valor).Format("#,##0.##") 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("ListaPrecios.Valor"))); 
+                     columns.AddFor(m => m.RelacionaListaPreciosId) 
+                             .Lookup(lookup => lookup 
+                             .DataSource(d => d.Mvc().LoadMethod("POST").Controller("ListaPrecios").LoadAction("GetRelacionaListaPreciosId").Key("Id")) 
+                             .DataSourceOptions(o => o.Paginate(true).PageSize(10)) 
+                             .ValueExpr("Id").DisplayExpr("Id")); 
+                     columns.AddFor(m => m.Tarifa) 
+                         .ValidationRules(rules => rules.AddStringLength().Min(0).Max(100).Message(DApp.GetStringLengthResource("ListaPrecios.Tarifa", 100))) 
+                     ; 
+                     columns.AddFor(m => m.TipoEstadosId) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("ListaPrecios.TipoEstadosId"))) 
+                         .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("ListaPrecios.TipoEstadosId"))) 
+                             .Lookup(lookup => lookup 
+                             .DataSource(d => d.Mvc().LoadMethod("POST").Controller("ListaPrecios").LoadAction("GetTipoEstadosId").Key("Id")) 
+                             .DataSourceOptions(o => o.Paginate(true).PageSize(10)) 
+                             .ValueExpr("Id").DisplayExpr("Id")); 
+             }) 
+         ) 
+        </div> 
+    </div> 
+</div> 
+*@ 

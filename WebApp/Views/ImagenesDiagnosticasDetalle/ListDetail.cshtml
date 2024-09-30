@@ -1,0 +1,176 @@
+@*  Remplazar FATHERModel por el modelo del padre al que pertenece   *@
+
+@model ImagenesDiagnosticasModel
+@{
+    string Prefix = "ImagenesDiagnosticasDetalle";
+    string UrlOnClick = Url.Action("EditDetail", "ImagenesDiagnosticasDetalle");
+    string UrlNew = Url.Action("NewDetail", "ImagenesDiagnosticasDetalle", new { IdFather = Model.Entity.Id });
+
+    var DataGridDetailConfig = new DataGridConfiguration<ImagenesDiagnosticasDetalle>(Prefix)
+        //.OnClick(UrlOnClick, new { Id = "Id" }, Prefix + "MainPanelForm")
+        //.New(UrlNew,Model.Entity.IsNew,Prefix + "MainPanelForm")
+        .AddButtons(new List<ButtonToolbar>{
+            new ButtonToolbar(){
+                Id=$"{Prefix}ButtonCargarImagenDiagnostica",
+                Text=DApp.DefaultLanguage.GetResource("ImagenesDiagnosticasDetalle.CargarImagenDiagnostica"),
+                Action=$"{Prefix}MostrarCargueImagenDiagnostica",
+                Icon="upload",
+                LocateInMenu=ToolbarItemLocateInMenuMode.Always,
+                Disabled = Model.Entity.IsNew || true
+            },
+            new ButtonToolbar(){
+                Id=$"{Prefix}ButtonRefrescarImagenesDiagnosticasDetalle",
+                Text=DApp.DefaultLanguage.GetResource("ImagenesDiagnosticasDetalle.RefrescarImagenesDiagnosticasDetalle"),
+                Action=$"{Prefix}RefrescarImagenesDiagnosticasDetalle",
+                Icon="refresh",
+                LocateInMenu=ToolbarItemLocateInMenuMode.Always,
+                Disabled = Model.Entity.IsNew || true
+            }
+        })
+        .Exports(true, true);
+}
+
+<script>
+    function @(Prefix)MostrarCargueImagenDiagnostica(data)
+    {
+        $("#@(Prefix)PopupImagenDiagnostica").dxPopup("instance").show();
+    }
+    function @(Prefix)RefrescarImagenesDiagnosticasDetalle(data)
+    {
+        $("#ImagenesDiagnosticasDetalleDetalleDataGrid").dxDataGrid("instance").refresh();
+    }
+    function @(Prefix)FileUploaderImagenDiagnosticaOnUploadStarted(data)
+    {
+        showLoadIndicator();
+        $("#@(Prefix)Errores").html("");
+    }
+    function @(Prefix)FileUploaderImagenDiagnosticaOnUploaded(data)
+    {
+        hideLoadIndicator();
+        $("#ImagenesDiagnosticasDetalleDetalleDataGrid").dxDataGrid("instance").refresh();
+    }
+    function @(Prefix)FileUploaderImagenDiagnosticaOnUploadError(data)
+    {
+        console.log("OnUploadError", data);
+        hideLoadIndicator();
+        try {
+            var result = JSON.parse(data.request.response);
+            if (result.TieneErrores) {
+                var htmlError = "<ul>";
+                for (var i = 0; i < result.Errores.length; i++) {
+                    htmlError += "<li>" + result.Errores[i] + "</li>"
+                }
+                htmlError += "</ul>";
+                $("#@(Prefix)Errores").html(htmlError);
+            }
+        }
+        catch (err) {
+            $("#@(Prefix)Errores").html(data.request.response);
+        }
+
+    }
+</script>
+
+@* ------------ Descomentar el siguiente codigo si es una edicion en maestro --------------- *@
+<div class="card cardDeatil">
+    <div class="card-body">
+        <div class="box-body table-responsive no-padding">
+            @(Html.DControls().DataGridSimple<ImagenesDiagnosticasDetalle>(DataGridDetailConfig)
+            .ID("ImagenesDiagnosticasDetalleDetalleDataGrid")
+            .DataSource(d => d.Mvc().LoadMethod("POST").Controller("ImagenesDiagnosticasDetalle").LoadAction("Get").Key("Id"))
+            .DataSourceOptions(x=>x.Filter("['ImagenesDiagnosticasId','=','" + @Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+            .Columns(columns =>
+            {
+                columns.AddFor(m => m.Nombre);
+                columns.Add().Width("50").Caption("").Alignment(HorizontalAlignment.Center).CellTemplate(
+                @<text>
+                <% if(data.SubioAStorage){ %>
+                <a href="/ImagenesDiagnosticasDetalle/DescargarImagenDiagnostica/<%- data.Id %>" target="_blank"><i class="fa fa-cloud-download" aria-hidden="true"></i></a>
+                <% } else { %>
+                <label>Sincronizando ...</label>
+                <% } %>
+                </text>);
+                columns.Add().Width("50").Caption("").Alignment(HorizontalAlignment.Center).CellTemplate(
+                @<text>
+                <% if(data.SubioAStorage){ %>
+                <a href="/Home/DicomViewerImage/<%- data.Id %>" target="_blank"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                <% } %>
+                </text>);
+                //columns.AddFor(m => m.SubioAStorage);
+            })
+        )
+        </div>
+        <div id="ImagenesDiagnosticasDetalleMainPanelForm"></div>
+    </div>
+</div>
+
+@(Html.DevExtreme().Popup()
+    .ID($"{Prefix}PopupImagenDiagnostica")
+    .Width(800)
+    .Height(350)
+    .ShowTitle(true)
+    .Title(DApp.DefaultLanguage.GetResource("ImagenesDiagnosticasDetalle.PopupImagenDiagnostica"))
+    .Visible(false)
+    .DragEnabled(false)
+    .CloseOnOutsideClick(false)
+    .ContentTemplate(new TemplateName($"{Prefix}TemplateImagenDiagnostica"))
+)
+
+@using (Html.DevExtreme().NamedTemplate($"{Prefix}TemplateImagenDiagnostica"))
+{
+    <div id="@(Prefix)Errores" class="text-danger text-sm-left"></div>
+    <div id="@(Prefix)FileUploaderDiv" style="max-height: 100%;overflow: auto;">
+        @(Html.DevExtreme().FileUploader()
+            .ID($"{Prefix}FileUploaderImagenDiagnostica")
+            .Name("ArchivoImagenDiagnostica")
+            .Multiple(true)
+            .Accept(".dcm")
+            .AllowedFileExtensions(new[] { ".dcm" })
+            .UploadMode(FileUploadMode.UseButtons)
+            .UploadUrl(Url.Action("CargarImagenDiagnostica", "ImagenesDiagnosticasDetalle", new { imagenesDiagnosticasId = @Model.Entity.Id }))
+            .OnUploadStarted($"{Prefix}FileUploaderImagenDiagnosticaOnUploadStarted")
+            .OnUploaded($"{Prefix}FileUploaderImagenDiagnosticaOnUploaded")
+            .OnUploadError($"{Prefix}FileUploaderImagenDiagnosticaOnUploadError")
+        )
+    </div>
+    
+}
+
+@* ------------ Descomentar el siguiente codigo si es una edicion en grilla y COMENTAR LOS METODOS OnClick y New del DataGridDetailConfig --------------- *@
+
+@*<script>
+         function @(Prefix)OnInitNewRowDetalleDataGrid(model) {
+             model = GetAuditoryData(model);
+             model.data.ImagenesDiagnosticasId = "@Model.Entity.Id"; // Cambiar IdFather por el campo foraneo hacia el padre
+         }
+    </script>
+    <div class="card cardDeatil">
+        <div class="card-body">
+            <div class="box-body table-responsive no-padding">
+                 @(Html.DControls().DataGridSimple<ImagenesDiagnosticasDetalle>(DataGridDetailConfig)
+                     .ID("ImagenesDiagnosticasDetalleDetalleDataGrid")
+                     .DataSource(d => d.Mvc().LoadMethod("POST").Controller("ImagenesDiagnosticasDetalle").LoadAction("Get").Key("Id")
+                         .DeleteAction("DeleteInGrid").DeleteMethod("POST")
+                     )
+                     .DataSourceOptions(x=>x.Filter("['ImagenesDiagnosticasId','=','" + @Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+                     .Editing(editing => editing.Mode(GridEditMode.Batch).AllowAdding(false).AllowUpdating(false).AllowDeleting(true))
+                     .OnInitNewRow(Prefix + "OnInitNewRowDetalleDataGrid")
+                     .OnRowInserted("OnRowInsertedDetalleDataGrid").OnRowUpdated("OnRowUpdatedDetalleDataGrid").OnRowRemoved("OnRowRemovedDetalleDataGrid").OnDataErrorOccurred("OnDataErrorOccurredDetalleDataGrid")
+                     .Columns(columns =>
+                     {
+                         //columns.AddFor(m => m.ImagenesDiagnosticasId).Format("#,##0.##")
+                         //    .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("ImagenesDiagnosticasDetalle.ImagenesDiagnosticasId")));
+                         columns.AddFor(m => m.Nombre)
+                             .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("ImagenesDiagnosticasDetalle.Nombre")))
+                             .ValidationRules(rules => rules.AddStringLength().Min(0).Max(250).Message(DApp.GetStringLengthResource("ImagenesDiagnosticasDetalle.Nombre", 250))
+                            );
+                         //columns.AddFor(m => m.KeyStorage)
+                         //    .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("ImagenesDiagnosticasDetalle.KeyStorage")))
+                         //    .ValidationRules(rules => rules.AddStringLength().Min(0).Max(1000).Message(DApp.GetStringLengthResource("ImagenesDiagnosticasDetalle.KeyStorage", 1000)))
+                         //;
+                     })
+             )
+            </div>
+        </div>
+    </div>*@
+

@@ -1,0 +1,73 @@
+@*  Remplazar FATHERModel por el modelo del padre al que pertenece   *@ 
+ 
+@model EntidadesModel 
+@{ 
+    string Prefix = "EntidadesEsquemasImpuestos"; 
+    string UrlOnClick = Url.Action("EditDetail", "EntidadesEsquemasImpuestos"); 
+    string UrlNew = Url.Action("NewDetail", "EntidadesEsquemasImpuestos", new { IdFather = Model.Entity.Id }); 
+
+    var DataGridDetailConfig = new DataGridConfiguration<EntidadesEsquemasImpuestos>(Prefix) 
+        //.OnClick(UrlOnClick, new { Id = "Id" }, Prefix + "MainPanelForm") 
+        //.New(UrlNew,Model.Entity.IsNew,Prefix + "MainPanelForm") 
+        .Exports(true,true); 
+} 
+ 
+
+
+@* ------------ Descomentar el siguiente codigo si es una edicion en maestro --------------- *@
+@* 
+
+<div class="card cardDeatil"> 
+    <div class="card-body">
+        <div class="box-body table-responsive no-padding"> 
+        @(Html.DControls().DataGridSimple<EntidadesEsquemasImpuestos>(DataGridDetailConfig) 
+            .ID("EntidadesEsquemasImpuestosDetalleDataGrid") 
+            .DataSource(d => d.Mvc().LoadMethod("POST").Controller("EntidadesEsquemasImpuestos").LoadAction("Get").Key("Id")) 
+            .DataSourceOptions(x=>x.Filter("['IdFather','=','"+@Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+            .Columns(columns => 
+            { 
+             columns.AddFor(m => m.Entidades.Id); 
+             columns.AddFor(m => m.EsquemasImpuestos.Id); 
+            }) 
+        ) 
+        </div> 
+        <div id="EntidadesEsquemasImpuestosMainPanelForm"></div> 
+    </div> 
+</div> 
+*@ 
+
+
+@* ------------ Descomentar el siguiente codigo si es una edicion en grilla y COMENTAR LOS METODOS OnClick y New del DataGridDetailConfig --------------- *@
+ 
+<script> 
+     function @(Prefix)OnInitNewRowDetalleDataGrid(model) { 
+         model = GetAuditoryData(model); 
+         model.data.EntidadesId = "@Model.Entity.Id"; // Cambiar IdFather por el campo foraneo hacia el padre 
+     } 
+</script> 
+<div class="card cardDeatil"> 
+    <div class="card-body">
+        <div class="box-body table-responsive no-padding"> 
+             @(Html.DControls().DataGridSimple<EntidadesEsquemasImpuestos>(DataGridDetailConfig)
+                 .ID("EntidadesEsquemasImpuestosDetalleDataGrid")
+                 .DataSource(d => d.Mvc().LoadMethod("POST").Controller("EntidadesEsquemasImpuestos").LoadAction("Get").Key("Id")
+                     .InsertAction("AddInGrid").InsertMethod("POST").UpdateAction("ModifyInGrid").UpdateMethod("POST").DeleteAction("DeleteInGrid").DeleteMethod("POST")
+                 )
+                 .DataSourceOptions(x=>x.Filter("['EntidadesId','=','" + @Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+                 .Editing(editing => editing.Mode(GridEditMode.Batch).AllowAdding(!Model.Entity.IsNew).AllowUpdating(true).AllowDeleting(true))
+                 .OnInitNewRow(Prefix + "OnInitNewRowDetalleDataGrid")
+                 .OnRowInserted("OnRowInsertedDetalleDataGrid").OnRowUpdated("OnRowUpdatedDetalleDataGrid").OnRowRemoved("OnRowRemovedDetalleDataGrid").OnDataErrorOccurred("OnDataErrorOccurredDetalleDataGrid")
+                 .Columns(columns =>
+                 {
+                     columns.AddFor(m => m.EsquemasImpuestosId)
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("EntidadesEsquemasImpuestos.EsquemasImpuestosId")))
+                         .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("EntidadesEsquemasImpuestos.EsquemasImpuestosId")))
+                             .Lookup(lookup => lookup
+                             .DataSource(d => d.Mvc().LoadMethod("POST").Controller("EntidadesEsquemasImpuestos").LoadAction("GetEsquemasImpuestosId").Key("Id"))
+                             .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                             .ValueExpr("Id").DisplayExpr("Descripcion"));
+                 })
+         ) 
+        </div> 
+    </div> 
+</div>  

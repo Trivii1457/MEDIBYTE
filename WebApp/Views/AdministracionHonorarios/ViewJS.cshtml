@@ -1,0 +1,93 @@
+@model AdministracionHonorariosModel 
+@{
+    string Prefix = "AdministracionHonorarios"; 
+}
+
+<script>
+
+    @*function @(Prefix)OnValueChangedEmpleadosId(e)
+    {
+        if (e.value == 0 || e.value == "" || e.value == null) {
+            $("#@(Prefix)TipoAtencionEstadosId").dxSelectBox("instance").option("readOnly", true);
+            $("#@(Prefix)TipoLecturaEstadosId").dxSelectBox("instance").option("readOnly", true);
+            $("#@(Prefix)TipoDatoConvenioEstadosId").dxSelectBox("instance").option("readOnly", true);
+            $("#@(Prefix)TipoDatoParticularEstadosId").dxSelectBox("instance").option("readOnly", true);
+            $("#@(Prefix)TipoDatoLecturaEstadosId").dxSelectBox("instance").option("readOnly", true);
+            $("#@(Prefix)ValorHonorarioConvenio").dxNumberBox("instance").option("readOnly", true);
+            $("#@(Prefix)ValorHonorarioParticular").dxNumberBox("instance").option("readOnly", true);
+            $("#@(Prefix)ValorHonorarioLectura").dxNumberBox("instance").option("readOnly", true);
+
+            $("#@(Prefix)TipoAtencionEstadosId").dxSelectBox("instance").option("value", null);
+            $("#@(Prefix)TipoLecturaEstadosId").dxSelectBox("instance").option("value", null);
+            $("#@(Prefix)TipoDatoConvenioEstadosId").dxSelectBox("instance").option("value", null);
+            $("#@(Prefix)TipoDatoParticularEstadosId").dxSelectBox("instance").option("value", null);
+            $("#@(Prefix)TipoDatoLecturaEstadosId").dxSelectBox("instance").option("value", null);
+            $("#@(Prefix)ValorHonorarioConvenio").dxNumberBox("instance").option("value", null);
+            $("#@(Prefix)ValorHonorarioParticular").dxNumberBox("instance").option("value", null);
+            $("#@(Prefix)ValorHonorarioLectura").dxNumberBox("instance").option("value", null);
+
+        } else {
+            $("#@(Prefix)TipoAtencionEstadosId").dxSelectBox("instance").option("readOnly", false);
+            $("#@(Prefix)TipoLecturaEstadosId").dxSelectBox("instance").option("readOnly", false);
+            $("#@(Prefix)TipoDatoConvenioEstadosId").dxSelectBox("instance").option("readOnly", false);
+            $("#@(Prefix)TipoDatoParticularEstadosId").dxSelectBox("instance").option("readOnly", false);
+            $("#@(Prefix)TipoDatoLecturaEstadosId").dxSelectBox("instance").option("readOnly", false);
+
+        }
+    }
+
+    function @(Prefix)OnValueChangedTipoAtencionEstadosId(e)
+    {
+        console.log(e)
+        if (e.value == 76) {
+            $("#@(Prefix)ValorHonorarioConvenio").dxNumberBox("instance").option("readOnly", false);
+        } else {
+            $("#@(Prefix)ValorHonorarioConvenio").dxNumberBox("instance").option("readOnly", true);
+            $("#@(Prefix)ValorHonorarioConvenio").dxNumberBox("instance").option("value", null);
+        }
+    }*@
+
+    function @(Prefix)FormSuccess(data)
+    {
+        hideLoadIndicator();
+        if ('@ViewData.ModelState.IsValid' == 'True')
+        {
+            if ("@ViewBag.Accion" == "Delete") {
+                DevExpress.ui.notify("Registro eliminado correctamente.","info");
+            } else if ("@ViewBag.Accion" == "Save") {
+                DevExpress.ui.notify("Registro guardado correctamente.","info");
+            } else {
+                DevExpress.ui.notify("Error no accion en submit.","info");
+            }
+        }
+    }
+
+    function @(Prefix)FormFailure(data)
+    {
+        hideLoadIndicator();
+        DevExpress.ui.notify("Error en el formulario","error");
+    }
+
+    function @(Prefix)FormSuccessDetail(data)
+    {
+        hideLoadIndicator();
+        if ('@ViewData.ModelState.IsValid' == 'True')
+        {
+            $("#AdministracionHonorariosDetalleDataGrid").dxDataGrid("instance").refresh();
+            if ("@ViewBag.Accion" == "Delete") {
+                DevExpress.ui.notify("Registro eliminado correctamente.","info");
+            } else if ("@ViewBag.Accion" == "Save") {
+                DevExpress.ui.notify("Registro guardado correctamente.","info");
+            } else {
+                DevExpress.ui.notify("Error no accion en submit.","info");
+            }
+        }
+    }
+
+    function @(Prefix)FormFailureDetail(data)
+    {
+        hideLoadIndicator();
+        DevExpress.ui.notify("Error en el formulario","error");
+    }
+
+</script>

@@ -1,0 +1,30 @@
+@{ 
+    string Prefix = "FacturasDetalles"; 
+    string UrlClick = Url.Action("Edit", "FacturasDetalles"); 
+    string UrlNew = Url.Action("New", "FacturasDetalles"); 
+
+    var DataGridConfig = new DataGridConfiguration<FacturasDetalles>(Prefix) 
+        .OnClick(UrlClick, new { Id = "Id" }) 
+        .New(UrlNew,DApp.ActionViewSecurity(Context,UrlNew)) 
+        .Exports(true,true) 
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("FacturasDetalles"), "mainPanel"); 
+} 
+
+<div class="box-body table-responsive no-padding"> 
+@(Html.DControls().DataGridSimple<FacturasDetalles>(DataGridConfig) 
+    .ID("FacturasDetallesDataGrid") 
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("FacturasDetalles").LoadAction("Get").Key("Id")) 
+    .Columns(columns => 
+    { 
+        columns.AddFor(m => m.Facturas.Id); 
+        columns.AddFor(m => m.NroLinea); 
+        columns.AddFor(m => m.ServiciosId); 
+        columns.AddFor(m => m.Cantidad); 
+        columns.AddFor(m => m.PorcDescuento); 
+        columns.AddFor(m => m.PorcImpuesto); 
+        columns.AddFor(m => m.ValorServicio); 
+        columns.AddFor(m => m.SubTotal); 
+        columns.AddFor(m => m.ValorTotal); 
+    }) 
+) 
+</div> 

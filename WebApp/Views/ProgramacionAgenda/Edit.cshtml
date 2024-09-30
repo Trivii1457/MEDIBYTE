@@ -1,0 +1,212 @@
+@model ProgramacionAgendaModel
+@{
+    string Prefix = "ProgramacionAgenda";
+
+    string UrlSave = Url.Action("Edit", "ProgramacionAgenda");
+    string UrlNew = Url.Action("New", "ProgramacionAgenda");
+    string UrlDelete = Url.Action("Delete", "ProgramacionAgenda", new { Id = Model.Entity.Id });
+    string UrlBack = Url.Action("ListPartial", "ProgramacionAgenda");
+
+    var ToolbarConfig = new ToolbarConfiguration(Prefix)
+        .Title(DApp.DefaultLanguage.GetResource("ProgramacionAgenda"))
+        .Save(DApp.ActionViewSecurity(Context, UrlSave) || !Model.Entity.IsNew, Model.Entity.IsNew)
+        .New(UrlNew, DApp.ActionViewSecurity(Context, UrlNew))
+        .Delete(UrlDelete, DApp.ActionViewSecurity(Context, UrlDelete), UrlBack, Model.Entity.IsNew)
+        .Back(UrlBack);
+}
+
+<partial name="ViewJS.cshtml" model="Model" view-data="ViewData" />
+
+@(Html.DControls().Toolbar(ToolbarConfig))
+
+<div>
+    <div id="ProgramacionAgendaMainPanelForm">
+
+        @(Html.DControls().ValidationSummary().ValidationGroup(Prefix + "ValidationGroup").ElementAttr("class","ErrorValidationSummary"))
+
+        <div>
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active">
+                    <a href="#InfoGeneral" aria-controls="InfoGeneral" role="tab" data-toggle="tab">
+                        @DApp.DefaultLanguage.GetResource("ProgramacionAgenda.InfoGeneral")
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a href="#InfoSeleccion" aria-controls="InfoSeleccion" role="tab" data-toggle="tab">
+                        @DApp.DefaultLanguage.GetResource("ProgramacionAgenda.InfoSeleccion")
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="InfoGeneral" style="margin-top: 23px;">
+                    <form id="@(Prefix)Form" asp-controller="ProgramacionAgenda" asp-action="Edit" class="form-horizontal" data-ajax-mode="replace" data-ajax-update="#mainPanel" data-ajax-success="@(Prefix)FormSuccess" data-ajax-failure="@(Prefix)FormFailure" data-ajax="true">
+
+                        @using (Html.DevExtreme().ValidationGroup(Prefix + "ValidationGroup"))
+                        {
+                            @(Html.DControls().CheckBoxFor(m => m.Entity.IsNew).ID(Prefix + "IsNew").Visible(false))
+                            @(Html.DControls().NumberBoxFor(m => m.Entity.Id).ID(Prefix + "Id").Visible(false))
+                            @(Html.DControls().TextBoxFor(m => m.Entity.UpdatedBy).ID(Prefix + "UpdatedBy").Visible(false))
+                            @(Html.DControls().DateBoxFor(m => m.Entity.LastUpdate).ID(Prefix + "LastUpdate").Type(DateBoxType.DateTime).Visible(false))
+                            @(Html.DControls().TextBoxFor(m => m.Entity.CreatedBy).ID(Prefix + "CreatedBy").Visible(false))
+                            @(Html.DControls().DateBoxFor(m => m.Entity.CreationDate).ID(Prefix + "CreationDate").Type(DateBoxType.DateTime).Visible(false))
+
+                            @(Html.DControls().NumberBoxFor(m => m.Entity.Consecutivo).ID(Prefix + "Consecutivo").Visible(false))
+
+                            @(Html.DControls().CheckBoxFor(m => m.Entity.Lunes).ID(Prefix + "Lunes").Visible(false))
+                            @(Html.DControls().CheckBoxFor(m => m.Entity.Martes).ID(Prefix + "Martes").Visible(false))
+                            @(Html.DControls().CheckBoxFor(m => m.Entity.Miercoles).ID(Prefix + "Miercoles").Visible(false))
+                            @(Html.DControls().CheckBoxFor(m => m.Entity.Jueves).ID(Prefix + "Jueves").Visible(false))
+                            @(Html.DControls().CheckBoxFor(m => m.Entity.Viernes).ID(Prefix + "Viernes").Visible(false))
+                            @(Html.DControls().CheckBoxFor(m => m.Entity.Sabado).ID(Prefix + "Sabado").Visible(false))
+                            @(Html.DControls().CheckBoxFor(m => m.Entity.Domingo).ID(Prefix + "Domingo").Visible(false))
+
+                            @(Html.DControls().TextBoxFor(m => m.SerializedServiciosConsultorios).ID(Prefix + "SerializedServiciosConsultorios").Visible(false))
+                            @(Html.DControls().TextBoxFor(m => m.SerializedServiciosEmpleados).ID(Prefix + "SerializedServiciosEmpleados").Visible(false))
+
+
+                            @(Html.DControls().Form<ProgramacionAgendaModel>().ColCount(12).OnContentReady(Prefix + "OnValueChangedFechas")
+                            .ID("ProgramacionAgendaModelForm").LabelLocation(FormLabelLocation.Top).ShowValidationSummary(false).FormData(Model)
+                            .Items(items =>
+                            {
+                                items.AddSimpleFor(m => m.Entity.FechaInicio).ColSpan(3)
+                                          .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("ProgramacionAgenda.FechaInicio")))
+                                              .Editor(e => e.DateBox().ID(Prefix + "FechaInicio")
+                                              .Min(DateTime.Now).OnValueChanged(Prefix + "OnValueChangedFechas")
+                                              .DisplayFormat(DApp.DefaultLanguage.DateFormat).Placeholder(DateTime.Now.ToString(DApp.DefaultLanguage.DateFormat)).ShowClearButton(true).UseMaskBehavior(true));
+                                items.AddSimpleFor(m => m.Entity.FechaFinal).ColSpan(3)
+                                  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("ProgramacionAgenda.FechaFinal")))
+                                      .Editor(e => e.DateBox().ID(Prefix + "FechaFinal")
+                                      .Min(DateTime.Now).OnValueChanged(Prefix + "OnValueChangedFechas")
+                                      .DisplayFormat(DApp.DefaultLanguage.DateFormat).Placeholder(DateTime.Now.ToString(DApp.DefaultLanguage.DateFormat)).ShowClearButton(true).UseMaskBehavior(true));
+
+                                items.AddSimpleFor(m => m.HoraInicio).ColSpan(3)
+                                  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("ProgramacionAgenda.HoraInicio")))
+                                      .Editor(e => e.DateBox().ID(Prefix + "HoraInicio")
+                                      .Type(DateBoxType.Time)
+                                      .DisplayFormat(DApp.DefaultLanguage.TimeFormat).Placeholder(DateTime.Now.ToString(DApp.DefaultLanguage.TimeFormat)).ShowClearButton(true).UseMaskBehavior(true));
+
+                                items.AddSimpleFor(m => m.HoraFinal).ColSpan(3)
+                                  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("ProgramacionAgenda.HoraFinal")))
+                                      .Editor(e => e.DateBox().ID(Prefix + "HoraFinal")
+                                      .Type(DateBoxType.Time)
+                                      .DisplayFormat(DApp.DefaultLanguage.TimeFormat).Placeholder(DateTime.Now.ToString(DApp.DefaultLanguage.DateFormat)).ShowClearButton(true).UseMaskBehavior(true));
+
+                                items.AddSimple().Label(l => l.Text(DApp.DefaultLanguage.GetResource("ProgramacionAgenda.DiasSemana"))).Template(new TemplateName("DiasSemanaTemplate")).ColSpan(9);
+
+                                items.AddEmpty().ColSpan(3);
+
+                                items.AddSimpleFor(m => m.Entity.CreatedBy).ColSpan(3)
+                                    .Editor(e => e.TextBox().ReadOnly(true));
+                                items.AddSimpleFor(m => m.Entity.CreationDate).ColSpan(3)
+                                    .Editor(e => e.DateBox().ReadOnly(true).DisplayFormat(DApp.DefaultLanguage.DateTimeFormat));
+
+                                items.AddSimpleFor(m => m.Entity.UpdatedBy).ColSpan(3)
+                                    .Editor(e => e.TextBox().ReadOnly(true));
+                                items.AddSimpleFor(m => m.Entity.LastUpdate).ColSpan(3)
+                                    .Editor(e => e.DateBox().ReadOnly(true).DisplayFormat(DApp.DefaultLanguage.DateTimeFormat));
+
+                                items.AddSimpleFor(m => m.Entity.Observaciones).ColSpan(12)
+                                 .ValidationRules(rules => rules.AddStringLength().Min(0).Max(1000).Message(DApp.GetStringLengthResource("ProgramacionAgenda.Observaciones", 1000)))
+                                      .Editor(e => e.TextArea().ID(Prefix + "Observaciones"));
+                            })
+                            )
+                        }
+                    </form>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="InfoSeleccion">
+                    <div class="row" style="margin-top: 23px;">
+                        <div class="col-xl-6">
+                            @(Html.DControls().DataGrid<Consultorios>()
+                                .ID(Prefix+"ListConsultorios")
+                                .ShowBorders(true).ShowRowLines(true).ShowColumnLines(true)
+                                .DataSource(ds => ds.Mvc().LoadMethod("POST").Controller("ProgramacionAgenda").LoadAction("GetConsultorios").Key("Id"))
+                                .Selection(s => s.Mode(SelectionMode.Multiple).ShowCheckBoxesMode(GridSelectionShowCheckBoxesMode.Always).AllowSelectAll(true))
+                                .Scrolling(scrolling => scrolling.Mode(GridScrollingMode.Infinite)).Height("300px")
+                                .FilterRow(f => f.Visible(false))
+                                .Columns(columns => {
+                                    columns.AddFor(m => m.Nombre);
+                                    columns.AddFor(m => m.Sedes.Nombre);
+                                })
+                                .ColumnAutoWidth(true)
+                                .OnSelectionChanged(Prefix+ "OnSelectionChangedListConsultorios")
+                                .OnInitialized(Prefix + "OnInitializedListConsultorios")
+                            )
+                        </div>
+                        <div class="col-xl-6">
+                            @(Html.DControls().DataGrid<Empleados>()
+                                .ID(Prefix+"ListEmpleados")
+                                .ShowBorders(true).ShowRowLines(true).ShowColumnLines(true)
+                                .DataSource(ds => ds.Mvc().LoadMethod("POST").Controller("ProgramacionAgenda").LoadAction("GetEmpleados").Key("Id"))
+                                .Selection(s => s.Mode(SelectionMode.Multiple).ShowCheckBoxesMode(GridSelectionShowCheckBoxesMode.Always).AllowSelectAll(true))
+                                .Scrolling(scrolling => scrolling.Mode(GridScrollingMode.Infinite)).Height("300px")
+                                .FilterRow(f => f.Visible(false))
+                                .Columns(columns => {
+                                    columns.AddFor(m => m.NombreCompleto);
+                                })
+                                .ColumnAutoWidth(true)
+                                .OnSelectionChanged(Prefix + "OnSelectionChangedListEmpleados")
+                                .OnInitialized(Prefix + "OnInitializedListEmpleados")
+                            )
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 23px;">
+                        <div class="col-xl-6">
+                            @(Html.DControls().DataGrid<ServiciosConsultorios>()
+                            .ID(Prefix+ "ListServiciosConsultorios")
+                            .KeyExpr("Id")
+                            .ShowBorders(true).ShowRowLines(true).ShowColumnLines(true)
+                            //.DataSource(ds => ds.Mvc().LoadMethod("POST").Controller("ProgramacionAgenda").LoadAction("GetProgramacionDisponible").Key("Id"))
+                            .Selection(s => s.Mode(SelectionMode.Multiple).ShowCheckBoxesMode(GridSelectionShowCheckBoxesMode.Always).AllowSelectAll(true))
+                            .Scrolling(scrolling => scrolling.Mode(GridScrollingMode.Infinite)).Height("300px")
+                            .FilterRow(f => f.Visible(false))
+                            .Columns(columns => {
+                                columns.AddFor(m => m.Servicios.Nombre);
+                                columns.AddFor(m => m.Servicios.Duracion);
+                                columns.AddFor(m => m.Consultorios.Nombre);
+                            })
+                            .ColumnAutoWidth(true)
+                            .OnSelectionChanged(Prefix + "OnSelectionChangedListServiciosConsultorios")
+                            )
+                        </div>
+                        <div class="col-xl-6">
+                            @(Html.DControls().DataGrid<ServiciosEmpleados>()
+                            .ID(Prefix+ "ListServiciosEmpleados")
+                            .KeyExpr("Id")
+                            .ShowBorders(true).ShowRowLines(true).ShowColumnLines(true)
+                            //.DataSource(ds => ds.Mvc().LoadMethod("POST").Controller("ProgramacionAgenda").LoadAction("GetProgramacionDisponible").Key("Id"))
+                            .Selection(s => s.Mode(SelectionMode.Multiple).ShowCheckBoxesMode(GridSelectionShowCheckBoxesMode.Always).AllowSelectAll(true))
+                            .Scrolling(scrolling => scrolling.Mode(GridScrollingMode.Infinite)).Height("300px")
+                            .FilterRow(f => f.Visible(false))
+                            .Columns(columns => {
+                                columns.AddFor(m => m.Servicios.Nombre);
+                                columns.AddFor(m => m.Servicios.Duracion);
+                                columns.AddFor(m => m.Empleados.NombreCompleto);
+                            })
+                            .ColumnAutoWidth(true)
+                            .OnSelectionChanged(Prefix + "OnSelectionChangedListServiciosEmpleados")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@using (Html.DControls().NamedTemplate("DiasSemanaTemplate"))
+{
+    @(Html.DControls().TagBox().ReadOnly(true)
+        .ID(Prefix+"TagDiasSemanas")
+        .DataSource(Model.DiasSemana)
+        .Value(Model.DiasSemanaSelecionados)
+        .DisplayExpr("Nombre").ValueExpr("Id").SearchExpr("Nombre")
+        .SearchEnabled(true)
+        .ShowClearButton(true)
+        .ShowSelectionControls(true)
+        .ShowDropDownButton(true)
+        .OnValueChanged(Prefix+ "OnValueChangedTagDiasSemanas")
+        .ApplyValueMode(EditorApplyValueMode.Instantly)
+    )
+}
+

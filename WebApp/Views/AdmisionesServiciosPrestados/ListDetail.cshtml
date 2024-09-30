@@ -1,0 +1,123 @@
+@*  Remplazar FATHERModel por el modelo del padre al que pertenece   *@ 
+ 
+@model AdmisionesModel
+@{ 
+    string Prefix = "AdmisionesServiciosPrestados";
+    string UrlOnClick = Url.Action("EditDetail", "AdmisionesServiciosPrestados", new { EsCorrecion = Model.EsCorrecion });
+    string UrlNew = Url.Action("NewDetail", "AdmisionesServiciosPrestados", new { IdFather = Model.Entity.Id, EsCorrecion = Model.EsCorrecion });
+
+    var DataGridDetailConfig = new DataGridConfiguration<AdmisionesServiciosPrestados>(Prefix)
+        .OnClick(UrlOnClick, new { Id = "Id" }, Prefix + "MainPanelForm")
+        .New(UrlNew, Model.Entity.IsNew, Prefix + "MainPanelForm")
+        .Exports(true,true);
+
+    if (Model.Entity.Facturado && !Model.EsCorrecion)
+    {
+        DataGridDetailConfig = new DataGridConfiguration<AdmisionesServiciosPrestados>(Prefix)
+        .Exports(true, true);
+    }
+
+    if (Model.TieneServiciosFacturadosAEntidad)
+    {
+        DataGridDetailConfig = new DataGridConfiguration<AdmisionesServiciosPrestados>(Prefix)
+        .Exports(true, true);
+    }
+
+} 
+ 
+@* ------------ Descomentar el siguiente codigo si es una edicion en maestro --------------- *@
+ 
+
+<div class="card cardDeatil"> 
+    <div class="card-body">
+        <div class="box-body table-responsive no-padding"> 
+        @(Html.DControls().DataGridSimple<AdmisionesServiciosPrestados>(DataGridDetailConfig)
+            .ID("AdmisionesServiciosPrestadosDetalleDataGrid")
+            .DataSource(d => d.Mvc().LoadMethod("POST").Controller("AdmisionesServiciosPrestados").LoadAction("Get").Key("Id"))
+            .DataSourceOptions(x=>x.Filter("['AdmisionesId','=','" + @Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+            .Columns(columns =>
+            {
+
+                columns.AddFor(m => m.Servicios.Nombre);
+                columns.AddFor(m => m.ValorServicio);
+                columns.AddFor(m => m.Cantidad);
+                columns.AddFor(m => m.ValorTotal);
+                columns.AddFor(m => m.Observaciones);
+                columns.AddFor(m => m.Recomendaciones);
+            })
+        ) 
+        </div> 
+        <div id="AdmisionesServiciosPrestadosMainPanelForm"></div> 
+    </div> 
+</div> 
+ 
+
+
+@* ------------ Descomentar el siguiente codigo si es una edicion en grilla y COMENTAR LOS METODOS OnClick y New del DataGridDetailConfig --------------- *@
+@* 
+<script> 
+     function @(Prefix)OnInitNewRowDetalleDataGrid(model) { 
+         model = GetAuditoryData(model); 
+         model.data.IdFather = "@Model.Entity.Id"; // Cambiar IdFather por el campo foraneo hacia el padre 
+     } 
+</script> 
+<div class="card cardDeatil"> 
+    <div class="card-body">
+        <div class="box-body table-responsive no-padding"> 
+             @(Html.DControls().DataGridSimple<AdmisionesServiciosPrestados>(DataGridDetailConfig) 
+                 .ID("AdmisionesServiciosPrestadosDetalleDataGrid") 
+                 .DataSource(d => d.Mvc().LoadMethod("POST").Controller("AdmisionesServiciosPrestados").LoadAction("Get").Key("Id") 
+                     .InsertAction("AddInGrid").InsertMethod("POST").UpdateAction("ModifyInGrid").UpdateMethod("POST").DeleteAction("DeleteInGrid").DeleteMethod("POST") 
+                 ) 
+                 .DataSourceOptions(x=>x.Filter("['IdFather','=','"+@Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+                 .Editing(editing => editing.Mode(GridEditMode.Batch).AllowAdding(!Model.Entity.IsNew).AllowUpdating(true).AllowDeleting(true)) 
+                 .OnInitNewRow(Prefix + "OnInitNewRowDetalleDataGrid") 
+                 .OnRowInserted("OnRowInsertedDetalleDataGrid").OnRowUpdated("OnRowUpdatedDetalleDataGrid").OnRowRemoved("OnRowRemovedDetalleDataGrid").OnDataErrorOccurred("OnDataErrorOccurredDetalleDataGrid") 
+                 .Columns(columns => 
+                 { 
+                     columns.AddFor(m => m.AdmisionesId) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("AdmisionesServiciosPrestados.AdmisionesId"))) 
+                         .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("AdmisionesServiciosPrestados.AdmisionesId"))) 
+                             .Lookup(lookup => lookup 
+                             .DataSource(d => d.Mvc().LoadMethod("POST").Controller("AdmisionesServiciosPrestados").LoadAction("GetAdmisionesId").Key("Id")) 
+                             .DataSourceOptions(o => o.Paginate(true).PageSize(10)) 
+                             .ValueExpr("Id").DisplayExpr("Id")); 
+                     columns.AddFor(m => m.ServiciosId).Format("#,##0.##") 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("AdmisionesServiciosPrestados.ServiciosId"))); 
+                     columns.AddFor(m => m.ValorServicio).Format("#,##0.##") 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("AdmisionesServiciosPrestados.ValorServicio"))); 
+                     columns.AddFor(m => m.AtencionesId) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("AdmisionesServiciosPrestados.AtencionesId"))) 
+                         .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("AdmisionesServiciosPrestados.AtencionesId"))) 
+                             .Lookup(lookup => lookup 
+                             .DataSource(d => d.Mvc().LoadMethod("POST").Controller("AdmisionesServiciosPrestados").LoadAction("GetAtencionesId").Key("Id")) 
+                             .DataSourceOptions(o => o.Paginate(true).PageSize(10)) 
+                             .ValueExpr("Id").DisplayExpr("Id")); 
+                     columns.AddFor(m => m.Observaciones) 
+                         .ValidationRules(rules => rules.AddStringLength().Min(0).Max(1024).Message(DApp.GetStringLengthResource("AdmisionesServiciosPrestados.Observaciones", 1024))) 
+                     ; 
+                     columns.AddFor(m => m.Recomendaciones) 
+                         .ValidationRules(rules => rules.AddStringLength().Min(0).Max(1024).Message(DApp.GetStringLengthResource("AdmisionesServiciosPrestados.Recomendaciones", 1024))) 
+                     ; 
+                     columns.AddFor(m => m.Cantidad) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("AdmisionesServiciosPrestados.Cantidad"))); 
+                     columns.AddFor(m => m.Facturado) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("AdmisionesServiciosPrestados.Facturado"))); 
+                     columns.AddFor(m => m.FacturasGeneracionId) 
+                             .Lookup(lookup => lookup 
+                             .DataSource(d => d.Mvc().LoadMethod("POST").Controller("AdmisionesServiciosPrestados").LoadAction("GetFacturasGeneracionId").Key("Id")) 
+                             .DataSourceOptions(o => o.Paginate(true).PageSize(10)) 
+                             .ValueExpr("Id").DisplayExpr("Id")); 
+                     columns.AddFor(m => m.FacturasId) 
+                             .Lookup(lookup => lookup 
+                             .DataSource(d => d.Mvc().LoadMethod("POST").Controller("AdmisionesServiciosPrestados").LoadAction("GetFacturasId").Key("Id")) 
+                             .DataSourceOptions(o => o.Paginate(true).PageSize(10)) 
+                             .ValueExpr("Id").DisplayExpr("Id")); 
+                     columns.AddFor(m => m.PorcImpuesto).Format("#,##0.##") 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("AdmisionesServiciosPrestados.PorcImpuesto"))); 
+             }) 
+         ) 
+        </div> 
+    </div> 
+</div> 
+*@ 

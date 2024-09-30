@@ -1,0 +1,51 @@
+@{ 
+    string Prefix = "Recaudos";
+    string UrlClick = Url.Action("Edit", "Recaudos");
+    string UrlNew = Url.Action("New", "Recaudos");
+
+    var DataGridConfig = new DataGridConfiguration<Recaudos>(Prefix)
+        .OnClick(UrlClick, new { Id = "Id" })
+        .New(UrlNew,DApp.ActionViewSecurity(Context,UrlNew))
+        .Exports(true,true).SetStorage()
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("Recaudos"), "mainPanel");
+} 
+
+    <div class="box-body table-responsive no-padding">
+        @(Html.DControls().DataGridSimple<Recaudos>(DataGridConfig)
+    .ID("RecaudosDataGrid")
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Recaudos").LoadAction("Get").Key("Id"))
+    .Columns(columns =>
+    {
+        columns.AddFor(m => m.MediosPagoId)
+                        .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Recaudos.MediosPagoId")))
+                        .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Recaudos.MediosPagoId")))
+                            .Lookup(lookup => lookup
+                            .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Recaudos").LoadAction("GetMediosPagoId").Key("Id"))
+                            .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                            .ValueExpr("Id").DisplayExpr("Descripcion"));
+        columns.AddFor(m => m.FechaRecaudo);
+        columns.AddFor(m => m.ValorTotalRecibido);
+        columns.AddFor(m => m.EmpresasId).Caption(DApp.GetResource("FacturasGeneracion.EmpresasId"))
+            .Lookup(lookup => lookup
+            .DataSource(d => d.Mvc().LoadMethod("POST").Controller("FacturasGeneracion").LoadAction("GetEmpresasId").Key("Id"))
+            .DisplayExpr("RazonSocial")
+            .ValueExpr("Id")
+            );
+        columns.AddFor(m => m.EntidadesId).Caption(DApp.GetResource("FacturasGeneracion.EntidadesId")).Lookup(lookup => lookup
+        .DataSource(d => d.Mvc().LoadMethod("POST").Controller("FacturasGeneracion").LoadAction("GetEntidadesId").Key("Id"))
+        .DisplayExpr("Nombre")
+        .ValueExpr("Id")
+        );
+        columns.AddFor(m => m.SedesId).Caption(DApp.GetResource("FacturasGeneracion.SedesId")).Lookup(lookup => lookup
+        .DataSource(d => d.Mvc().LoadMethod("POST").Controller("FacturasGeneracion").LoadAction("GetSedesId").Key("Id"))
+        .DisplayExpr("Nombre")
+        .ValueExpr("Id")
+        );
+        columns.AddFor(m => m.CiclosCajasId).Caption(DApp.GetResource("FacturasGeneracion.CiclosCajasId")).Lookup(lookup => lookup
+        .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Recaudos").LoadAction("GetCiclosCajasIdAll").Key("Id"))
+        .DisplayExpr("Cajas.Nombre")
+        .ValueExpr("Id")
+        );
+    })
+)
+    </div> 

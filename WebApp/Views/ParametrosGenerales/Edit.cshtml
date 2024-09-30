@@ -1,0 +1,90 @@
+@model ParametrosGeneralesModel
+@{
+    string Prefix = "ParametrosGenerales";
+
+    string UrlSave = Url.Action("Edit", "ParametrosGenerales");
+    string UrlNew = Url.Action("New", "ParametrosGenerales");
+    string UrlDelete = Url.Action("Delete", "ParametrosGenerales", new { Id = Model.Entity.Id });
+    string UrlBack = Url.Action("ListPartial", "ParametrosGenerales");
+
+    var ToolbarConfig = new ToolbarConfiguration(Prefix)
+        .Title(DApp.DefaultLanguage.GetResource("ParametrosGenerales"))
+        .Save(DApp.ActionViewSecurity(Context, UrlSave), Model.Entity.IsNew);
+    //.New(UrlNew, DApp.ActionViewSecurity(Context, UrlNew))
+    //.Delete(UrlDelete,DApp.ActionViewSecurity(Context,UrlDelete),UrlBack,Model.Entity.IsNew)
+    //.Back(UrlBack);
+}
+
+<partial name="ViewJS.cshtml" model="Model" view-data="ViewData" />
+
+@(Html.DControls().Toolbar(ToolbarConfig))
+
+<div>
+    <div id="ParametrosGeneralesMainPanelForm">
+        <form id="@(Prefix)Form" asp-controller="ParametrosGenerales" asp-action="Edit" class="form-horizontal" data-ajax-mode="replace" data-ajax-update="#mainPanel" data-ajax-success="@(Prefix)FormSuccess" data-ajax-failure="@(Prefix)FormFailure" data-ajax="true">
+            @(Html.DControls().ValidationSummary().ValidationGroup(Prefix + "ValidationGroup").ElementAttr("class","ErrorValidationSummary"))
+            @using (Html.DevExtreme().ValidationGroup(Prefix + "ValidationGroup"))
+            {
+                @(Html.DControls().CheckBoxFor(m => m.Entity.IsNew).ID(Prefix + "IsNew").Visible(false))
+                @(Html.DControls().NumberBoxFor(m => m.Entity.Id).ID(Prefix + "Id").Visible(false))
+                @(Html.DControls().TextBoxFor(m => m.Entity.UpdatedBy).ID(Prefix + "UpdatedBy").Visible(false))
+                @(Html.DControls().DateBoxFor(m => m.Entity.LastUpdate).ID(Prefix + "LastUpdate").Type(DateBoxType.Time).Visible(false))
+                @(Html.DControls().TextBoxFor(m => m.Entity.CreatedBy).ID(Prefix + "CreatedBy").Visible(false))
+                @(Html.DControls().DateBoxFor(m => m.Entity.CreationDate).ID(Prefix + "CreationDate").Type(DateBoxType.Time).Visible(false))
+
+                @(Html.DControls().Form<ParametrosGeneralesModel>()
+                    .ID("ParametrosGeneralesModelForm").LabelLocation(FormLabelLocation.Top).ShowValidationSummary(false).FormData(Model)
+                    .Items(items =>
+                    {
+                        items.AddGroup().ColCount(12).Caption(DApp.DefaultLanguage.GetResource("ParametrosGenerales.Atenciones"))
+                            .Items(groupItems =>{
+                                groupItems.AddSimpleFor(m => m.Entity.HabilitarAnteciones).Label(x=>x.Visible(false)).ColSpan(2)
+                                      .Editor(e=>e.CheckBox().ID(Prefix + "HabilitarAnteciones")
+                                      .Text(DApp.DefaultLanguage.GetResource("ParametrosGenerales.HabilitarAnteciones"))
+                                      .OnValueChanged($"{Prefix}OnValueChangedHabilitarAnteciones")
+                                      );
+                                groupItems.AddSimpleFor(m => m.Entity.FechaDesdeAtenciones).ColSpan(4)
+                                  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("ParametrosGenerales.FechaDesdeAtenciones")))
+                                      .Editor(e=>e.DateBox().ID(Prefix + "FechaDesdeAtenciones").Type(DateBoxType.Date)
+                                      .DisplayFormat(DApp.DefaultLanguage.DateFormat).Placeholder(DateTime.Now.ToString(DApp.DefaultLanguage.DateFormat))
+                                      .ShowClearButton(true).UseMaskBehavior(true)
+                                      );
+                                groupItems.AddSimpleFor(m => m.Entity.FechaHastaAtenciones).ColSpan(4)
+                                  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("ParametrosGenerales.FechaHastaAtenciones")))
+                                      .Editor(e=>e.DateBox().ID(Prefix + "FechaHastaAtenciones").Type(DateBoxType.Date)
+                                      .DisplayFormat(DApp.DefaultLanguage.DateFormat).Placeholder(DateTime.Now.ToString(DApp.DefaultLanguage.DateFormat))
+                                      .ShowClearButton(true).UseMaskBehavior(true)
+                                      );
+                            });
+
+                        items.AddGroup().ColCount(12).Caption(DApp.DefaultLanguage.GetResource("ParametrosGenerales.AnularAtenciones"))
+                            .Items(groupItems =>
+                            {
+                                groupItems.AddSimple().ColSpan(12).Label(x => x.Text(""))
+                                    .Editor(x => x.TextBox().Height(25).ReadOnly(true).Value(DApp.GetResource("ParametrosGenerales.TextoAyudaCambiarEstadosAnteciones"))
+                                );
+                                    
+                                groupItems.AddSimple().ColSpan(2).Label(x=>x.Text(DApp.GetResource("ParametrosGenerales.ConsecutivoCita")))
+                                      .Editor(e => e.NumberBox().ID(Prefix + "ConsecutivoCita")
+                                      .ShowClearButton(true)
+                                      );
+                                groupItems.AddSimple().ColSpan(2).Label(x => x.Text(DApp.GetResource("ParametrosGenerales.ConsecutivoAdmision")))
+                                      .Editor(e => e.NumberBox().ID(Prefix + "ConsecutivoAdmision")
+                                      .ShowClearButton(true)
+                                      );
+                                groupItems.AddSimple().ColSpan(8).Label(x => x.Text(DApp.GetResource("ParametrosGenerales.DetalleAnulacion")))
+                                      .Editor(e => e.TextArea().Height(35).ID(Prefix + "DetalleAnulacion")
+                                      );
+                                groupItems.AddButton().ColSpan(12).VerticalAlignment(VerticalAlignment.Center).HorizontalAlignment(HorizontalAlignment.Center)
+                                    .ButtonOptions(x => x.Text(DApp.GetResource("ParametrosGenerales.CambiarEstados")).Type(ButtonType.Default)
+                                    .UseSubmitBehavior(false).OnClick($"{Prefix}OnClickCambiarEstadoAtencion")
+                                );
+
+                            });
+
+                    })
+                )
+            }
+        </form>
+    </div>
+</div>

@@ -1,0 +1,500 @@
+﻿@model AdmisionesModel
+@{
+    string Prefix = "Admisiones";
+    string UrlReport = Url.Action("ImprimirFacturaIndividual", Prefix, new { Id = Model.Entity.FacturaCopagoCuotaModeradoraId });
+    string UrlEnviarDian = Url.Action("EnviarFacturaDIAN", "Facturas", new { id = Model.Entity.FacturaCopagoCuotaModeradoraId });
+}
+
+<script>
+
+    var AdmisionNueva = ("@Model.Entity.IsNew" == "True");
+    var TotalPagarDesdeCita = null;
+    var EstaFacturada = ("@Model.Entity.Facturado" == "True");
+
+    if ("@ViewBag.Accion" == "Facturado") {
+        DevExpress.ui.notify("Se genero la factura numero: @ViewBag.FacturaConsecutivo", "info", 5000);
+    }
+
+    function @(Prefix)AnularAdmision() {
+        $("#PopupAnularAdmision").dxPopup("instance").show();
+    }
+
+    function @(Prefix)OnValueChangedServiciosId() {
+
+        var servicio = $("#@(Prefix)ServiciosId").dxSelectBox("instance").option("selectedItem");
+        if (servicio != null) {
+            $("#@(Prefix)EstadosIdTipoDuracion").dxSelectBox("instance").option("value", servicio.EstadosIdTipoDuracion);
+            $("#@(Prefix)Duracion").dxNumberBox("instance").option("value", servicio.Duracion);
+        } else {
+            $("#@(Prefix)EstadosIdTipoDuracion").dxSelectBox("instance").option("value", null);
+            $("#@(Prefix)Duracion").dxNumberBox("instance").option("value", 0);
+        }
+
+    }
+
+    function @(Prefix)ConfirmarAnularAdmision() {
+
+        var detalle = $("#@(Prefix)DetalleAnulacion").dxTextArea("instance").option("value");
+        if (detalle == null || detalle == "") {
+            DevExpress.ui.notify("El detalle para la aunlacion es obligatorio.", "error", 5000);
+            return false;
+        }
+
+        showLoadIndicator();
+        GetViewOnContainer("@Url.Action("AnularAdmision", Prefix)", "mainPanel",
+            {
+                admisionId: @Model.Entity.Id,
+                detalleAnulacion : detalle
+            }
+        );
+    }
+
+    function @(Prefix)EnviarDIAN() {
+
+        showLoadIndicator();
+        $.ajax({
+            url: "@UrlEnviarDian",
+            type: 'GET',
+            success: function (data) {
+                hideLoadIndicator();
+                $("#mainPanel").html(data);
+            },
+            error: function (xhr) {
+                console.log(xhr);
+                hideLoadIndicator();
+                DevExpress.ui.notify("Error inesperado " + xhr.responseText, "error");
+            }
+        });
+    }
+
+    function @(Prefix)ImprimirFacturaIndividual() {
+        showLoadIndicator();
+        $.ajax({
+            url: "@UrlReport",
+            type: 'GET',
+            success: function (data) {
+                $("#VisorReporteria").dxPopup("instance").show();
+                $("#ContenidoReporte").html(data);
+                hideLoadIndicator();
+            },
+            error: function (xhr) {
+                console.log(xhr);
+                hideLoadIndicator();
+                DevExpress.ui.notify("Error inesperado " + xhr.statusText, "error");
+            }
+        });
+    }
+
+    function @(Prefix)ValidarNumeroPoliza(params) {
+
+        var tipoUsuario = $("#@(Prefix)TiposUsuariosId").dxSelectBox("instance").option("value");
+        var numeroPoliza = params.value;
+
+        if (tipoUsuario != null && tipoUsuario != "" && tipoUsuario != 0 && (tipoUsuario == 9 || tipoUsuario == 10)) {
+            if (numeroPoliza == null || numeroPoliza == "" || numeroPoliza == 0) {
+                params.rule.isValid = false;
+                params.rule.message = "La columna Número de poliza es requerida.";
+                params.validator.validate();
+                return false;
+            }
+        } else {
+            params.rule.isValid = true;
+            params.rule.message = "";
+            params.validator.validate();
+            return true;
+        }
+        return true;
+    }
+
+    function @(Prefix)ValidarFormaPago(params) {
+
+        var tipoPago = $("#@(Prefix)ValorPagoEstadosId").dxSelectBox("instance").option("value");
+        var formaPago = params.value;
+
+        if (tipoPago != null && tipoPago != "" && tipoPago != 0 && tipoPago != 63) {
+            if (formaPago == null || formaPago == "" || formaPago == 0) {
+                params.rule.isValid = false;
+                params.rule.message = "La columna Forma de Pago es requerida.";
+                params.validator.validate();
+                return false;
+            }
+        } else {
+            params.rule.isValid = true;
+            params.rule.message = "";
+            params.validator.validate();
+            return true;
+        }
+        return true;
+    }
+
+    function @(Prefix)ValidarMedioPagos(params) {
+
+        var tipoPago = $("#@(Prefix)ValorPagoEstadosId").dxSelectBox("instance").option("value");
+        var medioPago = params.value;
+
+        if (tipoPago != null && tipoPago != "" && tipoPago != 0 && tipoPago != 63) {
+            if (medioPago == null || medioPago == "" || medioPago == 0) {
+                params.rule.isValid = false;
+                params.rule.message = "La columna Medio de pago es requerida.";
+                params.validator.validate();
+                return false;
+            }
+        } else {
+            params.rule.isValid = true;
+            params.rule.message = "";
+            params.validator.validate();
+            return true;
+        }
+        return true;
+    }
+
+    function @(Prefix)ValidarDocumentos(params) {
+
+        var tipoPago = $("#@(Prefix)ValorPagoEstadosId").dxSelectBox("instance").option("value");
+        var documento = params.value;
+
+        if (tipoPago != null && tipoPago != "" && tipoPago != 0 && tipoPago != 63) {
+            if (documento == null || documento == "" || documento == 0) {
+                params.rule.isValid = false;
+                params.rule.message = "La columna Documento es requerida.";
+                params.validator.validate();
+                return false;
+            }
+        } else {
+            params.rule.isValid = true;
+            params.rule.message = "";
+            params.validator.validate();
+            return true;
+        }
+        return true;
+    }
+
+    function @(Prefix)FacturaIndividual() {
+
+        var FormasPagosId = $("#@(Prefix)FormasPagosId").dxSelectBox("instance").option("value");
+        var MedioPagosId = $("#@(Prefix)MedioPagosId").dxSelectBox("instance").option("value");
+        var DocumentosId = $("#@(Prefix)DocumentosId").dxSelectBox("instance").option("value");
+
+        if (FormasPagosId == "" || FormasPagosId == 0 || FormasPagosId == null ||
+            MedioPagosId == "" || MedioPagosId == 0 || MedioPagosId == null ||
+            DocumentosId == "" || DocumentosId == 0 || DocumentosId == null
+            ) {
+            DevExpress.ui.notify("Los campos Forma de pago, Medio de pago y Documento es obligatorio para generar la factura.", "error");
+            return false;
+        }
+
+
+        showLoadIndicator();
+        $('#@(Prefix)Form').attr('action', '@Url.Action("FacturaIndividual", "Admisiones")');
+        $('#@(Prefix)Form').submit();
+    }
+
+    var tipoID = "";
+
+    function @(Prefix)OnValueChangedPaciente(e) {
+
+        $("#@(Prefix)ValorCopago").dxNumberBox("instance").option("value", 0);
+        $("#@(Prefix)EntidadesConvenio").dxSelectBox("instance").option("value", null);
+        $("#@(Prefix)ConveniosId").dxSelectBox("instance").option("value", null);
+        $("#@(Prefix)FilialesId").dxSelectBox("instance").option("value", null);
+        $("#@(Prefix)ValorPagoEstadosId").dxSelectBox("instance").option("value", 0);
+        $("#@(Prefix)CitasId").dxNumberBox("instance").option("value", 0);
+        $("#@(Prefix)DocumentosId").dxSelectBox("instance").option("value", null);
+        $("#@(Prefix)DocumentosId").dxSelectBox("instance").getDataSource().reload();
+
+        if (e.value != null) {
+            @(Prefix)MostrarCitas();
+            var Citas = $("#@(Prefix)CitasDataGrid").dxDataGrid("instance");
+            Citas.getDataSource().filter(["PacientesId", "=", e.value]);
+            Citas.getDataSource().reload();
+            //Citas.option("selectedRowKeys", [@(Prefix)GetCitaCercana(e.value)]);
+        }
+    }
+
+    function @(Prefix)MostrarCitas() {
+
+         $("#@(Prefix)CitasPopup").dxPopup("instance").show();
+    }
+
+    function @(Prefix)OcultarCitas(mostrar = true) {
+        $("#@(Prefix)CitasPopup").dxPopup("instance").hide();
+    }
+    function @(Prefix)LimpiarSeleccion() {
+        $("#@(Prefix)CitasDataGrid").dxDataGrid("instance").option("selectedRowKeys", []);
+    }
+
+    function @(Prefix)GetCitaCercana(idPaciente) {
+        var cita = null;
+
+        if (idPaciente!=null  && idPaciente !== 0) {
+            $.ajax({
+             url: "@Url.Action("GetCitaCercana","Admisiones")",
+             data: { IdPaciente: idPaciente },
+             async:false,
+            type: 'POST',
+             success: function (data) {
+                 cita = data;
+                }
+         });
+        }
+
+         return cita;
+
+    }
+    function @(Prefix)OnChangeConvenio(item) {
+        var Filiales = $("#@(Prefix)FilialesId").dxSelectBox("instance");
+        Filiales.getDataSource().filter(["EntidadesId", "=", @(Prefix)GetEntidad(item)]);
+        Filiales.getDataSource().reload();
+        Filiales.option("value", null);
+    }
+
+    function @(Prefix)GetEntidad(item) {
+
+        var entidades = 0;
+        if (item.value!=null) {
+             $.ajax({
+                url: "@Url.Action("GetEntidadesConvenios","Admisiones")",
+                data: { id: item.value },
+                async:false,
+                type: 'POST',
+                success: function (data) {
+                    entidades = data;
+                }
+            });
+        }
+        return entidades;
+    }
+
+
+    function @(Prefix)OnSelectionChangedCitas(item) {
+
+        var Cita = item.selectedRowsData[0];
+        if (Cita) {
+            $("#@(Prefix)CitasId").dxNumberBox("instance").option("value", Cita.Id);
+            $("#@(Prefix)ConsultorioId").dxSelectBox("instance").option("value", Cita.ConsultoriosId);
+            $("#@(Prefix)EmpleadosId").dxSelectBox("instance").option("value", Cita.EmpleadosId);
+            $("#@(Prefix)EntidadesConvenio").dxSelectBox("instance").option("value", Cita.EntidadesId);
+            $("#@(Prefix)ServiciosId").dxSelectBox("instance").option("value", Cita.ServiciosId);
+            $("#@(Prefix)ConveniosId").dxSelectBox("instance").option("value", Cita.ConveniosId);
+            $("#@(Prefix)EstadosIdTipoDuracion").dxSelectBox("instance").option("value", Cita.EstadosIdTipoDuracion);
+            $("#@(Prefix)Duracion").dxNumberBox("instance").option("value", Cita.Duracion);
+            $("#@(Prefix)Cantidad").dxNumberBox("instance").option("value", Cita.Cantidad);
+
+            if (AdmisionNueva) {
+                TotalPagarDesdeCita = Cita.Servicios.TarifaPlena * Cita.Cantidad;
+                if (Cita.ConveniosId == null || Cita.ConveniosId == 0 || Cita.ConveniosId == "") {
+                    $("#@(Prefix)ValorPagarParticular").dxNumberBox("instance").option("value", TotalPagarDesdeCita);
+                } else {
+                    showLoadIndicator();
+                    $.ajax({
+                        url: "@Url.Action("TraerValorServicio", "AdmisionesServiciosPrestados")",
+                        data: { idServicio: Cita.ServiciosId, convenioId: Cita.ConveniosId },
+                        type: 'GET',
+                        success: function (data) {
+                            hideLoadIndicator();
+                            if (data <= 0) {
+                                $("#@(Prefix)ValorPagarParticular").dxNumberBox("instance").option("value", TotalPagarDesdeCita);
+                            } else {
+                                $("#@(Prefix)ValorPagarParticular").dxNumberBox("instance").option("value", (data * Cita.Cantidad));
+                            }
+                        },
+                        error: function (xhr) {
+                            console.log(xhr);
+                            hideLoadIndicator();
+                            DevExpress.ui.notify("Error:" + xhr.responseText, "error");
+                        }
+                    });
+                }
+            }
+        } else {
+            $("#@(Prefix)CitasId").dxNumberBox("instance").option("value", null);
+            $("#@(Prefix)ConsultorioId").dxSelectBox("instance").option("value", null);
+            $("#@(Prefix)EmpleadosId").dxSelectBox("instance").option("value", null);
+            $("#@(Prefix)ConveniosId").dxSelectBox("instance").option("value", null);
+        }
+        $("#@(Prefix)ValorPagoEstadosId").dxSelectBox("instance").option("value",null);
+    }
+
+    function @(Prefix)OnSelectionChangedValorPago() {
+
+         var OpcionPago = $("#@(Prefix)ValorPagoEstadosId").dxSelectBox("instance").option("value");
+
+        //Filtro para el tipo de documento
+        if (AdmisionNueva) {
+            $("#@(Prefix)DocumentosId").dxSelectBox("instance").option("value", null);
+        }
+
+        @*$("#@(Prefix)DocumentosId").dxSelectBox("instance").getDataSource().filter(["Transaccion", "=", 0]);
+        $("#@(Prefix)DocumentosId").dxSelectBox("instance").getDataSource().reload();*@
+
+        if (EstaFacturada)
+            return false;
+
+        $("#@(Prefix)ValorCopago").dxNumberBox("instance").option("readOnly", true);
+        $("#@(Prefix)PorcDescAutorizado").dxNumberBox("instance").option("readOnly", true);
+
+        var PacienteId = $("#@(Prefix)PacientesId").dxSelectBox("instance").option("value");
+        var CitasId = $("#@(Prefix)CitasId").dxNumberBox("instance").option("value");
+
+        if (OpcionPago != null && OpcionPago != "" && OpcionPago != 0) {
+            if ((PacienteId != null && PacienteId != 0) && (CitasId != null && CitasId != 0)) {
+                showLoadIndicator();
+                $.ajax({
+                    url: "@Url.Action("GetValorCategoriaIngreso","Admisiones")",
+                    data: { PacienteId: PacienteId, CitasId: CitasId },
+                    type: 'POST',
+                    success: function (data) {
+                        hideLoadIndicator();
+
+                        if (OpcionPago == 68 || OpcionPago == 69 || OpcionPago == 58 || OpcionPago == 59) {
+                            $("#@(Prefix)PorcDescAutorizado").dxNumberBox("instance").option("value", 0);
+                            $("#@(Prefix)ValorCopago").dxNumberBox("instance").option("readOnly", false);
+                        }
+
+                        if (OpcionPago == 58 && AdmisionNueva) {
+                            $("#@(Prefix)ValorCopago").dxNumberBox("instance").option("value", data.valorServicio);
+                        }
+
+                        else if (OpcionPago == 59) {
+                            if (data.CategoriasIngresosDetalles)
+                                $("#@(Prefix)ValorCopago").dxNumberBox("instance").option("value", data.CategoriasIngresosDetalles.CuotaModeradora);
+                            else
+                                $("#@(Prefix)ValorCopago").dxNumberBox("instance").option("value", 0);
+                        }
+                        else if (OpcionPago == 10067) {
+                            $("#@(Prefix)ValorCopago").dxNumberBox("instance").option("value", 0);
+                            $("#@(Prefix)PorcDescAutorizado").dxNumberBox("instance").option("readOnly", false);
+                        }
+
+                    },
+                    error: function (xhr) {
+                        console.log(xhr);
+                        hideLoadIndicator();
+                        DevExpress.ui.notify("Error:" + xhr.responseText, "error");
+                    }
+                });
+            }
+        } else {
+            $("#@(Prefix)ValorCopago").dxNumberBox("instance").option("value", 0);
+        }
+    }
+
+    function @(Prefix)OnValueChangedPorcDescAutorizado(item) {
+        if (!AdmisionNueva) {
+            TotalPagarDesdeCita = $("#@(Prefix)ValorPagarParticular").dxNumberBox("instance").option("value");
+        }
+
+        if (item.value != 0) {
+            var total = TotalPagarDesdeCita - (TotalPagarDesdeCita * (item.value / 100));
+            $("#@(Prefix)ValorPagarParticular").dxNumberBox("instance").option("value", total);
+        } else {
+            $("#@(Prefix)ValorPagarParticular").dxNumberBox("instance").option("value", TotalPagarDesdeCita);
+        }
+    }
+
+    function @(Prefix)DisplayCitasID(item) {
+
+        var text = "";
+        if (item !==     null) {
+            var consultorio = item.Consultorios;
+
+                text += @(Prefix)SetFecha(item.FechaInicio)  + " - " + @(Prefix)SetFecha(item.FechaFinal)+ " - " +consultorio.Nombre;
+
+        }
+         return text;
+    }
+    function @(Prefix)SetFecha(item) {
+        var fecha = item.slice(8, 10) + "-" + item.slice(5, 7) + "-" +item.slice(0, 4) +" "+ item.slice(11, 13) +":"+ item.slice(14, 16);
+        return fecha;
+    }
+
+    function @(Prefix)setText(items) {
+        var text = "";
+        items.forEach(function (item) {
+            if (item)
+                text += item.trim() + " ";
+        });
+        return text;
+    }
+
+    function @(Prefix)GetCitasId() {
+        var cita = $("#@(Prefix)CitasId").dxNumberBox("instance").option("value");
+        return cita;
+    }
+    function @(Prefix)GetPacientesId() {
+        var pacienteId = $("#@(Prefix)PacientesId").dxSelectBox("instance").option("value");
+        return pacienteId;
+    }
+    function @(Prefix)GetServiciosId() {
+        var servicio = $("#@(Prefix)ServiciosId").dxSelectBox("instance").option("value");
+        return servicio;
+    }
+    function @(Prefix)GetEntidadesId() {
+        var entidad = $("#@(Prefix)EntidadesConvenio").dxSelectBox("instance").option("value");
+        return entidad;
+    }
+
+    function @(Prefix)OnValueChangedEntidadesConvenio() {
+        $("#@(Prefix)ConveniosId").dxSelectBox("instance").option("value",null);
+        $("#@(Prefix)FilialesId").dxSelectBox("instance").option("value", null);
+        $("#@(Prefix)ConveniosId").dxSelectBox("instance").getDataSource().reload();
+        $("#@(Prefix)FilialesId").dxSelectBox("instance").getDataSource().reload();
+    }
+
+    function @(Prefix)DisplayTipoId(tipo) {
+        $.ajax({
+            url: "@Url.Action("GetTipoId","Admisiones")",
+            data: { id: tipo },
+            type: 'POST',
+            async:false,
+             success: function (data) {
+                 tipoID = data;
+
+                }
+         });
+    }
+
+    function @(Prefix)FormSuccess(data)
+    {
+        hideLoadIndicator();
+        if ('@ViewData.ModelState.IsValid' == 'True')
+        {
+            if ("@ViewBag.Accion" == "Delete") {
+                DevExpress.ui.notify("Registro eliminado correctamente.","info");
+            } else if ("@ViewBag.Accion" == "Save") {
+                DevExpress.ui.notify("Registro guardado correctamente.","info");
+            } else {
+                DevExpress.ui.notify("Error no accion en submit.","info");
+            }
+        }
+    }
+
+    function @(Prefix)FormFailure(data)
+    {
+        hideLoadIndicator();
+        DevExpress.ui.notify("Error en el formulario","error");
+    }
+
+    function @(Prefix)FormSuccessDetail(data)
+    {
+        hideLoadIndicator();
+        if ('@ViewData.ModelState.IsValid' == 'True')
+        {
+            $("#AdmisionesDetalleDataGrid").dxDataGrid("instance").refresh();
+            if ("@ViewBag.Accion" == "Delete") {
+                DevExpress.ui.notify("Registro eliminado correctamente.","info");
+            } else if ("@ViewBag.Accion" == "Save") {
+                DevExpress.ui.notify("Registro guardado correctamente.","info");
+            } else {
+                DevExpress.ui.notify("Error no accion en submit.","info");
+            }
+        }
+    }
+
+    function @(Prefix)FormFailureDetail(data)
+    {
+        hideLoadIndicator();
+        DevExpress.ui.notify("Error en el formulario","error");
+    }
+
+</script>

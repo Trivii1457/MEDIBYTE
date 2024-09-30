@@ -1,0 +1,43 @@
+@{ 
+    string Prefix = "FacturasGeneracion";
+    string UrlClick = Url.Action("Edit", "FacturasGeneracion");
+    string UrlNew = Url.Action("New", "FacturasGeneracion");
+
+    var DataGridConfig = new DataGridConfiguration<FacturasGeneracion>(Prefix)
+        .OnClick(UrlClick, new { Id = "Id" })
+        .New(UrlNew,DApp.ActionViewSecurity(Context,UrlNew))
+        .Exports(true,true).SetStorage()
+        .AddButtons(new List<ButtonToolbar>() {
+            new ButtonToolbar{
+                Icon = "xlsxfile",
+                Text = DApp.DefaultLanguage.GetResource("FacturasGeneracion.PlantillaCargueFE"),
+                Action = Prefix + "DescargarPlantillaCargueFE",
+                Location = ToolbarItemLocation.After,
+                LocateInMenu = ToolbarItemLocateInMenuMode.Auto
+            }
+        })
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("FacturasGeneracion"), "mainPanel");
+} 
+
+<script>
+    function @(Prefix)DescargarPlantillaCargueFE() {
+        window.open('@Url.Action("DescargarPlantillaCargueFE", "FacturasGeneracion")', '_blank');
+    }
+</script>
+
+<div class="box-body table-responsive no-padding"> 
+@(Html.DControls().DataGridSimple<FacturasGeneracion>
+    (DataGridConfig)
+    .ID("FacturasGeneracionDataGrid")
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("FacturasGeneracion").LoadAction("Get").Key("Id"))
+    .Columns(columns =>
+    {
+        columns.AddFor(m => m.CreationDate).Caption(DApp.DefaultLanguage.GetResource("FacturasGeneracion.FechaGeneracion")).SortOrder(SortOrder.Desc); ;
+        columns.AddFor(m => m.Entidades.Nombre);
+        columns.AddFor(m => m.Sedes.Nombre);
+        columns.AddFor(m => m.FechaInicio);
+        columns.AddFor(m => m.FechaFinal);
+        columns.AddFor(m => m.Pacientes.NombreCompleto);
+    })
+    )
+</div> 

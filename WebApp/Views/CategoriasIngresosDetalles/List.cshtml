@@ -1,0 +1,28 @@
+@{ 
+    string Prefix = "CategoriasIngresosDetalles";
+    string UrlClick = Url.Action("Edit", "CategoriasIngresosDetalles");
+    string UrlNew = Url.Action("New", "CategoriasIngresosDetalles");
+
+    var DataGridConfig = new DataGridConfiguration<CategoriasIngresosDetalles>(Prefix)
+        .OnClick(UrlClick, new { Id = "Id" })
+        .New(UrlNew,DApp.ActionViewSecurity(Context,UrlNew))
+        .Exports(true,true).SetStorage()
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("CategoriasIngresosDetalles"), "mainPanel");
+} 
+
+<div class="box-body table-responsive no-padding"> 
+@(Html.DControls().DataGridSimple<CategoriasIngresosDetalles>(DataGridConfig) 
+    .ID("CategoriasIngresosDetallesDataGrid") 
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("CategoriasIngresosDetalles").LoadAction("Get").Key("Id")) 
+    .Columns(columns => 
+    { 
+        columns.AddFor(m => m.CategoriasIngresos.Id); 
+        columns.AddFor(m => m.FechaInicial); 
+        columns.AddFor(m => m.FechaFinal);  
+        columns.AddFor(m => m.PorcentajeCopago); 
+        columns.AddFor(m => m.CopagoMaximoEvento); 
+        columns.AddFor(m => m.CopagoMaximoAno); 
+        columns.AddFor(m => m.CuotaModeradora); 
+    }) 
+) 
+</div> 

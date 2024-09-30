@@ -1,0 +1,176 @@
+@{ 
+    string Prefix = "Admisiones";
+    string UrlClick = Url.Action("Edit", "Admisiones");
+    string UrlNew = Url.Action("New", "Admisiones");
+    string ImprimirReporteEntregaProduccion = Url.Action("ImprimirReporteEntregaProduccion", "Admisiones");
+
+    var DataGridConfig = new DataGridConfiguration<Admisiones>(Prefix)
+        .OnClick(UrlClick, new { Id = "Id" })
+        .New(UrlNew,DApp.ActionViewSecurity(Context,UrlNew))
+        .Exports(true,true).SetStorage()
+        .AddButtons(new List<ButtonToolbar>
+        {
+            //new ButtonToolbar
+            //{
+            //    Action = $"{Prefix}MostrarModalImprimirReporteEntregaProduccion",
+            //    Icon = "doc",
+            //    Text = DApp.DefaultLanguage.GetResource("Admisiones.ImprimirReporteEntregaProduccion"),
+            //    LocateInMenu = ToolbarItemLocateInMenuMode.Always,
+            //    Location = ToolbarItemLocation.Before
+            //},
+            new ButtonToolbar
+            {
+                Action = $"{Prefix}MostrarModalDescargarXLSXReporteEntregaProduccion",
+                Icon = "xlsxfile",
+                Text = DApp.DefaultLanguage.GetResource("Admisiones.DescargarXLSXReporteEntregaProduccion"),
+                LocateInMenu = ToolbarItemLocateInMenuMode.Always,
+                Location = ToolbarItemLocation.Before
+            }
+        })
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("Admisiones"), "mainPanel");
+}
+
+<script>
+
+    var tipoReporte = "";
+
+    function @(Prefix)MostrarModalDescargarXLSXReporteEntregaProduccion()
+    {
+        tipoReporte = "DESCARGAR";
+        $("#@(Prefix)PopupImprimirReporteEntrega").dxPopup("instance").show();
+        $("#@(Prefix)ButtonAccept").html(tipoReporte);
+    }
+
+    function @(Prefix)MostrarModalImprimirReporteEntregaProduccion()
+    {
+        tipoReporte = "IMPRIMIR";
+        $("#@(Prefix)PopupImprimirReporteEntrega").dxPopup("instance").show();
+        $("#@(Prefix)ButtonAccept").html(tipoReporte);
+    }
+
+    function @(Prefix)ImprimirReporteEntregaProduccion() {
+
+        $("#@(Prefix)Errores").html("");
+
+        var sedeId = $("#@(Prefix)ReporteSedeId").dxSelectBox("instance").option("value");
+        var fechaDesde = $("#@(Prefix)ReporteFechaDesde").dxDateBox("instance").option("value");
+        var fechaHasta = $("#@(Prefix)ReporteFechaHasta").dxDateBox("instance").option("value");
+
+        if (sedeId == 0 || sedeId == "" || sedeId == null || fechaDesde == null || fechaHasta == null) {
+            DevExpress.ui.notify("Error: Los campos Sede, Fecha desde y Fecha Hasta son obligatorios.", "error", 4000);
+            return false;
+        }
+
+        if (fechaHasta < fechaDesde) {
+            DevExpress.ui.notify("Error: Fecha Desde no puede ser superior a Fecha Hasta.", "error", 4000);
+            return false;
+        }
+
+        if (tipoReporte == "IMPRIMIR") {
+            showLoadIndicator();
+            $("#@(Prefix)PopupImprimirReporteEntrega").dxPopup("instance").hide();
+            $.ajax({
+                url: "@ImprimirReporteEntregaProduccion",
+                data: { sedeId: sedeId, fechaDesde: fechaDesde.toISOString(), fechaHasta: fechaHasta.toISOString() },
+                type: 'POST',
+                success: function (data) {
+                    $("#VisorReporteria").dxPopup("instance").show();
+                    $("#ContenidoReporte").html(data);
+                    hideLoadIndicator();
+                },
+                error: function (xhr) {
+                    console.log(xhr);
+                    hideLoadIndicator();
+                    DevExpress.ui.notify("Error: " + xhr.responseText, "error", 4000);
+                }
+            });
+        } else {
+            DescargarArchivo(
+                "@Url.Action("XLSXReporteEntregaProduccion", Prefix)",
+                undefined,
+                { sedeId: sedeId, fechaDesde: fechaDesde.toISOString(), fechaHasta: fechaHasta.toISOString() }
+            );
+        }
+    }
+
+</script> 
+
+<div class="box-body table-responsive no-padding"> 
+@(Html.DControls().DataGridSimple<Admisiones>(DataGridConfig)
+    .ID("AdmisionesDataGrid")
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Admisiones").LoadAction("Get").Key("Id"))
+    .Columns(columns =>
+    {
+        columns.AddFor(m => m.Id).Caption(DApp.DefaultLanguage.GetResource("Admisiones.Consecutivo"));
+        columns.AddFor(m => m.Pacientes.NumeroIdentificacion);
+        columns.AddFor(m => m.Pacientes.NombreCompleto);
+        columns.AddFor(m => m.ProgramacionCitas.Consecutivo).Caption(DApp.DefaultLanguage.GetResource("Admisiones.ConsecutivoCita"));
+        columns.AddFor(m => m.ProgramacionCitas.Servicios.Nombre);
+        columns.AddFor(m => m.ProgramacionCitas.FechaInicio).Format("dd/MM/yyyy").SortOrder(SortOrder.Desc);
+        columns.AddFor(m => m.ProgramacionCitas.FechaInicio).Caption(DApp.DefaultLanguage.GetResource("Admisiones.HoraInicio")).Format("HH:mm");
+        columns.AddFor(m => m.ProgramacionCitas.Servicios.RequiereProfesional);
+        columns.AddFor(m => m.ProgramacionCitas.Consultorios.Nombre);
+        columns.AddFor(m => m.ProgramacionCitas.Empleados.NombreCompleto);
+        columns.AddFor(m => m.Convenios.Nombre);
+        columns.AddFor(m => m.Filiales.Nombre);
+        columns.AddFor(m => m.Estados.Nombre);
+        columns.AddFor(m => m.PorcDescAutorizado);
+        columns.AddFor(m => m.ValorPagoEstados.Nombre).Caption(DApp.DefaultLanguage.GetResource("Admisiones.ValorPagoEstados"));
+        columns.AddFor(m => m.Facturado);
+
+    })
+) 
+</div> 
+
+<div class="row">
+    <div class="col-md-12">
+        @(Html.DControls().Popup()
+            .ID($"{Prefix}PopupImprimirReporteEntrega")
+            .Width(800)
+            .Height(300)
+            .ShowTitle(true)
+            .Title(DApp.DefaultLanguage.GetResource("Admisiones.ImprimirReporteEntregaProduccion"))
+            .Visible(false)
+            .DragEnabled(false)
+            .CloseOnOutsideClick(false)
+            .ContentTemplate(new TemplateName($"{Prefix}TemplateImprimirReporteEntrega"))
+        )
+
+        @using (Html.DevExtreme().NamedTemplate($"{Prefix}TemplateImprimirReporteEntrega"))
+        {
+            <div id="@(Prefix)Errores" class="text-danger text-sm-left"></div>
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <label for="@($"{Prefix}ReporteSedeId")">@DApp.DefaultLanguage.GetResource("Admisiones.ReporteSedeId"):</label>
+                    @(Html.DControls().SelectBox()
+                        .ID($"{Prefix}ReporteSedeId").InputAttr("class", "form-control")
+                        .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Admisiones").LoadAction("GetSedesId").Key("Id"))
+                        .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                        .ValueExpr("Id").DisplayExpr("Nombre")
+                        .SearchEnabled(true).ShowClearButton(true)
+                    )
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="@($"{Prefix}ReporteFechaDesde")">@DApp.DefaultLanguage.GetResource("Admisiones.ReporteFechaDesde"):</label>
+                    @(Html.DControls().DateBox().Value(DateTime.Now)
+                        .ID($"{Prefix}ReporteFechaDesde").InputAttr("class", "form-control")
+                        .DisplayFormat(DApp.DefaultLanguage.DateFormat).Placeholder(DateTime.Now.ToString(DApp.DefaultLanguage.DateFormat)).ShowClearButton(true).UseMaskBehavior(true)
+                    )
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="@($"{Prefix}ReporteFechaHasta")">@DApp.DefaultLanguage.GetResource("Admisiones.ReporteFechaHasta"):</label>
+                    @(Html.DControls().DateBox().Value(DateTime.Now)
+                        .ID($"{Prefix}ReporteFechaHasta").InputAttr("class", "form-control")
+                        .DisplayFormat(DApp.DefaultLanguage.DateFormat).Placeholder(DateTime.Now.ToString(DApp.DefaultLanguage.DateFormat)).ShowClearButton(true).UseMaskBehavior(true)
+                    )
+                </div>
+            </div>
+            
+            <div class="row d-flex justify-content-center">
+                <button class="btn btn-dark btn" id="@(Prefix)ButtonAccept" onclick="@(Prefix)ImprimirReporteEntregaProduccion()">IMPRIMIR</button>
+            </div>
+        }
+    </div>
+</div>

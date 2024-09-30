@@ -1,0 +1,64 @@
+@model ServiciosSedesModel 
+@{
+    string Prefix = "ServiciosSedes"; 
+    string UrlDelete = Url.Action("DeleteDetail", "ServiciosSedes", new { Id = Model.Entity.Id }); 
+
+    var toolbarDetailconfig = new ToolbarDetailConfiguration(Prefix).Delete(UrlDelete).Save().Cancel(); 
+} 
+
+<partial name="ViewJS.cshtml" model="Model" view-data="ViewData" /> 
+
+<div>@(Html.DControls().Toolbar(toolbarDetailconfig))</div>
+
+<div> 
+    <form id="@(Prefix)Form" asp-controller="ServiciosSedes" asp-action="EditDetail" class="form-horizontal" data-ajax-mode="replace" data-ajax-update="#ServiciosSedesMainPanelForm" data-ajax-success="@(Prefix)FormSuccessDetail" data-ajax-failure="@(Prefix)FormFailureDetail" data-ajax="true">
+        @(Html.DControls().ValidationSummary().ValidationGroup(Prefix + "ValidationGroup").ElementAttr("class", "ErrorValidationSummary"))
+        @using (Html.DevExtreme().ValidationGroup(Prefix + "ValidationGroupDetail"))
+        {
+            @(Html.DControls().CheckBoxFor(m => m.Entity.IsNew).ID(Prefix + "IsNew").Visible(false))
+            @(Html.DControls().NumberBoxFor(m => m.Entity.Id).ID(Prefix + "Id").Visible(false))
+            @(Html.DControls().TextBoxFor(m => m.Entity.UpdatedBy).ID(Prefix + "UpdatedBy").Visible(false))
+            @(Html.DControls().DateBoxFor(m => m.Entity.LastUpdate).ID(Prefix + "LastUpdate").Type(DateBoxType.DateTime).Visible(false))
+            @(Html.DControls().TextBoxFor(m => m.Entity.CreatedBy).ID(Prefix + "CreatedBy").Visible(false))
+            @(Html.DControls().DateBoxFor(m => m.Entity.CreationDate).ID(Prefix + "CreationDate").Type(DateBoxType.DateTime).Visible(false))
+
+            @(Html.DControls().Form<ServiciosSedesModel>()
+                .ID("ServiciosSedesModelForm").LabelLocation(FormLabelLocation.Top).ShowValidationSummary(false).FormData(Model)
+                .Items(items =>
+                {
+                     items.AddGroup().ColCount(2).Caption(DApp.DefaultLanguage.GetResource("DEFAULT.INFORMATIONGENERAL"))
+                         .Items(groupItems =>
+                                 {
+                            groupItems.AddSimpleFor(m => m.Entity.ServiciosId)
+                            .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("ServiciosSedes.ServiciosId")))
+                            .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("ServiciosSedes.ServiciosId")))
+                                 .Editor(e => e.SelectBox().ID("ServiciosId")
+                                 .DataSource(d => d.Mvc().LoadMethod("POST").Controller("ServiciosSedes").LoadAction("GetServiciosId").Key("Id"))
+                                 .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                 .ValueExpr("Id").DisplayExpr("DescripcionCompleta")
+                                 .SearchEnabled(true).ShowClearButton(true)
+                            );
+                            groupItems.AddSimpleFor(m => m.Entity.SedesId)
+                            .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("ServiciosSedes.SedesId")))
+                            .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("ServiciosSedes.SedesId")))
+                                 .Editor(e => e.SelectBox().ID("SedesId")
+                                 .DataSource(d => d.Mvc().LoadMethod("POST").Controller("ServiciosSedes").LoadAction("GetSedesId").Key("Id"))
+                                 .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                 .ValueExpr("Id").DisplayExpr("Nombre")
+                                 .SearchEnabled(true).ShowClearButton(true)
+                            );
+                            groupItems.AddSimpleFor(m => m.Entity.EstadosId)
+                                 .Editor(e => e.SelectBox().ID("EstadosId")
+                                 .DataSource(d => d.Mvc().LoadMethod("POST").Controller("ServiciosSedes").LoadAction("GetEstadosId").Key("Id"))
+                                 .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                 .ValueExpr("Id").DisplayExpr("Nombre")
+                                 .SearchEnabled(true).ShowClearButton(true)
+                            );
+                 });
+             })
+            )
+        }
+        
+    </form> 
+</div> 
+

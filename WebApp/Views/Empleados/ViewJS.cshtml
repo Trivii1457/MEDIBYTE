@@ -1,0 +1,62 @@
+@model EmpleadosModel
+@{
+    string Prefix = "Empleados";
+    string idFirmaArchivo = Model.Entity.FirmaDigitalArchivo.Maestro + Model.Entity.FirmaDigitalArchivo.NombreCampoForanea;
+    string idSelloArchivo = Model.Entity.SelloDigitalArchivo.Maestro + Model.Entity.SelloDigitalArchivo.NombreCampoForanea;
+}
+
+    <script>
+
+    function @(Prefix)calcularDigito(item) {
+
+        let nit = item.component.option("value");
+        let isNitValid = nit >>> 0 === parseFloat(nit) ? true : false;
+
+        if (isNitValid) {
+            $("#@(Prefix)DV").dxTextBox("instance").option("value", CalcularDigitoVerificacion(nit));
+        }
+    }
+
+    function DisplayExprTiposSangreId(data) {
+        if(data)
+              return data.Nombre + " " + data.RH;
+    }
+
+    function @(Prefix)OnTipoEmpleadosChanged(item) {
+        var selected = item.selectedItem;
+
+        @*var Firma = $("#@(Prefix)FirmaDigitalComp").dxFileUploader("instance");
+        var Sello = $("#@(Prefix)SelloDigitalComp").dxFileUploader("instance");
+        var container = $(".@(Prefix)file-uploader");*@
+
+        if (selected != null && selected.Id === 2) {
+            @(idFirmaArchivo)Ocultar(false);
+            @(idSelloArchivo)Ocultar(false);
+        } else {
+            @(idFirmaArchivo)Ocultar(true);
+            @(idSelloArchivo)Ocultar(true);
+        }
+    }
+
+    function @(Prefix)FormSuccess(data)
+    {
+        hideLoadIndicator();
+        if ('@ViewData.ModelState.IsValid' == 'True')
+        {
+            if ("@ViewBag.Accion" == "Delete") {
+                DevExpress.ui.notify("Registro eliminado correctamente.","info");
+            } else if ("@ViewBag.Accion" == "Save") {
+                DevExpress.ui.notify("Registro guardado correctamente.","info");
+            } else {
+                DevExpress.ui.notify("Error no accion en submit.","info");
+            }
+        }
+    }
+
+    function @(Prefix)FormFailure(data)
+    {
+        hideLoadIndicator();
+        DevExpress.ui.notify("Error en el formulario","error");
+    }
+
+    </script>

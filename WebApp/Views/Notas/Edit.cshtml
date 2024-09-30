@@ -1,0 +1,424 @@
+@model NotasModel
+@{
+    string Prefix = "Notas";
+
+    string UrlSave = Url.Action("Edit", "Notas");
+    string UrlNew = Url.Action("New", "Notas");
+    string UrlDelete = Url.Action("Delete", "Notas", new { Id = Model.Entity.Id });
+    string UrlBack = Url.Action("ListPartial", "Notas");
+    string UrlDianXml = Url.Action("DownloadInvoiceFileXML", "Notas", new { id = Model.Entity.Id });
+
+    var disable = (Model.Entity.Estadosid == 10085 || Model.Entity.Estadosid == 10086);
+
+    bool enviadoDian = false;
+    if (!string.IsNullOrWhiteSpace(Model.Entity.DIANResponse))
+    {
+        if (Model.Entity.DIANResponse.Contains("DIAN Aceptado"))
+        {
+            enviadoDian = true;
+        }
+    }
+
+    var ToolbarConfig = new ToolbarConfiguration(Prefix)
+        .Title(DApp.DefaultLanguage.GetResource("Notas"))
+        .Save(DApp.ActionViewSecurity(Context, UrlSave) || disable, Model.Entity.IsNew)
+        .New(UrlNew, DApp.ActionViewSecurity(Context, UrlNew))
+        //.Delete(UrlDelete,DApp.ActionViewSecurity(Context,UrlDelete),UrlBack,Model.Entity.IsNew)
+        .AddButtons(new List<ButtonToolbar>()
+        {
+            new ButtonToolbar
+            {
+                Action = $"{Prefix}ImprimirNotaPorId",
+                Text = @DApp.DefaultLanguage.GetResource("DEFAULT.Imprimir"),
+                Disabled = (Model.Entity.IsNew),
+                Location = ToolbarItemLocation.After,
+                LocateInMenu = ToolbarItemLocateInMenuMode.Auto,
+                Icon = "print"
+            },
+            new ButtonToolbar
+            {
+                Action = $"{Prefix}AprobarNota",
+                Text = @DApp.DefaultLanguage.GetResource("Notas.AprobarNota"),
+                Disabled = (Model.Entity.IsNew || disable),
+                Location = ToolbarItemLocation.After,
+                LocateInMenu = ToolbarItemLocateInMenuMode.Auto,
+                Icon = "check"
+            },
+            new ButtonToolbar
+            {
+                Action = $"{Prefix}AnularNota",
+                Text = @DApp.DefaultLanguage.GetResource("Notas.AnularNota"),
+                Disabled = (Model.Entity.IsNew || disable),
+                Location = ToolbarItemLocation.After,
+                LocateInMenu = ToolbarItemLocateInMenuMode.Auto,
+                Icon = "clear"
+            },
+            new ButtonToolbar
+            {
+                Action = "EnviarDIAN",
+                Text = @DApp.DefaultLanguage.GetResource("Notas.EnviarDIAN"),
+                Disabled = Model.Entity.IsNew || Model.Entity.Estadosid != 10085 || enviadoDian,
+                Location = ToolbarItemLocation.After,
+                LocateInMenu = ToolbarItemLocateInMenuMode.Auto,
+                Icon = "expand"
+            },
+            new ButtonToolbar
+            {
+                Action = $"{Prefix}EnviarNota",
+                Text = @DApp.DefaultLanguage.GetResource("Notas.EnviarCorreo"),
+                Disabled = Model.Entity.IsNew || !enviadoDian,
+                Location = ToolbarItemLocation.After,
+                LocateInMenu = ToolbarItemLocateInMenuMode.Auto,
+                Icon = "email"
+            }
+        })
+        .Back(UrlBack);
+}
+
+<partial name="ViewJS.cshtml" model="Model" view-data="ViewData" />
+
+@(Html.DControls().Toolbar(ToolbarConfig))
+
+<div>
+    <div id="NotasMainPanelForm">
+        <form id="@(Prefix)Form" asp-controller="Notas" asp-action="Edit" class="form-horizontal" data-ajax-mode="replace" data-ajax-update="#mainPanel" data-ajax-success="@(Prefix)FormSuccess" data-ajax-failure="@(Prefix)FormFailure" data-ajax="true">
+            @(Html.DControls().ValidationSummary().ValidationGroup(Prefix + "ValidationGroup").ElementAttr("class","ErrorValidationSummary"))
+            @using (Html.DevExtreme().ValidationGroup(Prefix + "ValidationGroup"))
+            {
+                @(Html.DControls().CheckBoxFor(m => m.Entity.IsNew).ID(Prefix + "IsNew").Visible(false))
+                @(Html.DControls().NumberBoxFor(m => m.Entity.Id).ID(Prefix + "Id").Visible(false))
+
+                @(Html.DControls().TextBoxFor(m => m.Entity.UpdatedBy).ID(Prefix + "UpdatedBy").Visible(false))
+                @(Html.DControls().DateBoxFor(m => m.Entity.LastUpdate).ID(Prefix + "LastUpdate").Type(DateBoxType.Time).Visible(false))
+                @(Html.DControls().TextBoxFor(m => m.Entity.CreatedBy).ID(Prefix + "CreatedBy").Visible(false))
+                @(Html.DControls().DateBoxFor(m => m.Entity.CreationDate).ID(Prefix + "CreationDate").Type(DateBoxType.Time).Visible(false))
+                @(Html.DControls().NumberBoxFor(m => m.Entity.Saldo).ID(Prefix + "Saldo").Visible(false))
+                @(Html.DControls().DateBoxFor(m => m.Entity.PeriodoInicial).ID(Prefix + "PeriodoInicial").Type(DateBoxType.Time).Visible(false))
+                @(Html.DControls().DateBoxFor(m => m.Entity.PeriodoFinal).ID(Prefix + "PeriodoFinal").Type(DateBoxType.Time).Visible(false))
+                @(Html.DControls().TextBoxFor(m => m.Entity.OrdenCompra).ID(Prefix + "OrdenCompra").Visible(false))
+                @(Html.DControls().TextBoxFor(m => m.Entity.Referencia).ID(Prefix + "Referencia").Visible(false))
+                @(Html.DControls().TextBoxFor(m => m.Entity.MontoEscrito).ID(Prefix + "MontoEscrito").Visible(false))
+
+                @(Html.DControls().TextBoxFor(m => m.SerializedPacientes).ID(Prefix + "SerializedPacientes").Visible(false))
+
+                @(Html.DControls().Form<NotasModel>()
+                    .ID("NotasModelForm").LabelLocation(FormLabelLocation.Top).ShowValidationSummary(false).FormData(Model)
+                    .Items(items =>
+                    {
+                    items.AddGroup().ColCount(12).Caption(DApp.DefaultLanguage.GetResource("DEFAULT.INFORMATIONGENERAL"))
+                        .Items(groupItems =>{
+                        groupItems.AddSimpleFor(m => m.Entity.DocumentosId).ColSpan(4)
+                             .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Notas.DocumentosId")))
+                             .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Notas.DocumentosId")))
+                                  .Editor(e => e.SelectBox().ID(Prefix + "DocumentosId")
+                                  .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Notas").LoadAction("GetDocumentosId").Key("Id"))
+                                  .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                  .ValueExpr("Id").DisplayExpr("DocumentoCompleto").SearchExpr("Prefijo", "Descripcion")
+                                  .SearchEnabled(true).ShowClearButton(true).OnSelectionChanged(Prefix + "DocumentosIdOnSelectionChanged")
+                             );
+                        groupItems.AddSimpleFor(m => m.Entity.Consecutivo).ColSpan(4)
+                              .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Notas.Consecutivo")))
+                                  .Editor(e=>e.NumberBox().ID(Prefix + "Consecutivo").ShowClearButton(true).ShowSpinButtons(true).ReadOnly(true));
+
+                        groupItems.AddSimpleFor(m => m.Entity.Fecha).ColSpan(4)
+                               .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Notas.Fecha")))
+                                   .Editor(e=>e.DateBox().ID(Prefix + "Fecha").Type(DateBoxType.Time)
+                                   .DisplayFormat(DApp.DefaultLanguage.DateFormat).Placeholder(DateTime.Now.ToString(DApp.DefaultLanguage.DateFormat)).ReadOnly(true));
+
+                        groupItems.AddSimpleFor(m => m.Entity.NotasConceptosId).ColSpan(4)
+                             .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Notas.NotasConceptosId")))
+                             .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Notas.NotasConceptosId")))
+                                  .Editor(e => e.SelectBox().ID(Prefix + "NotasConceptosId")
+                                  .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Notas").LoadAction("GetNotasConceptosId").Key("Id"))
+                                  .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                  .ValueExpr("Id").DisplayExpr("Descripcion").SearchExpr("Descripcion")
+                                  .SearchEnabled(true).ShowClearButton(true)
+                                  .OnValueChanged($"{Prefix}ValidarSeleccionarPacientes")
+                             );
+
+                        groupItems.AddSimpleFor(m => m.Entity.FacturasId).ColSpan(4)
+                            .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Notas.FacturasId")))
+                             .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Notas.FacturasId")))
+                                  .Editor(e => e.SelectBox().ID(Prefix + "FacturasId")
+                                  .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Notas").LoadAction("GetFacturasId").Key("Id"))
+                                  .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                  .ValueExpr("Id").DisplayExpr(new JS(Prefix + "DisplayExprFacturaId")).SearchExpr("Documentos.Prefijo", "NroConsecutivo")
+                                  .SearchEnabled(true).ShowClearButton(true).OnSelectionChanged(Prefix + "FacturasIdOnSelectionChanged")
+                             );
+
+                        groupItems.AddButton().ColSpan(4).HorizontalAlignment(HorizontalAlignment.Left).VerticalAlignment(VerticalAlignment.Bottom)
+                            .ButtonOptions(x => x.ID($"{Prefix}ButtonSeleciconarPacientes").Text(DApp.DefaultLanguage.GetResource("Notas.SeleccionarPacientes")).OnClick($"{Prefix}MostrarPopupSeleciconarPacientes").Disabled(true));
+
+                        groupItems.AddSimpleFor(m => m.Entity.Estadosid).ColSpan(4)
+                             .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Notas.Estadosid")))
+                             .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Notas.Estadosid")))
+                                  .Editor(e => e.SelectBox().ID(Prefix + "Estadosid")
+                                  .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Notas").LoadAction("GetEstadosid").Key("Id"))
+                                  .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                  .ValueExpr("Id").DisplayExpr("Nombre").SearchExpr("Nombre")
+                                  .SearchEnabled(true).ShowClearButton(true).ReadOnly(true)
+                             );
+
+                        groupItems.AddSimpleFor(m => m.Entity.FormasPagosId).ColSpan(4)
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Notas.FormasPagosId")))
+                         .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Notas.FormasPagosId")))
+                              .Editor(e => e.SelectBox().ID(Prefix + "FormasPagosId")
+                              .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Notas").LoadAction("GetFormasPagosId").Key("Id"))
+                              .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                              .ValueExpr("Id").DisplayExpr("Nombre").SearchExpr("Nombre","Codigo")
+                              .SearchEnabled(true).ShowClearButton(true)
+                         );
+
+                        groupItems.AddSimpleFor(m => m.Entity.MediosPagoId).ColSpan(4)
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Notas.MediosPagoId")))
+                         .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Notas.MediosPagoId")))
+                              .Editor(e => e.SelectBox().ID(Prefix + "MediosPagoId")
+                              .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Notas").LoadAction("GetMediosPagoId").Key("Id"))
+                              .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                              .ValueExpr("Id").DisplayExpr("Descripcion").SearchExpr("Descripcion", "Codigo")
+                              .SearchEnabled(true).ShowClearButton(true)
+                         );
+
+                        groupItems.AddSimpleFor(m => m.Entity.FechaVencimiento).ColSpan(4)
+                           .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Notas.FechaVencimiento")))
+                               .Editor(e => e.DateBox().ID(Prefix + "FechaVencimiento").Min(DateTime.Now)
+                               .DisplayFormat(DApp.DefaultLanguage.DateFormat).Placeholder(DateTime.Now.ToString(DApp.DefaultLanguage.DateFormat)).ShowClearButton(true).UseMaskBehavior(true));
+
+                        groupItems.AddEmpty().ColSpan(8);
+
+                        groupItems.AddSimpleFor(m => m.Entity.Observaciones).ColSpan(12)
+                         .ValidationRules(rules => rules.AddStringLength().Min(0).Max(2000).Message(DApp.GetStringLengthResource("Notas.Observaciones", 2000)))
+                             .Editor(e => e.TextArea().ID(Prefix + "Observaciones"));
+
+                        groupItems.AddSimpleFor(m => m.Entity.CreatedBy).ColSpan(3)
+                                    .Editor(e => e.TextBox().ReadOnly(true));
+                        groupItems.AddSimpleFor(m => m.Entity.CreationDate).ColSpan(3)
+                             .Editor(e => e.DateBox().ReadOnly(true)
+                             .Type(DateBoxType.DateTime)
+                             .DisplayFormat(DApp.DefaultLanguage.DateTimeFormat));
+
+                        groupItems.AddSimpleFor(m => m.Entity.UpdatedBy).ColSpan(3)
+                             .Editor(e => e.TextBox().ReadOnly(true));
+                        groupItems.AddSimpleFor(m => m.Entity.LastUpdate).ColSpan(3)
+                             .Editor(e => e.DateBox().ReadOnly(true)
+                             .Type(DateBoxType.DateTime)
+                             .DisplayFormat(DApp.DefaultLanguage.DateTimeFormat));
+
+                        groupItems.AddTabbed().ColSpan(12)
+                         .TabPanelOptions(o => {o.DeferRendering(false);})
+                         .Tabs(tabItems => {
+                             tabItems.Add()
+                                     .Title(DApp.DefaultLanguage.GetResource("DEFAULT.INFORMATIONCLIENTE"))
+                                     .Items(tabItem => {
+                                         tabItem.AddSimpleFor(m => m.Entity.EmpresasId).ColSpan(1)
+                                             .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Notas.EmpresasId")))
+                                             .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Notas.EmpresasId")))
+                                                  .Editor(e => e.SelectBox().ID(Prefix + "EmpresasId")
+                                                  .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Notas").LoadAction("GetEmpresasId").Key("Id"))
+                                                  .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                                  .ValueExpr("Id").DisplayExpr("RazonSocial").SearchExpr("RazonSocial")
+                                                  .SearchEnabled(true).ShowClearButton(true).ReadOnly(true)
+                                             );
+
+                                         tabItem.AddSimpleFor(m => m.Entity.SedesId).ColSpan(1)
+                                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Notas.SedesId")))
+                                                 .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Notas.SedesId")))
+                                                      .Editor(e => e.SelectBox().ID(Prefix + "SedesId")
+                                                      .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Notas").LoadAction("GetSedesId").Key("Id"))
+                                                      .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                                      .ValueExpr("Id").DisplayExpr("Nombre]").SearchExpr("Nombre]")
+                                                      .SearchEnabled(true).ShowClearButton(true).ReadOnly(true)
+                                                 );
+
+                                         tabItem.AddSimpleFor(m => m.Entity.EntidadesId).ColSpan(1)
+                                                   .Editor(e => e.SelectBox().ID(Prefix + "EntidadesId")
+                                                   .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Notas").LoadAction("GetEntidadesId").Key("Id"))
+                                                   .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                                   .ValueExpr("Id").DisplayExpr("Nombre").SearchExpr("Nombre")
+                                                   .SearchEnabled(true).ShowClearButton(true).ReadOnly(true)
+                                              );
+
+                                         tabItem.AddSimpleFor(m => m.Entity.PacientesId).ColSpan(1)
+                                                   .Editor(e => e.SelectBox().ID(Prefix + "PacientesId")
+                                                   .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Notas").LoadAction("GetPacientesId").Key("Id"))
+                                                   .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                                   .ValueExpr("Id").DisplayExpr("NombreCompleto").SearchExpr("NombreCompleto")
+                                                   .SearchEnabled(true).ShowClearButton(true).ReadOnly(true)
+                                              );
+
+                                     });
+
+
+                             tabItems.Add().ColCount(4)
+                                          .Title(DApp.DefaultLanguage.GetResource("DEFAULT.INFORMATIONVALUE"))
+                                          .Items(tabItem => {
+                                              tabItem.AddSimpleFor(m => m.Entity.ValorSubtotal).ColSpan(1)
+                                                   .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Notas.ValorSubtotal")))
+                                                       .Editor(e=>e.NumberBox().ID(Prefix + "ValorSubtotal").Format("#,##0.##").ReadOnly(true));
+                                              tabItem.AddSimpleFor(m => m.Entity.ValorDescuentos).ColSpan(1)
+                                                   .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Notas.ValorDescuentos")))
+                                                       .Editor(e=>e.NumberBox().ID(Prefix + "ValorDescuentos").Format("#,##0.##").ReadOnly(true));
+                                              tabItem.AddSimpleFor(m => m.Entity.ValorImpuestos).ColSpan(1)
+                                                   .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Notas.ValorImpuestos")))
+                                                       .Editor(e=>e.NumberBox().ID(Prefix + "ValorImpuestos").Format("#,##0.##").ReadOnly(true));
+                                              tabItem.AddSimpleFor(m => m.Entity.ValorTotal).ColSpan(1)
+                                                   .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Notas.ValorTotal")))
+                                                       .Editor(e=>e.NumberBox().ID(Prefix + "ValorTotal").Format("#,##0.##").ReadOnly(true));
+
+                                          });
+
+
+                             tabItems.Add()
+                                          .Title(DApp.DefaultLanguage.GetResource("DEFAULT.ELECTRONICNOTE"))
+                                          .Items(tabItem => {
+                                              tabItem.AddSimple().Template(new TemplateName($"{Prefix}BotonValidacionDIAN"));
+                                              tabItem.AddSimpleFor(m => m.Entity.CUFE).ColSpan(1)
+                                                  .ValidationRules(rules => rules.AddStringLength().Min(0).Max(255).Message(DApp.GetStringLengthResource("Notas.CUFE", 255)))
+                                                       .Editor(e => e.TextBox().ID(Prefix + "CUFE").ReadOnly(true));
+                                              tabItem.AddSimpleFor(m => m.Entity.IssueDate).ColSpan(1)
+                                                       .Editor(e=>e.DateBox().ID(Prefix + "IssueDate").Type(DateBoxType.Time)
+                                                       .DisplayFormat(DApp.DefaultLanguage.DateFormat).Placeholder(DateTime.Now.ToString(DApp.DefaultLanguage.DateFormat)).ReadOnly(true));
+                                              tabItem.AddSimpleFor(m => m.Entity.DIANResponse).ColSpan(1)
+                                                  .ValidationRules(rules => rules.AddStringLength().Min(0).Max(1024).Message(DApp.GetStringLengthResource("Notas.DIANResponse", 1024)))
+                                                       .Editor(e => e.TextArea().ID(Prefix + "DIANResponse").ReadOnly(true));
+                                              tabItem.AddSimpleFor(m => m.Entity.XmlUrl).ColSpan(1)
+                                                  .ValidationRules(rules => rules.AddStringLength().Min(0).Max(2048).Message(DApp.GetStringLengthResource("Notas.XmlUrl", 2048)))
+                                                       .Editor(e => e.TextArea().ID(Prefix + "XmlUrl").ReadOnly(true));
+                                              tabItem.AddSimpleFor(m => m.Entity.ErrorReference).ColSpan(1)
+                                                       .Editor(e => e.TextBox().ID(Prefix + "ErrorReference").ReadOnly(true));
+                                              tabItem.AddSimpleFor(m => m.Entity.UrlTracking).ColSpan(1)
+                                                  .ValidationRules(rules => rules.AddStringLength().Min(0).Max(2048).Message(DApp.GetStringLengthResource("Notas.UrlTracking", 2048)))
+                                                       .Editor(e => e.TextArea().ID(Prefix + "UrlTracking").ReadOnly(true));
+                                              tabItem.AddSimpleFor(m => m.Entity.IdDbusiness).ColSpan(1)
+                                                  .ValidationRules(rules => rules.AddStringLength().Min(0).Max(50).Message(DApp.GetStringLengthResource("Notas.IdDbusiness", 50)))
+                                                       .Editor(e => e.TextBox().ID(Prefix + "IdDbusiness").ReadOnly(true));
+
+                                          });
+
+
+                         });
+
+
+                                @*groupItems.AddSimpleFor(m => m.Entity.PeriodoInicial).ColSpan(1)
+                                     .Editor(e=>e.DateBox().ID(Prefix + "PeriodoInicial").Type(DateBoxType.Time)
+                                     .DisplayFormat(DApp.DefaultLanguage.DateFormat).Placeholder(DateTime.Now.ToString(DApp.DefaultLanguage.DateFormat)).ShowClearButton(true).UseMaskBehavior(true));
+                                groupItems.AddSimpleFor(m => m.Entity.PeriodoFinal).ColSpan(1)
+                                     .Editor(e=>e.DateBox().ID(Prefix + "PeriodoFinal").Type(DateBoxType.Time)
+                                     .DisplayFormat(DApp.DefaultLanguage.DateFormat).Placeholder(DateTime.Now.ToString(DApp.DefaultLanguage.DateFormat)).ShowClearButton(true).UseMaskBehavior(true));
+                                groupItems.AddSimpleFor(m => m.Entity.Referencia).ColSpan(1)
+                                .ValidationRules(rules => rules.AddStringLength().Min(0).Max(50).Message(DApp.GetStringLengthResource("Notas.Referencia", 50)))
+                                     .Editor(e => e.TextBox().ID(Prefix + "Referencia").ShowClearButton(true));
+                                groupItems.AddSimpleFor(m => m.Entity.OrdenCompra).ColSpan(1)
+                                .ValidationRules(rules => rules.AddStringLength().Min(0).Max(50).Message(DApp.GetStringLengthResource("Notas.OrdenCompra", 50)))
+                                     .Editor(e => e.TextBox().ID(Prefix + "OrdenCompra").ShowClearButton(true)); *@
+
+                               @* groupItems.AddSimpleFor(m => m.Entity.Saldo).ColSpan(1)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Notas.Saldo")))
+                                     .Editor(e=>e.NumberBox().ID(Prefix + "Saldo").Format("#,##0.##").ShowClearButton(true).ShowSpinButtons(true)); *@
+
+
+                                @*groupItems.AddSimpleFor(m => m.Entity.MontoEscrito).ColSpan(1)
+                                .ValidationRules(rules => rules.AddStringLength().Min(0).Max(1024).Message(DApp.GetStringLengthResource("Notas.MontoEscrito", 1024)))
+                                     .Editor(e => e.TextArea().ID(Prefix + "MontoEscrito")); *@
+
+
+                         });
+                    })
+                )
+            }
+        </form>
+
+        @* Si el maestro maneja detalle descomentar el siguiente codigo y remplazar la palabra "MAESTRODETALLE" *@
+
+        <div>
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active">
+                    <a href="#NotasDetalles" aria-controls="NotasDetalles" role="tab" data-toggle="tab">
+                        @DApp.DefaultLanguage.GetResource("NotasDetalles")
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="NotasDetalles">
+                    <partial name="../NotasDetalles/ListDetail.cshtml" model=Model view-data="ViewData" />
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+@using (Html.DevExtreme().NamedTemplate($"{Prefix}BotonValidacionDIAN"))
+{
+    @if (string.IsNullOrWhiteSpace(Model.Entity.ErrorReference) && string.IsNullOrWhiteSpace(Model.Entity.UrlTracking) && string.IsNullOrWhiteSpace(Model.Entity.DIANResponse))
+    {
+        <span>@DApp.DefaultLanguage.GetResource("Facturas.NotInformation")</span>
+    }
+    else if (!string.IsNullOrWhiteSpace(Model.Entity.DIANResponse) && Model.Entity.DIANResponse.Contains("Aceptado"))
+    {
+        <button type="button" onclick="DescargarArchivo('@UrlDianXml')" class="btn btn-sm btn-outline-success">@DApp.DefaultLanguage.GetResource("Facturas.AceptadoDIAN")</button>
+    }
+    else if (string.IsNullOrEmpty(Model.Entity.ErrorReference))
+    {
+        string url = Model.Entity.UrlTracking.Split("|")[6];
+        if (!string.IsNullOrWhiteSpace(url))
+        {
+            <a href="@url" target="_blank" class="btn btn-sm btn-outline-danger">@DApp.DefaultLanguage.GetResource("Facturas.ValidacionAcepta")</a>
+        }
+        else
+        {
+            @*<DxButton RenderStyle="@ButtonRenderStyle.Warning" RenderStyleMode="@ButtonRenderStyleMode.Contained" Text="@GetResource("Invoice.InformationDian")" SizeMode="@SizeMode.Small" Click="@(x => OpenPopup(GetResource("Invoice.InformationDian"), Model.UrlTracking) )" />*@
+        }
+    }
+    else
+    {
+        @*<DxButton RenderStyle="@ButtonRenderStyle.Danger" RenderStyleMode="@ButtonRenderStyleMode.Contained" Text="@GetResource("Invoice.ErrorDian")" SizeMode="@SizeMode.Small" Click="@(x=> OpenPopup( GetResource("Invoice.ErrorDian"), Model.ErrorReference ) )" />*@
+    }
+
+    @*<button class="btn btn-sm btn-outline-warning">Descargar</button>*@
+}
+
+
+@(Html.DControls().Popup()
+        .ID($"{Prefix}PopupSeleccionarPacientes")
+        .Width(1200)
+        .Height(600)
+        .ShowTitle(true)
+        .Title(DApp.DefaultLanguage.GetResource("Notas.SeleciconarPacientes"))
+        .Visible(false)
+        .DragEnabled(false)
+        .CloseOnOutsideClick(false)
+        .ContentTemplate(new TemplateName($"{Prefix}TemplatePopupSeleccionarPacientes"))
+    )
+
+@using (Html.DevExtreme().NamedTemplate($"{Prefix}TemplatePopupSeleccionarPacientes"))
+{
+    <div>
+        @(Html.DControls().DataGridSimple<Pacientes>()
+            .ID($"{Prefix}ListPacientesSeleccionar")
+            .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Notas").LoadAction("GetPacientesASeleccionar").Key("Id")
+                .LoadParams(new { facturaId = new JS($"{Prefix}GetFacturaId") })
+            )
+            .SearchPanel(x=>x.Visible(false)).Export(x=>x.AllowExportSelectedData(false))
+            .Selection(x=>x.AllowSelectAll(true).ShowCheckBoxesMode(GridSelectionShowCheckBoxesMode.Always).SelectAllMode(SelectAllMode.Page).Mode(SelectionMode.Multiple))
+            .Paging(x=>x.PageSize(8))
+            .Columns(columns =>
+            {
+                columns.AddFor(m => m.NumeroIdentificacion);
+                columns.AddFor(m => m.NombreCompleto).CalculateFilterExpression("CalculateFilterExpressionNombreCompleto");
+            })
+            .OnSelectionChanged($"{Prefix}OnSelectionChangedListPacientesSeleccionar")
+        )
+        <div class="row d-flex justify-content-center">
+            <button class="btn btn-primary btn" onclick="@(Prefix)AceptarPacientes()">ACEPTAR</button>
+            <button class="btn btn-secondary btn" onclick="@(Prefix)CancelarPacientes()">CANCELAR</button>
+        </div>
+    </div>
+}
+
+
+
+
+

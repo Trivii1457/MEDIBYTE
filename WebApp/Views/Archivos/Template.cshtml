@@ -1,0 +1,153 @@
+@model Archivos
+@{
+    string Prefix = $"{Model.Maestro}{Model.NombreCampoForanea}";
+}
+<div id="@(Prefix)Archivo" class="row" style=" height: 46px;padding-left: 12px;padding-right: 12px;">
+    <label>@(DApp.DefaultLanguage.GetResource($"{Model.Maestro}.{Model.NombreCampoForanea}")):</label>
+    <div class="btn-group btn-block" role="group"  style="height: 35px;">
+        <div class="text-center" style="width: 60%;border-style: solid;border-width: 1px;padding-top: 7px;border-color: #2a3f54;">
+            <label id="@(Prefix)NombreArchivo" style="text-overflow: ellipsis;display: inline-block;overflow: hidden;width: 80%;white-space: nowrap;vertical-align: middle;">
+                @(Model.Id != 0 ? Model.Nombre : "Sin Archivo")
+            </label>
+        </div>
+        @if (!Model.EsArchivo)
+        {
+            <button type="button" class="btn btn-outline-secondary" onclick="@(Prefix)VerArchivo()"><i class="fa fa-eye" aria-hidden="true"></i></button>
+        }
+        else
+        {
+            <button type="button" class="btn btn-outline-secondary" onclick="@(Prefix)DescargarArchivo()" @(Model.Id != 0 ? "" : "disabled")><i class="fa fa-cloud-download" aria-hidden="true"></i></button>
+        }
+        <button type="button" class="btn btn-outline-primary" onclick="@(Prefix)CargarArchivo()"><i class="fa fa-upload" aria-hidden="true"></i></button>
+        <button type="button" class="btn btn-outline-danger" onclick="@(Prefix)EliminarArchivo()"><i class="fa fa-times-circle-o" aria-hidden="true"></i></button>
+    </div>
+    <input type="file" id="@(Prefix)InputFile" accept="@(!Model.EsArchivo ? "image/png, image/jpeg" : "*" )" hidden />
+</div>
+
+@(Html.DevExtreme().Popup()
+                    .ID($"{Prefix}PopupVisualizacionArchivo")
+                    .Width(400)
+                    .Height(550)
+                    .ShowTitle(true)
+                    .Title("Archivo")
+                    .Visible(false)
+                    .DragEnabled(false)
+                    .ShowCloseButton(false)
+                    .CloseOnOutsideClick(true)
+                    .Content(@<text>
+                        <div>
+                            <div class="row justify-content-center">
+                                @if (Model.Id != 0)
+                                {
+                                    <img id="@(Prefix)VistaPreviaFile" src="data:@(Model.TipoContenido);base64,@(Model.StringToBase64)" style="max-width: 100%;max-height: 100%;">
+                                }
+                                else
+                                {
+                                    <img id="@(Prefix)VistaPreviaFile" src="~/images/logo_not_file.png" style="max-width: 100%;max-height: 100%;"/>
+                                }
+                            </div>
+                            <div style="position: absolute;bottom: 15px;left: 70%;">
+                                <button class="btn btn-primary" onclick="@(Prefix)CerrarPopupVisualizacionArchivo()">Aceptar</button>
+                            </div>
+                        </div>
+                    </text>)
+                )
+
+<script>
+
+    $('#@(Prefix)InputFile').change(function () {
+        if ($(this).val() != '') {
+
+            var input = this;
+            const maxAllowedSize = 5 * 1024 * 1024; // 5 megas
+
+            if (input.files[0].size > maxAllowedSize) {
+                DevExpress.ui.notify("Solo se permiten archivos con un maximo de 5 megas de tamaño.", "error");
+                return false;
+            }
+
+            @if (!Model.EsArchivo)
+            {
+                <text>
+                if (!(input.files[0].type == 'image/jpeg' || input.files[0].type == 'image/png'))
+                {
+                    DevExpress.ui.notify("Solo se permiten imagenes con extensión jpeg, jpg o png.", "error");
+                    return false;
+                }
+
+                $("#@(Prefix)PopupVisualizacionArchivo").dxPopup("instance").show();
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#@(Prefix)VistaPreviaFile').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+
+                </text>
+            }
+
+            $("#@(Prefix)NombreArchivo").html(input.files[0].name);
+            @(Prefix)ProcesarArchivo();
+        }
+    });
+
+    function @(Prefix)ProcesarArchivo() {
+        var input = document.getElementById("@(Prefix)InputFile");
+        var files = input.files;
+        var formData = new FormData();
+
+        if (files.length > 0) {
+            formData.append("file", files[0]);
+        } else {
+            return false;
+        }
+
+        formData.append("maestro", "@(Model.Maestro)");
+        formData.append("nombreCampoForanea", "@(Model.NombreCampoForanea)");
+
+        showLoadIndicator();
+        $.ajax({
+            url: "@Url.Action("ProcesarArchivo", "Archivos")",
+            data: formData,
+            processData: false,
+            contentType: false,
+            type: "POST",
+            success: function (data) {
+                hideLoadIndicator();
+                $("#@(Prefix)DivContenidoArchivoEntidad").html(data);
+            },
+            error: function (xhr) {
+                hideLoadIndicator();
+                DevExpress.ui.notify("Error de servidor " + xhr.status + " : " + xhr.statusText, "error");
+            }
+        });
+    }
+
+    function @(Prefix)DescargarArchivo() {
+        window.open('/Archivos/DescargarArchivo?idArchivo=@(Model.Id)', '_blank');
+    }
+
+    function @(Prefix)CargarArchivo() {
+        $('#@(Prefix)InputFile').click();
+    }
+
+    function @(Prefix)EliminarArchivo() {
+        $("#@(Prefix)NombreArchivo").html("Sin Archivo");
+        $("#@(Prefix)EliminarArchivo").dxCheckBox("instance").option("value", true);
+    }
+
+    function @(Prefix)VerArchivo() {
+        $("#@(Prefix)PopupVisualizacionArchivo").dxPopup("instance").show();
+    }
+
+    function @(Prefix)CerrarPopupVisualizacionArchivo() {
+        $("#@(Prefix)PopupVisualizacionArchivo").dxPopup("instance").hide();
+    }
+
+    function @(Prefix)Ocultar(estado) {
+        if (estado)
+            $("#@(Prefix)Archivo").hide();
+        else {
+            $("#@(Prefix)Archivo").show();
+        }
+    }
+</script>

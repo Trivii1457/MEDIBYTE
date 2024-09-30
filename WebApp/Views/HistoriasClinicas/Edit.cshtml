@@ -1,0 +1,491 @@
+@model HistoriasClinicasModel
+@{
+    string Prefix = "HistoriasClinicas";
+
+    string UrlSave = Url.Action("Edit", "HistoriasClinicas");
+    string UrlNew = Url.Action("New", "HistoriasClinicas");
+    string UrlDelete = Url.Action("Delete", "HistoriasClinicas", new { Id = Model.Entity.Id });
+    string UrlBack = Url.Action("ListPartial", "HistoriasClinicas");
+
+    bool EstaCerrada = Model.Entity.EstadosId == 19;
+
+    var ToolbarConfig = new ToolbarConfiguration(Prefix)
+        .Title(DApp.DefaultLanguage.GetResource("HistoriasClinicas"))
+        .Save(DApp.ActionViewSecurity(Context, UrlSave) || EstaCerrada || !Model.EsMismoUsuario, Model.Entity.IsNew)
+        .AddButtons(new List<ButtonToolbar>()
+        {
+            new ButtonToolbar
+            {
+                Action = "MostrarPopudModificarDatosAtencion",
+                Text = @DApp.DefaultLanguage.GetResource("HistoriasClinicas.MostrarPopudModificarDatosAtencion"),
+                Disabled = (Model.Entity.IsNew) || EstaCerrada,
+                Location = ToolbarItemLocation.After,
+                LocateInMenu = ToolbarItemLocateInMenuMode.Auto,
+                Icon = "background"
+            },
+            new ButtonToolbar
+            {
+                Action = "ImprimirDocumentosAPacientes",
+                Text = @DApp.DefaultLanguage.GetResource("HistoriasClinicas.ImprimirDocumentosAPacientes"),
+                Disabled = (Model.Entity.IsNew),
+                Location = ToolbarItemLocation.After,
+                LocateInMenu = ToolbarItemLocateInMenuMode.Auto,
+                Icon = "print"
+            },
+            new ButtonToolbar
+            {
+                Action = "ImprimirHCPorId",
+                Text = @DApp.DefaultLanguage.GetResource("DEFAULT.Imprimir"),
+                Disabled = (Model.Entity.IsNew),
+                Location = ToolbarItemLocation.After,
+                LocateInMenu = ToolbarItemLocateInMenuMode.Auto,
+                Icon = "print"
+            },
+            new ButtonToolbar
+            {
+                Action = $"{Prefix}CerrarHC",
+                Text = @DApp.DefaultLanguage.GetResource("HistoriasClinicas.CerrarHC"),
+                Disabled = !Model.EsMismoUsuario || EstaCerrada,
+                Location = ToolbarItemLocation.After,
+                LocateInMenu = ToolbarItemLocateInMenuMode.Auto,
+                Icon = "close"
+            }
+                                })
+        //.New(UrlNew, DApp.ActionViewSecurity(Context, UrlNew))
+        //.Delete(UrlDelete, DApp.ActionViewSecurity(Context, UrlDelete), UrlBack, Model.Entity.IsNew)
+        .Back(UrlBack);
+}
+
+@{
+    string Prefix1 = "HistoriasClinicasDiagnosticos";
+    //string UrlOnClick = Url.Action("EditDetail", "HistoriasClinicasDiagnosticos");
+    //string UrlNew = Url.Action("NewDetail", "HistoriasClinicasDiagnosticos", new { IdFather = Model.Entity.Id });
+
+    var DataGridDetailConfig = new DataGridConfiguration<HistoriasClinicasDiagnosticos>(Prefix1)
+        //.OnClick(UrlOnClick, new { Id = "Id" }, Prefix + "MainPanelForm")
+        //.New(UrlNew,Model.Entity.IsNew,Prefix + "MainPanelForm")
+        .Exports(true, true);
+}
+
+@{
+    string Prefix2 = "HistoriasClinicasRespuestas";
+    //string UrlOnClick = Url.Action("EditDetail", "HistoriasClinicasRespuestas");
+    //string UrlNew = Url.Action("NewDetail", "HistoriasClinicasRespuestas", new { IdFather = Model.Entity.Id });
+
+    var DataGridDetailConfig1 = new DataGridConfiguration<HistoriasClinicasRespuestas>(Prefix2)
+        //.OnClick(UrlOnClick, new { Id = "Id" }, Prefix + "MainPanelForm")
+        //.New(UrlNew,Model.Entity.IsNew,Prefix + "MainPanelForm")
+        .Exports(true, true);
+
+}
+
+<partial name="ViewJS.cshtml" model="Model" view-data="ViewData" />
+
+@(Html.DControls().Toolbar(ToolbarConfig))
+
+<script>
+
+     function @(Prefix1)OnInitNewRowDetalleDataGrid(model) {
+         model = GetAuditoryData(model);
+         model.data.HistoriasClinicasId = "@Model.Entity.Id"; // Cambiar IdFather por el campo foraneo hacia el padre
+     }
+</script>
+
+<script>
+
+     function @(Prefix2)OnInitNewRowDetalleDataGrid(model) {
+         model = GetAuditoryData(model);
+         model.data.HIstoriasClinicasId = "@Model.Entity.Id"; // Cambiar IdFather por el campo foraneo hacia el padre
+     }
+</script>
+
+<div>
+    <div id="HistoriasClinicasMainPanelForm">
+        <form id="@(Prefix)Form" asp-controller="HistoriasClinicas" asp-action="Edit" class="form-horizontal" data-ajax-mode="replace" data-ajax-update="#mainPanel" data-ajax-success="@(Prefix)FormSuccess" data-ajax-failure="@(Prefix)FormFailure" data-ajax="true">
+            @(Html.DControls().ValidationSummary().ValidationGroup(Prefix + "ValidationGroup").ElementAttr("class","ErrorValidationSummary"))
+            <div asp-validation-summary="All" class="ErrorValidationSummary"></div>
+            @using (Html.DevExtreme().ValidationGroup(Prefix + "ValidationGroup"))
+            {
+                @(Html.DControls().CheckBoxFor(m => m.Entity.IsNew).ID(Prefix + "IsNew").Visible(false))
+                @(Html.DControls().NumberBoxFor(m => m.Entity.Id).ID(Prefix + "Id").Visible(false))
+                @(Html.DControls().NumberBoxFor(m => m.Entity.AtencionesId).ID(Prefix + "AtencionesId").Visible(false))
+                @(Html.DControls().NumberBoxFor(m => m.Entity.HCTiposId).ID(Prefix + "HCTiposId").Visible(false))
+                @(Html.DControls().NumberBoxFor(m => m.Entity.HistoriaClinicaPrincipal).ID(Prefix + "HistoriaClinicaPrincipal").Visible(false))
+                @(Html.DControls().TextBoxFor(m => m.Entity.UpdatedBy).ID(Prefix + "UpdatedBy").Visible(false))
+                @(Html.DControls().DateBoxFor(m => m.Entity.LastUpdate).ID(Prefix + "LastUpdate").Type(DateBoxType.DateTime).Visible(false))
+                @(Html.DControls().TextBoxFor(m => m.Entity.CreatedBy).ID(Prefix + "CreatedBy").Visible(false))
+                @(Html.DControls().DateBoxFor(m => m.Entity.CreationDate).ID(Prefix + "CreationDate").Type(DateBoxType.DateTime).Visible(false))
+
+                @(Html.DControls().Form<HistoriasClinicasModel>().Disabled(EstaCerrada).OnContentReady($"{Prefix}CalcularIMC")
+                .ID("HistoriasClinicasModelForm").LabelLocation(FormLabelLocation.Top).ShowValidationSummary(false).FormData(Model)
+                .Items(items =>
+                {
+                items.AddGroup().ColCount(12).Caption(DApp.DefaultLanguage.GetResource("DEFAULT.INFORMATIONGENERAL"))
+                         .Items(groupItems =>
+                         {
+                             groupItems.AddSimpleFor(m => m.Entity.Consecutivo).ColSpan(2)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("HistoriasClinicas.Consecutivo")))
+                                 .ValidationRules(rules => rules.AddStringLength().Min(0).Max(45).Message(DApp.GetStringLengthResource("HistoriasClinicas.Consecutivo", 45)))
+                                      .Editor(e => e.TextBox().ID(Prefix + "Consecutivo")
+                                      .ReadOnly(true));
+                             groupItems.AddSimpleFor(m => m.Entity.FechaApertura).ColSpan(3)
+                                      .Editor(e => e.DateBox().ID(Prefix + "FechaApertura")
+                                      .Type(DateBoxType.Time)
+                                      .ReadOnly(true)
+                                    );
+                             groupItems.AddSimpleFor(m => m.Entity.EstadosId).ColSpan(3)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("HistoriasClinicas.EstadosId")))
+                                 .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("HistoriasClinicas.EstadosId")))
+                                      .Editor(e => e.SelectBox().ID(Prefix + "EstadosId")
+                                      .DataSource(d => d.Mvc().LoadMethod("POST").Controller("HistoriasClinicas").LoadAction("GetEstadosId").Key("Id"))
+                                      .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                      .ValueExpr("Id").DisplayExpr("Nombre").SearchExpr("Nombre")
+                                      .ReadOnly(true)
+                                 );
+
+                             groupItems.AddSimpleFor(m => m.Entity.EsControl).Label(x => x.Visible(false)).ColSpan(4)
+                                .Editor(e => e.CheckBox().ID(Prefix + "EsControl").Text(DApp.DefaultLanguage.GetResource("HistoriasClinicas.EsControl")).ReadOnly(true));
+
+
+                             groupItems.AddSimple().Label(x=>x.Text(DApp.DefaultLanguage.GetResource("HistoriasClinicas.Especialidad"))).ColSpan(12)
+                                      .Editor(e => e.TextBox().ID(Prefix + "Especialidades_Nombre")
+                                      .Value(Model.Entity.HCTipos.Especialidades.Nombre)
+                                      .ReadOnly(true)
+                                 );
+
+
+                             groupItems.AddSimpleFor(m => m.Entity.Atenciones.CausasExternasId).ColSpan(6)
+                                  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Atenciones.CausasExternasId")))
+                                  .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Atenciones.CausasExternasId")))
+                                       .Editor(e => e.SelectBox().ID(Prefix + "CausasExternasId")
+                                       .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Admisiones").LoadAction("GetCausasExternasId").Key("Id"))
+                                       .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                       .ValueExpr("Id").DisplayExpr("Nombre")
+                                       .ReadOnly(true)
+                                  );
+
+                             groupItems.AddSimpleFor(m => m.Entity.Atenciones.FinalidadConsultaId).ColSpan(6)
+                                      .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Atenciones.FinalidadConsultaId")))
+                                      .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Atenciones.FinalidadConsultaId")))
+                                      .Editor(e => e.SelectBox().ID(Prefix + "FinalidadConsultaId")
+                                      .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Atenciones").LoadAction("GetFinalidadConsultaId").Key("Id"))
+                                      .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                      .ValueExpr("Id").DisplayExpr("Nombre")
+                                      .ReadOnly(true)
+                                 );
+
+                             groupItems.AddSimpleFor(m => m.Entity.ProfesionalId).ColSpan(6)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("HistoriasClinicas.ProfesionalId")))
+                                 .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("HistoriasClinicas.ProfesionalId")))
+                                      .Editor(e => e.SelectBox().ID(Prefix + "ProfesionalId")
+                                      .DataSource(d => d.Mvc().LoadMethod("POST").Controller("HistoriasClinicas").LoadAction("GetProfesionalId").Key("Id"))
+                                      .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                      .ValueExpr("Id").DisplayExpr("NombreCompleto")
+                                      .ReadOnly(true)
+                                 );
+                             groupItems.AddSimpleFor(m => m.Entity.PacientesId).ColSpan(6)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("HistoriasClinicas.PacientesId")))
+                                 .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("HistoriasClinicas.PacientesId")))
+                                      .Editor(e => e.SelectBox().ID(Prefix + "PacientesId")
+                                      .DataSource(d => d.Mvc().LoadMethod("POST").Controller("HistoriasClinicas").LoadAction("GetPacientesId").Key("Id"))
+                                      .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                      .ValueExpr("Id").DisplayExpr("NombreCompleto")
+                                      .ReadOnly(true)
+                                 );
+
+                         });
+
+                items.AddGroup().ColCount(12).Caption(DApp.DefaultLanguage.GetResource("DEFAULT.INFORMATIONCONSULTA"))
+                         .Items(groupItems =>{
+
+                             groupItems.AddSimpleFor(m => m.Entity.MotivoConsulta).ColSpan(12)
+                                  .Editor(e => e.TextBox().ID(Prefix + "MotivoConsulta"));
+                             groupItems.AddSimpleFor(m => m.Entity.EnfermedadActual).ColSpan(12)
+                                  .Editor(e => e.TextArea().Height(100).ID(Prefix + "EnfermedadActual"));
+                             groupItems.AddSimpleFor(m => m.Entity.AntecedentesFamiliar).ColSpan(12)
+                                .Editor(e => e.TextArea().Height(100).ID(Prefix + "AntecedentesFamiliar"));
+                             groupItems.AddSimpleFor(m => m.Entity.AntecedentesPersonal).ColSpan(12)
+                                  .Editor(e => e.TextArea().Height(100).ID(Prefix + "AntecedentesPersonal"));
+
+                             groupItems.AddSimple().ColSpan(12).Template(new TemplateName($"{Prefix}HistoriasClinicasRespuestasTemplate"));
+
+                         });
+
+
+                items.AddGroup().ColSpan(12).ColCount(12).Caption(DApp.DefaultLanguage.GetResource("HistoriasClinicas.ExamenFisico"))
+                                .Items(groupItems =>
+                                {
+                                    groupItems.AddSimple().ColSpan(12).Template($"<div class=\"row d-flex justify-content-center subtitle\" >{DApp.DefaultLanguage.GetResource("HistoriasClinicas.SignosVitales")}</div>");
+
+                                    groupItems.AddSimpleFor(m => m.Entity.TensionArterial).ColSpan(4)
+                                    .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("HistoriasClinicas.TensionArterial")))
+                                    .ValidationRules(rules => rules.AddStringLength().Min(0).Max(100).Message(DApp.GetStringLengthResource("HistoriasClinicas.TensionArterial", 100)))
+                                         .Editor(e => e.TextBox().ID(Prefix + "TensionArterial").ShowClearButton(true));
+                                    groupItems.AddSimpleFor(m => m.Entity.FrecuenciaCardiaca).ColSpan(4)
+                                    .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("HistoriasClinicas.FrecuenciaCardiaca")))
+                                    .ValidationRules(rules => rules.AddStringLength().Min(0).Max(100).Message(DApp.GetStringLengthResource("HistoriasClinicas.FrecuenciaCardiaca", 100)))
+                                         .Editor(e => e.TextBox().ID(Prefix + "FrecuenciaCardiaca").ShowClearButton(true));
+                                    groupItems.AddSimpleFor(m => m.Entity.FrecuenciaRespiratoria).ColSpan(4)
+                                    .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("HistoriasClinicas.FrecuenciaRespiratoria")))
+                                    .ValidationRules(rules => rules.AddStringLength().Min(0).Max(100).Message(DApp.GetStringLengthResource("HistoriasClinicas.FrecuenciaRespiratoria", 100)))
+                                         .Editor(e => e.TextBox().ID(Prefix + "FrecuenciaRespiratoria").ShowClearButton(true));
+
+                                    groupItems.AddSimpleFor(m => m.Entity.Temperatura).ColSpan(4)
+                                    .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("HistoriasClinicas.Temperatura")))
+                                    .ValidationRules(rules => rules.AddStringLength().Min(0).Max(100).Message(DApp.GetStringLengthResource("HistoriasClinicas.Temperatura", 100)))
+                                         .Editor(e => e.TextBox().ID(Prefix + "Temperatura").ShowClearButton(true));
+                                    groupItems.AddSimpleFor(m => m.Entity.PerimetroCefalico).ColSpan(4)
+                                    .ValidationRules(rules => rules.AddStringLength().Min(0).Max(100).Message(DApp.GetStringLengthResource("HistoriasClinicas.PerimetroCefalico", 100)))
+                                         .Editor(e => e.TextBox().ID(Prefix + "PerimetroCefalico").ShowClearButton(true));
+                                    groupItems.AddSimpleFor(m => m.Entity.DominanciaEstadosId).ColSpan(4)
+                                    .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("HistoriasClinicas.DominanciaEstadosId")))
+                                    .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("HistoriasClinicas.DominanciaEstadosId")))
+                                         .Editor(e => e.SelectBox().ID(Prefix + "DominanciaEstadosId")
+                                         .DataSource(d => d.Mvc().LoadMethod("POST").Controller("HistoriasClinicas").LoadAction("GetDominanciaEstadosId").Key("Id"))
+                                         .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                         .ValueExpr("Id").DisplayExpr("Nombre").SearchExpr("Nombre")
+                                         .SearchEnabled(true).ShowClearButton(true)
+                                    );
+
+                                    groupItems.AddSimpleFor(m => m.Entity.Peso).ColSpan(4)
+                                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("HistoriasClinicas.Peso")))
+                                             .Editor(e => e.NumberBox().ID(Prefix + "Peso").Format("#,##0").Min(0).Max(635).ShowClearButton(true).ShowSpinButtons(true)
+                                             .OnValueChanged($"{Prefix}CalcularIMC")
+                                             );
+                                    groupItems.AddSimpleFor(m => m.Entity.Altura).ColSpan(4)
+                                          .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("HistoriasClinicas.Altura")))
+                                              .Editor(e => e.NumberBox().ID(Prefix + "Altura").Format("#,##0").Min(0).Max(243).ShowClearButton(true).ShowSpinButtons(true)
+                                              .OnValueChanged($"{Prefix}CalcularIMC")
+                                              );
+                                    groupItems.AddSimple().ColSpan(4).Template(@<text><label id="@(Prefix)IMC" style=" margin-top: 33px; font-weight: bold; font-size: initial;"></label></text>);
+
+                                    groupItems.AddSimpleFor(m => m.Entity.Hallazgos).ColSpan(12)
+                                    .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("HistoriasClinicas.Hallazgos")))
+                                         .Editor(e => e.TextArea().Height(100).ID(Prefix + "Hallazgos"));
+
+                                });
+
+                    items.AddGroup().ColSpan(12).ColCount(12).Caption(DApp.DefaultLanguage.GetResource("HistoriasClinicas.Analisis"))
+                                .Items(groupItems =>
+                                {
+                                    groupItems.AddSimpleFor(m => m.Entity.Analisis).ColSpan(12).Label(x => x.Visible(false))
+                                    .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("HistoriasClinicas.Analisis")))
+                                         .Editor(e => e.TextArea().Height(100).ID(Prefix + "Analisis"));
+                                });
+
+                    items.AddGroup().ColSpan(12).ColCount(12).Caption(DApp.DefaultLanguage.GetResource("HistoriasClinicasDiagnosticos"))
+                                .Items(groupItems =>
+                                {
+                                    groupItems.AddSimple().ColSpan(12).Template(new TemplateName($"{Prefix}Diagnosticos"));
+                                });
+
+                    items.AddGroup().ColSpan(12).ColCount(12).Caption(DApp.DefaultLanguage.GetResource("HistoriasClinicas.PlanManejo"))
+                                .Items(groupItems =>
+                                {
+                                    groupItems.AddSimpleFor(m => m.Entity.PlanManejo).ColSpan(12).Label(x=>x.Visible(false))
+                                        .Editor(e => e.TextArea().Height(100).ID(Prefix + "PlanManejo"));
+                                });
+
+                    items.AddSimple().Template(new TemplateName($"{Prefix}MaestrosDetalles"));
+
+                })
+                )
+
+
+            }
+        </form>
+
+    </div>
+</div>
+
+@*<a href="@Url.Action(" OpenHC","HistoriasClinicas" , new { atentionId = 50047 })">Abrir</a>*@
+
+@using (Html.DevExtreme().NamedTemplate($"{Prefix}Diagnosticos"))
+{
+    @*<div>
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active">
+                    <a href="#HistoriasClinicasDiagnosticos" aria-controls="HistoriasClinicasDiagnosticos" role="tab" data-toggle="tab">
+                        @DApp.DefaultLanguage.GetResource("HistoriasClinicasDiagnosticos")
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="HistoriasClinicasDiagnosticos">
+                    <partial name="../HistoriasClinicasDiagnosticos/ListDetail.cshtml" model=Model view-data="ViewData" />
+                </div>
+            </div>
+        </div>*@
+    <partial name="../HistoriasClinicasDiagnosticos/ListDetail.cshtml" model=Model view-data="ViewData" />
+}
+
+@using (Html.DevExtreme().NamedTemplate($"{Prefix}MaestrosDetalles"))
+{
+
+    <div>
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active">
+                <a href="#OrdenesMedicamentos" aria-controls="OrdenesMedicamentos" role="tab" data-toggle="tab">
+                    @DApp.DefaultLanguage.GetResource("OrdenesMedicamentos")
+                </a>
+            </li>
+            <li role="presentation">
+                <a href="#OrdenesServicios" aria-controls="OrdenesServicios" role="tab" data-toggle="tab">
+                    @DApp.DefaultLanguage.GetResource("OrdenesServicios")
+                </a>
+            </li>
+            <li role="presentation">
+                <a href="#IndicacionesMedicas" aria-controls="IndicacionesMedicas" role="tab" data-toggle="tab">
+                    @DApp.DefaultLanguage.GetResource("IndicacionesMedicas")
+                </a>
+            </li>
+            <li role="presentation">
+                <a href="#Incapacidades" aria-controls="Incapacidades" role="tab" data-toggle="tab">
+                    @DApp.DefaultLanguage.GetResource("Incapacidades")
+                </a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="OrdenesMedicamentos">
+                <partial name="../OrdenesMedicamentos/ListDetail.cshtml" model=Model view-data="ViewData" />
+            </div>
+            <div role="tabpanel" class="tab-pane" id="OrdenesServicios">
+                <partial name="../OrdenesServicios/ListDetail.cshtml" model=Model view-data="ViewData" />
+            </div>
+            <div role="tabpanel" class="tab-pane" id="IndicacionesMedicas">
+                <partial name="../IndicacionesMedicas/ListDetail.cshtml" model=Model view-data="ViewData" />
+            </div>
+            <div role="tabpanel" class="tab-pane" id="Incapacidades">
+                <partial name="../Incapacidades/ListDetail.cshtml" model=Model view-data="ViewData" />
+            </div>
+        </div>
+    </div>
+}
+
+@using (Html.DevExtreme().NamedTemplate($"{Prefix}HistoriasClinicasRespuestasTemplate"))
+{
+    if (Model.Preguntas.Count > 0)
+    {
+        <div>
+            @foreach (var item in Model.Preguntas)
+            {
+                if (item.EsEdicionEnPopup)
+                {
+                    <div class="col-md-12" style="background-color:#ffffff;">
+                        <div style="font-size:20px;text-align:center;margin-top:10px;margin-bottom:10px;">
+                            @item.Descripcion
+                        </div>
+                        <div class="box-body table-responsive no-padding">
+                            @(Html.DControls().DataGridSimple<HistoriasClinicasRespuestas>(DataGridDetailConfig1)
+                        .ID($"HistoriasClinicasRespuestas_{item.Id}_{item.Descripcion.Replace(" ","")}")
+                        .DataSource(d => d.Mvc().LoadMethod("POST").Controller("HistoriasClinicasRespuestas").LoadAction("Get").Key("Id")
+                            .LoadParams(new { idGrupo = item.Id  , idHC = Model.Entity.Id})
+                        .InsertAction("AddInGrid").InsertMethod("POST").UpdateAction("ModifyInGrid").UpdateMethod("POST").DeleteAction("DeleteInGrid").DeleteMethod("POST"))
+                        .Editing(editing => editing.Mode(GridEditMode.Popup).AllowAdding(false).AllowUpdating(true).AllowDeleting(false)
+                            .Popup(p => p
+                                .Title(item.Descripcion)
+                                .ShowTitle(true)
+                                .Width(700)
+                                .Height(400)
+                            )
+                            .Form(f => f.LabelLocation(FormLabelLocation.Top)
+                            .Items(items =>
+                            {
+                                items.AddGroup()
+                                    .ColSpan(2).ColCount(12)
+                                    .Items(groupItems =>
+                                    {
+                                        groupItems.AddSimpleFor(m => m.HCRespuestas.Orden).ColSpan(4);
+                                        groupItems.AddSimpleFor(m => m.HCRespuestas.Texto).ColSpan(8);
+                                        groupItems.AddSimpleFor(m => m.RespuestaAbierta).ColSpan(12)
+                                            .Editor(editor => editor.TextArea().Height(130));
+                                    });
+                            }))
+                        )
+                        .OnInitNewRow(Prefix2 + "OnInitNewRowDetalleDataGrid")
+                        .Paging(x=>x.PageSize(10))
+                        .OnRowInserted("OnRowInsertedDetalleDataGrid").OnRowUpdated("OnRowUpdatedDetalleDataGrid").OnRowRemoved("OnRowRemovedDetalleDataGrid").OnDataErrorOccurred("OnDataErrorOccurredDetalleDataGrid")
+                        .Columns(columns =>
+                        {
+                            columns.AddFor(m => m.HCRespuestas.Orden).Width("5%").AllowEditing(false).Caption("#").SortOrder(SortOrder.Asc);
+                            columns.AddFor(m => m.HCRespuestas.Texto).Width("35%").AllowEditing(false);
+                            columns.AddFor(m => m.RespuestaAbierta).Width("60%").AllowEditing(true);
+                        }))
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-md-12" style="background-color:#ffffff;">
+                        <div style="font-size:20px;text-align:center;margin-top:10px;margin-bottom:10px;">
+                            @item.Descripcion
+                        </div>
+                        <div class="box-body table-responsive no-padding">
+                            @(Html.DControls().DataGridSimple<HistoriasClinicasRespuestas>(DataGridDetailConfig1)
+                        .ID($"HistoriasClinicasRespuestas_{item.Id}_{item.Descripcion.Replace(" ","")}")
+                        .DataSource(d => d.Mvc().LoadMethod("POST").Controller("HistoriasClinicasRespuestas").LoadAction("Get").Key("Id")
+                            .LoadParams(new { idGrupo = item.Id  , idHC = Model.Entity.Id})
+                        .InsertAction("AddInGrid").InsertMethod("POST").UpdateAction("ModifyInGrid").UpdateMethod("POST").DeleteAction("DeleteInGrid").DeleteMethod("POST"))
+                        .Editing(editing => editing.Mode(GridEditMode.Batch).AllowAdding(false).AllowUpdating(true).AllowDeleting(false))
+                        .OnInitNewRow(Prefix2 + "OnInitNewRowDetalleDataGrid")
+                        .Paging(x=>x.PageSize(10))
+                        .OnRowInserted("OnRowInsertedDetalleDataGrid").OnRowUpdated("OnRowUpdatedDetalleDataGrid").OnRowRemoved("OnRowRemovedDetalleDataGrid").OnDataErrorOccurred("OnDataErrorOccurredDetalleDataGrid")
+                        .Columns(columns =>
+                        {
+                            columns.AddFor(m => m.HCRespuestas.Orden).Width("5%").AllowEditing(false).Caption("#").SortOrder(SortOrder.Asc);
+                            columns.AddFor(m => m.HCRespuestas.Texto).Width("35%").AllowEditing(false);
+                            columns.AddFor(m => m.RespuestaAbierta).Width("60%").AllowEditing(true);
+                        }))
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    }
+}
+
+@(Html.DControls().Popup()
+            .ID($"{Prefix}PopupModificarDatosAtencion")
+            .Width(800)
+            .Height(305)
+            .ShowTitle(true)
+            .Title(DApp.DefaultLanguage.GetResource("Facturas.ModificarDatosFactura"))
+            .Visible(false)
+            .DragEnabled(false)
+            .CloseOnOutsideClick(false)
+            .ContentTemplate(new TemplateName($"{Prefix}TemplatePopupModificarDatosFactura"))
+        )
+
+@using (Html.DevExtreme().NamedTemplate($"{Prefix}TemplatePopupModificarDatosFactura"))
+{
+    <div id="@(Prefix)Errores" class="text-danger text-sm-left"></div>
+    <div class="form-group">
+        <label for="@($"{Prefix}CausaExternaId")">@DApp.DefaultLanguage.GetResource("Atenciones.CausasExternasId"):</label>
+        @(Html.DControls().SelectBoxFor(x => x.Entity.Atenciones.CausasExternasId)
+        .ID(Prefix + "NuevoCausaExternaId").InputAttr("class", "form-control")
+        .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Atenciones").LoadAction("GetCausasExternasId").Key("Id"))
+        .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+        .ValueExpr("Id").DisplayExpr("Nombre")
+        .SearchEnabled(true).ShowClearButton(true)
+        )
+    </div>
+    <div class="form-group">
+        <label for="@($"{Prefix}FinalidadConsultaId")">@DApp.DefaultLanguage.GetResource("Atenciones.FinalidadConsultaId"):</label>
+        @(Html.DControls().SelectBoxFor(x=>x.Entity.Atenciones.FinalidadConsultaId)
+        .ID(Prefix + "NuevoFinalidadConsultaId").InputAttr("class", "form-control")
+        .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Atenciones").LoadAction("GetFinalidadConsultaId").Key("Id"))
+        .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+        .ValueExpr("Id").DisplayExpr("Nombre")
+        .SearchEnabled(true).ShowClearButton(true)
+        )
+    </div>
+    <div class="form-group">
+        @(Html.DControls().CheckBoxFor(x=>x.Entity.EsControl).Text(@DApp.DefaultLanguage.GetResource("HistoriasClinicas.EsControl"))
+        .ID(Prefix + "NuevoEsControl")
+        )
+    </div>
+    <div class="row d-flex justify-content-center">
+        <button class="btn btn-dark btn" onclick="ModificarDatosAtencion()">MODIFICAR</button>
+    </div>
+}
+

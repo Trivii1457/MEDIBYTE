@@ -1,0 +1,803 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <AssemblyName>Blazor.WebApp</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!-- Makes the TypeScript compilation task a no-op -->
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <UserSecretsId>c1eca120-0b55-46e0-9d87-ddae9457e11f</UserSecretsId>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Reportes\**\*.repx" />
+    <None Remove="Reportes\LiquidacionHonorariosReporte\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Reportes\**\*.repx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Reportes\LiquidacionHonorariosReporte\**" />
+    <Content Remove="Reportes\LiquidacionHonorariosReporte\**" />
+    <EmbeddedResource Remove="Reportes\LiquidacionHonorariosReporte\**" />
+    <TypeScriptCompile Remove="Reportes\LiquidacionHonorariosReporte\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="appsettings.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Reportes\LiquidacionHonorarios\LiquidacionHonorariosReporte.vsrepx" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Reportes\LiquidacionHonorarios\LiquidacionHonorariosReporte.vsrepx" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="appsettings.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\AdicionOrdenes\Edit.cshtml" />
+    <None Include="Views\AdicionOrdenes\List.cshtml" />
+    <None Include="Views\AdicionOrdenes\ViewJS.cshtml" />
+    <None Include="Views\AdministracionHonorariosLecturas\EditDetail.cshtml" />
+    <None Include="Views\AdministracionHonorariosLecturas\ListDetail.cshtml" />
+    <None Include="Views\AdministracionHonorariosLecturas\ViewJS.cshtml" />
+    <None Include="Views\AdministracionHonorariosServicios\EditDetail.cshtml" />
+    <None Include="Views\AdministracionHonorariosServicios\ListDetail.cshtml" />
+    <None Include="Views\AdministracionHonorariosServicios\ViewJS.cshtml" />
+    <None Include="Views\AdministracionHonorarios\Edit.cshtml" />
+    <None Include="Views\AdministracionHonorarios\List.cshtml" />
+    <None Include="Views\AdministracionHonorarios\ViewJS.cshtml" />
+    <None Include="Views\AdmisionesCorrecion\Edit.cshtml" />
+    <None Include="Views\AdmisionesCorrecion\List.cshtml" />
+    <None Include="Views\AdmisionesCorrecion\ViewJS.cshtml" />
+    <None Include="Views\AdmisionesServiciosPrestados\Edit.cshtml" />
+    <None Include="Views\AdmisionesServiciosPrestados\EditDetail.cshtml" />
+    <None Include="Views\AdmisionesServiciosPrestados\List.cshtml" />
+    <None Include="Views\AdmisionesServiciosPrestados\ListDetail.cshtml" />
+    <None Include="Views\AdmisionesServiciosPrestados\ListDetailArchivosResultados.cshtml" />
+    <None Include="Views\AdmisionesServiciosPrestados\ListDetailImagenesDiagnosticas.cshtml" />
+    <None Include="Views\AdmisionesServiciosPrestados\ViewJS.cshtml" />
+    <None Include="Views\Admisiones\Edit.cshtml" />
+    <None Include="Views\Admisiones\List.cshtml" />
+    <None Include="Views\Admisiones\ViewJS.cshtml" />
+    <None Include="Views\Archivos\Archivo.cshtml" />
+    <None Include="Views\Archivos\DataArchivo.cshtml" />
+    <None Include="Views\Archivos\Template.cshtml" />
+    <None Include="Views\Archivos\ViewJS.cshtml" />
+    <None Include="Views\AtencionesLectura\List.cshtml" />
+    <None Include="Views\AtencionesResultado\Edit.cshtml" />
+    <None Include="Views\AtencionesResultado\EditAudio.cshtml" />
+    <None Include="Views\AtencionesResultado\List.cshtml" />
+    <None Include="Views\AtencionesResultado\ViewJS.cshtml" />
+    <None Include="Views\Atenciones\Edit.cshtml" />
+    <None Include="Views\Atenciones\List.cshtml" />
+    <None Include="Views\Atenciones\SchedulerVerCitas.cshtml" />
+    <None Include="Views\Atenciones\ViewJS.cshtml" />
+    <None Include="Views\Audit\Edit.cshtml" />
+    <None Include="Views\Audit\List.cshtml" />
+    <None Include="Views\Audit\ViewJS.cshtml" />
+    <None Include="Views\AutorizacionAdmisionesDescuentos\List.cshtml" />
+    <None Include="Views\Bancos\Edit.cshtml" />
+    <None Include="Views\Bancos\EditDetail.cshtml" />
+    <None Include="Views\Bancos\List.cshtml" />
+    <None Include="Views\Bancos\ListDetail.cshtml" />
+    <None Include="Views\Bancos\ViewJS.cshtml" />
+    <None Include="Views\Cajas\Edit.cshtml" />
+    <None Include="Views\Cajas\EditDetail.cshtml" />
+    <None Include="Views\Cajas\List.cshtml" />
+    <None Include="Views\Cajas\ListDetail.cshtml" />
+    <None Include="Views\Cajas\ViewJS.cshtml" />
+    <None Include="Views\CategoriasIngresosDetalles\Edit.cshtml" />
+    <None Include="Views\CategoriasIngresosDetalles\EditDetail.cshtml" />
+    <None Include="Views\CategoriasIngresosDetalles\List.cshtml" />
+    <None Include="Views\CategoriasIngresosDetalles\ListDetail.cshtml" />
+    <None Include="Views\CategoriasIngresosDetalles\ViewJS.cshtml" />
+    <None Include="Views\CategoriasIngresos\Edit.cshtml" />
+    <None Include="Views\CategoriasIngresos\EditDetail.cshtml" />
+    <None Include="Views\CategoriasIngresos\List.cshtml" />
+    <None Include="Views\CategoriasIngresos\ListDetail.cshtml" />
+    <None Include="Views\CategoriasIngresos\ViewJS.cshtml" />
+    <None Include="Views\CategoriasServicios\Edit.cshtml" />
+    <None Include="Views\CategoriasServicios\List.cshtml" />
+    <None Include="Views\CategoriasServicios\ListDetail.cshtml" />
+    <None Include="Views\CategoriasServicios\ViewJS.cshtml" />
+    <None Include="Views\CausalesGlosas\Edit.cshtml" />
+    <None Include="Views\CausalesGlosas\EditDetail.cshtml" />
+    <None Include="Views\CausalesGlosas\List.cshtml" />
+    <None Include="Views\CausalesGlosas\ListDetail.cshtml" />
+    <None Include="Views\CausalesGlosas\ViewJS.cshtml" />
+    <None Include="Views\CausasExternas\Edit.cshtml" />
+    <None Include="Views\CausasExternas\List.cshtml" />
+    <None Include="Views\CausasExternas\ListDetail.cshtml" />
+    <None Include="Views\CausasExternas\ViewJS.cshtml" />
+    <None Include="Views\CiclosCajas\Edit.cshtml" />
+    <None Include="Views\CiclosCajas\EditDetail.cshtml" />
+    <None Include="Views\CiclosCajas\List.cshtml" />
+    <None Include="Views\CiclosCajas\ListDetail.cshtml" />
+    <None Include="Views\CiclosCajas\ViewJS.cshtml" />
+    <None Include="Views\Ciudades\Edit.cshtml" />
+    <None Include="Views\Ciudades\EditDetail.cshtml" />
+    <None Include="Views\Ciudades\List.cshtml" />
+    <None Include="Views\Ciudades\ListDetail.cshtml" />
+    <None Include="Views\Ciudades\ViewJS.cshtml" />
+    <None Include="Views\ConfiguracionEnvioEmail\Edit.cshtml" />
+    <None Include="Views\ConfiguracionEnvioEmail\List.cshtml" />
+    <None Include="Views\ConfiguracionEnvioEmail\ViewJS.cshtml" />
+    <None Include="Views\Consultorios\Edit.cshtml" />
+    <None Include="Views\Consultorios\EditDetail.cshtml" />
+    <None Include="Views\Consultorios\List.cshtml" />
+    <None Include="Views\Consultorios\ListDetail.cshtml" />
+    <None Include="Views\Consultorios\ViewJS.cshtml" />
+    <None Include="Views\ConveniosServicios\Edit.cshtml" />
+    <None Include="Views\ConveniosServicios\EditDetail.cshtml" />
+    <None Include="Views\ConveniosServicios\List.cshtml" />
+    <None Include="Views\ConveniosServicios\ListDetail.cshtml" />
+    <None Include="Views\ConveniosServicios\ViewJS.cshtml" />
+    <None Include="Views\Convenios\Edit.cshtml" />
+    <None Include="Views\Convenios\List.cshtml" />
+    <None Include="Views\Convenios\ViewJS.cshtml" />
+    <None Include="Views\Cups\Edit.cshtml" />
+    <None Include="Views\Cups\List.cshtml" />
+    <None Include="Views\Cups\ListDetail.cshtml" />
+    <None Include="Views\Cups\ViewJS.cshtml" />
+    <None Include="Views\Departamentos\Edit.cshtml" />
+    <None Include="Views\Departamentos\EditDetail.cshtml" />
+    <None Include="Views\Departamentos\List.cshtml" />
+    <None Include="Views\Departamentos\ListDetail.cshtml" />
+    <None Include="Views\Departamentos\ViewJS.cshtml" />
+    <None Include="Views\Documentos\Edit.cshtml" />
+    <None Include="Views\Documentos\List.cshtml" />
+    <None Include="Views\Documentos\ViewJS.cshtml" />
+    <None Include="Views\EmpleadoProfesiones\Edit.cshtml" />
+    <None Include="Views\EmpleadoProfesiones\List.cshtml" />
+    <None Include="Views\EmpleadoProfesiones\ListDetail.cshtml" />
+    <None Include="Views\EmpleadoProfesiones\ViewJS.cshtml" />
+    <None Include="Views\EmpleadosEspecialidades\Edit.cshtml" />
+    <None Include="Views\EmpleadosEspecialidades\List.cshtml" />
+    <None Include="Views\EmpleadosEspecialidades\ListDetail.cshtml" />
+    <None Include="Views\EmpleadosEspecialidades\ViewJS.cshtml" />
+    <None Include="Views\Empleados\Edit.cshtml" />
+    <None Include="Views\Empleados\List.cshtml" />
+    <None Include="Views\Empleados\ViewJS.cshtml" />
+    <None Include="Views\EmpresasEsquemasImpuestos\EditDetail.cshtml" />
+    <None Include="Views\EmpresasEsquemasImpuestos\ListDetail.cshtml" />
+    <None Include="Views\EmpresasEsquemasImpuestos\ViewJS.cshtml" />
+    <None Include="Views\EmpresasResponsabilidadesFiscales\EditDetail.cshtml" />
+    <None Include="Views\EmpresasResponsabilidadesFiscales\ListDetail.cshtml" />
+    <None Include="Views\EmpresasResponsabilidadesFiscales\ViewJS.cshtml" />
+    <None Include="Views\Empresas\Edit.cshtml" />
+    <None Include="Views\Empresas\List.cshtml" />
+    <None Include="Views\Empresas\ViewJS.cshtml" />
+    <None Include="Views\EntidadesEsquemasImpuestos\EditDetail.cshtml" />
+    <None Include="Views\EntidadesEsquemasImpuestos\ListDetail.cshtml" />
+    <None Include="Views\EntidadesEsquemasImpuestos\ViewJS.cshtml" />
+    <None Include="Views\EntidadesResponsabilidadesFiscales\EditDetail.cshtml" />
+    <None Include="Views\EntidadesResponsabilidadesFiscales\ListDetail.cshtml" />
+    <None Include="Views\EntidadesResponsabilidadesFiscales\ViewJS.cshtml" />
+    <None Include="Views\Entidades\Edit.cshtml" />
+    <None Include="Views\Entidades\List.cshtml" />
+    <None Include="Views\Entidades\ListDetail.cshtml" />
+    <None Include="Views\Entidades\ViewJS.cshtml" />
+    <None Include="Views\EntregaResultadosDetalles\EditDetail.cshtml" />
+    <None Include="Views\EntregaResultadosDetalles\ListDetail.cshtml" />
+    <None Include="Views\EntregaResultadosDetalles\ViewJS.cshtml" />
+    <None Include="Views\EntregaResultados\Edit.cshtml" />
+    <None Include="Views\EntregaResultados\List.cshtml" />
+    <None Include="Views\EntregaResultados\ViewJS.cshtml" />
+    <None Include="Views\Especialidades\Edit.cshtml" />
+    <None Include="Views\Especialidades\List.cshtml" />
+    <None Include="Views\Especialidades\ListDetail.cshtml" />
+    <None Include="Views\Especialidades\ViewJS.cshtml" />
+    <None Include="Views\EstadosCiviles\Edit.cshtml" />
+    <None Include="Views\EstadosCiviles\EditDetail.cshtml" />
+    <None Include="Views\EstadosCiviles\List.cshtml" />
+    <None Include="Views\EstadosCiviles\ListDetail.cshtml" />
+    <None Include="Views\EstadosCiviles\ViewJS.cshtml" />
+    <None Include="Views\Estados\Edit.cshtml" />
+    <None Include="Views\Estados\List.cshtml" />
+    <None Include="Views\Estados\ListDetail.cshtml" />
+    <None Include="Views\Estados\ViewJS.cshtml" />
+    <None Include="Views\EventosDIAN\Edit.cshtml" />
+    <None Include="Views\EventosDIAN\EditDetail.cshtml" />
+    <None Include="Views\EventosDIAN\List.cshtml" />
+    <None Include="Views\EventosDIAN\ListDetail.cshtml" />
+    <None Include="Views\EventosDIAN\ViewJS.cshtml" />
+    <None Include="Views\FacturasDetalles\Edit.cshtml" />
+    <None Include="Views\FacturasDetalles\EditDetail.cshtml" />
+    <None Include="Views\FacturasDetalles\List.cshtml" />
+    <None Include="Views\FacturasDetalles\ListDetail.cshtml" />
+    <None Include="Views\FacturasDetalles\ViewJS.cshtml" />
+    <None Include="Views\FacturasGeneracion\Edit.cshtml" />
+    <None Include="Views\FacturasGeneracion\EditDetail.cshtml" />
+    <None Include="Views\FacturasGeneracion\List.cshtml" />
+    <None Include="Views\FacturasGeneracion\ListDetail.cshtml" />
+    <None Include="Views\FacturasGeneracion\ViewJS.cshtml" />
+    <None Include="Views\Facturas\Edit.cshtml" />
+    <None Include="Views\Facturas\EditDetail.cshtml" />
+    <None Include="Views\Facturas\List.cshtml" />
+    <None Include="Views\Facturas\ListDetail.cshtml" />
+    <None Include="Views\Facturas\ListInterface.cshtml" />
+    <None Include="Views\Facturas\ViewJS.cshtml" />
+    <None Include="Views\Festivos\List.cshtml" />
+    <None Include="Views\Festivos\ViewJS.cshtml" />
+    <None Include="Views\Filiales\Edit.cshtml" />
+    <None Include="Views\Filiales\EditDetail.cshtml" />
+    <None Include="Views\Filiales\List.cshtml" />
+    <None Include="Views\Filiales\ListDetail.cshtml" />
+    <None Include="Views\Filiales\ViewJS.cshtml" />
+    <None Include="Views\FormasPagos\Edit.cshtml" />
+    <None Include="Views\FormasPagos\List.cshtml" />
+    <None Include="Views\FormasPagos\ViewJS.cshtml" />
+    <None Include="Views\Generos\Edit.cshtml" />
+    <None Include="Views\Generos\EditDetail.cshtml" />
+    <None Include="Views\Generos\List.cshtml" />
+    <None Include="Views\Generos\ListDetail.cshtml" />
+    <None Include="Views\Generos\ViewJS.cshtml" />
+    <None Include="Views\Glosas\Edit.cshtml" />
+    <None Include="Views\Glosas\EditDetail.cshtml" />
+    <None Include="Views\Glosas\List.cshtml" />
+    <None Include="Views\Glosas\ListDetail.cshtml" />
+    <None Include="Views\Glosas\ViewJS.cshtml" />
+    <None Include="Views\HCPreguntas\Edit.cshtml" />
+    <None Include="Views\HCPreguntas\List.cshtml" />
+    <None Include="Views\HCPreguntas\ViewJS.cshtml" />
+    <None Include="Views\HCRespuestas\Edit.cshtml" />
+    <None Include="Views\HCRespuestas\EditDetail.cshtml" />
+    <None Include="Views\HCRespuestas\List.cshtml" />
+    <None Include="Views\HCRespuestas\ListDetail.cshtml" />
+    <None Include="Views\HCRespuestas\ViewJS.cshtml" />
+    <None Include="Views\HCTiposPreguntas\Edit.cshtml" />
+    <None Include="Views\HCTiposPreguntas\EditDetail.cshtml" />
+    <None Include="Views\HCTiposPreguntas\List.cshtml" />
+    <None Include="Views\HCTiposPreguntas\ListDetail.cshtml" />
+    <None Include="Views\HCTiposPreguntas\ViewJS.cshtml" />
+    <None Include="Views\HCTipos\Edit.cshtml" />
+    <None Include="Views\HCTipos\EditDetail.cshtml" />
+    <None Include="Views\HCTipos\List.cshtml" />
+    <None Include="Views\HCTipos\ListDetail.cshtml" />
+    <None Include="Views\HCTipos\ViewJS.cshtml" />
+    <None Include="Views\HistoriasClinicasDiagnosticos\Edit.cshtml" />
+    <None Include="Views\HistoriasClinicasDiagnosticos\EditDetail.cshtml" />
+    <None Include="Views\HistoriasClinicasDiagnosticos\List.cshtml" />
+    <None Include="Views\HistoriasClinicasDiagnosticos\ListDetail.cshtml" />
+    <None Include="Views\HistoriasClinicasDiagnosticos\ViewJS.cshtml" />
+    <None Include="Views\HistoriasClinicasNotasAclaratorias\Edit.cshtml" />
+    <None Include="Views\HistoriasClinicasNotasAclaratorias\EditDetail.cshtml" />
+    <None Include="Views\HistoriasClinicasNotasAclaratorias\List.cshtml" />
+    <None Include="Views\HistoriasClinicasNotasAclaratorias\ListDetail.cshtml" />
+    <None Include="Views\HistoriasClinicasNotasAclaratorias\ViewJS.cshtml" />
+    <None Include="Views\HistoriasClinicasRespuestas\Edit.cshtml" />
+    <None Include="Views\HistoriasClinicasRespuestas\EditDetail.cshtml" />
+    <None Include="Views\HistoriasClinicasRespuestas\List.cshtml" />
+    <None Include="Views\HistoriasClinicasRespuestas\ListDetail.cshtml" />
+    <None Include="Views\HistoriasClinicasRespuestas\ViewJS.cshtml" />
+    <None Include="Views\HistoriasClinicas\Edit.cshtml" />
+    <None Include="Views\HistoriasClinicas\EditDetail.cshtml" />
+    <None Include="Views\HistoriasClinicas\List.cshtml" />
+    <None Include="Views\HistoriasClinicas\ListDetail.cshtml" />
+    <None Include="Views\HistoriasClinicas\ViewJS.cshtml" />
+    <None Include="Views\Home\Index.cshtml" />
+    <None Include="Views\ImagenesDiagnosticasDetalle\EditDetail.cshtml" />
+    <None Include="Views\ImagenesDiagnosticasDetalle\ListDetail.cshtml" />
+    <None Include="Views\ImagenesDiagnosticasDetalle\ViewJS.cshtml" />
+    <None Include="Views\ImagenesDiagnosticas\Edit.cshtml" />
+    <None Include="Views\ImagenesDiagnosticas\List.cshtml" />
+    <None Include="Views\ImagenesDiagnosticas\ViewJS.cshtml" />
+    <None Include="Views\IncapacidadesOrigenes\Edit.cshtml" />
+    <None Include="Views\IncapacidadesOrigenes\EditDetail.cshtml" />
+    <None Include="Views\IncapacidadesOrigenes\List.cshtml" />
+    <None Include="Views\IncapacidadesOrigenes\ListDetail.cshtml" />
+    <None Include="Views\IncapacidadesOrigenes\ViewJS.cshtml" />
+    <None Include="Views\Incapacidades\Edit.cshtml" />
+    <None Include="Views\Incapacidades\EditDetail.cshtml" />
+    <None Include="Views\Incapacidades\List.cshtml" />
+    <None Include="Views\Incapacidades\ListDetail.cshtml" />
+    <None Include="Views\Incapacidades\ViewJS.cshtml" />
+    <None Include="Views\IndicacionesMedicasDetalles\Edit.cshtml" />
+    <None Include="Views\IndicacionesMedicasDetalles\EditDetail.cshtml" />
+    <None Include="Views\IndicacionesMedicasDetalles\List.cshtml" />
+    <None Include="Views\IndicacionesMedicasDetalles\ListDetail.cshtml" />
+    <None Include="Views\IndicacionesMedicasDetalles\ViewJS.cshtml" />
+    <None Include="Views\IndicacionesMedicas\Edit.cshtml" />
+    <None Include="Views\IndicacionesMedicas\EditDetail.cshtml" />
+    <None Include="Views\IndicacionesMedicas\List.cshtml" />
+    <None Include="Views\IndicacionesMedicas\ListDetail.cshtml" />
+    <None Include="Views\IndicacionesMedicas\ViewJS.cshtml" />
+    <None Include="Views\LanguageResource\Edit.cshtml" />
+    <None Include="Views\LanguageResource\EditDetail.cshtml" />
+    <None Include="Views\LanguageResource\List.cshtml" />
+    <None Include="Views\LanguageResource\ListDetail.cshtml" />
+    <None Include="Views\LanguageResource\ViewJS.cshtml" />
+    <None Include="Views\Languages\Edit.cshtml" />
+    <None Include="Views\Languages\List.cshtml" />
+    <None Include="Views\Languages\ViewJS.cshtml" />
+    <None Include="Views\LiquidacionHonorariosDetalle\EditDetail.cshtml" />
+    <None Include="Views\LiquidacionHonorariosDetalle\ListDetail.cshtml" />
+    <None Include="Views\LiquidacionHonorariosDetalle\ViewJS.cshtml" />
+    <None Include="Views\ListaPrecios\Edit.cshtml" />
+    <None Include="Views\ListaPrecios\EditDetail.cshtml" />
+    <None Include="Views\ListaPrecios\List.cshtml" />
+    <None Include="Views\ListaPrecios\ListDetail.cshtml" />
+    <None Include="Views\ListaPrecios\ViewJS.cshtml" />
+    <None Include="Views\Login\InfoEmpresas.cshtml" />
+    <None Include="Views\Login\Login.cshtml" />
+    <None Include="Views\MedicamentosConcentraciones\Edit.cshtml" />
+    <None Include="Views\MedicamentosConcentraciones\EditDetail.cshtml" />
+    <None Include="Views\MedicamentosConcentraciones\List.cshtml" />
+    <None Include="Views\MedicamentosConcentraciones\ListDetail.cshtml" />
+    <None Include="Views\MedicamentosConcentraciones\ViewJS.cshtml" />
+    <None Include="Views\MedicamentosFormasFarmaceuticas\Edit.cshtml" />
+    <None Include="Views\MedicamentosFormasFarmaceuticas\EditDetail.cshtml" />
+    <None Include="Views\MedicamentosFormasFarmaceuticas\List.cshtml" />
+    <None Include="Views\MedicamentosFormasFarmaceuticas\ListDetail.cshtml" />
+    <None Include="Views\MedicamentosFormasFarmaceuticas\ViewJS.cshtml" />
+    <None Include="Views\MedicamentosViaAdministracion\Edit.cshtml" />
+    <None Include="Views\MedicamentosViaAdministracion\EditDetail.cshtml" />
+    <None Include="Views\MedicamentosViaAdministracion\List.cshtml" />
+    <None Include="Views\MedicamentosViaAdministracion\ListDetail.cshtml" />
+    <None Include="Views\MedicamentosViaAdministracion\ViewJS.cshtml" />
+    <None Include="Views\Medicamentos\Edit.cshtml" />
+    <None Include="Views\Medicamentos\EditDetail.cshtml" />
+    <None Include="Views\Medicamentos\List.cshtml" />
+    <None Include="Views\Medicamentos\ListDetail.cshtml" />
+    <None Include="Views\Medicamentos\ViewJS.cshtml" />
+    <None Include="Views\MediosEntregas\Edit.cshtml" />
+    <None Include="Views\MediosEntregas\EditDetail.cshtml" />
+    <None Include="Views\MediosEntregas\List.cshtml" />
+    <None Include="Views\MediosEntregas\ListDetail.cshtml" />
+    <None Include="Views\MediosEntregas\ViewJS.cshtml" />
+    <None Include="Views\MediosPago\Edit.cshtml" />
+    <None Include="Views\MediosPago\List.cshtml" />
+    <None Include="Views\MediosPago\ViewJS.cshtml" />
+    <None Include="Views\NotasConceptos\Edit.cshtml" />
+    <None Include="Views\NotasConceptos\EditDetail.cshtml" />
+    <None Include="Views\NotasConceptos\List.cshtml" />
+    <None Include="Views\NotasConceptos\ListDetail.cshtml" />
+    <None Include="Views\NotasConceptos\ViewJS.cshtml" />
+    <None Include="Views\NotasDetalles\Edit.cshtml" />
+    <None Include="Views\NotasDetalles\EditDetail.cshtml" />
+    <None Include="Views\NotasDetalles\List.cshtml" />
+    <None Include="Views\NotasDetalles\ListDetail.cshtml" />
+    <None Include="Views\NotasDetalles\ViewJS.cshtml" />
+    <None Include="Views\Notas\Edit.cshtml" />
+    <None Include="Views\Notas\EditDetail.cshtml" />
+    <None Include="Views\Notas\List.cshtml" />
+    <None Include="Views\Notas\ListDetail.cshtml" />
+    <None Include="Views\Notas\ViewJS.cshtml" />
+    <None Include="Views\OrdenesMedicamentosDetalles\EditDetail.cshtml" />
+    <None Include="Views\OrdenesMedicamentosDetalles\ListDetail.cshtml" />
+    <None Include="Views\OrdenesMedicamentosDetalles\ViewJS.cshtml" />
+    <None Include="Views\OrdenesMedicamentosDiagnosticos\EditDetail.cshtml" />
+    <None Include="Views\OrdenesMedicamentosDiagnosticos\ListDetail.cshtml" />
+    <None Include="Views\OrdenesMedicamentosDiagnosticos\ViewJS.cshtml" />
+    <None Include="Views\OrdenesMedicamentos\Edit.cshtml" />
+    <None Include="Views\OrdenesMedicamentos\EditDetail.cshtml" />
+    <None Include="Views\OrdenesMedicamentos\List.cshtml" />
+    <None Include="Views\OrdenesMedicamentos\ListDetail.cshtml" />
+    <None Include="Views\OrdenesMedicamentos\ViewJS.cshtml" />
+    <None Include="Views\OrdenesServiciosDetalles\EditDetail.cshtml" />
+    <None Include="Views\OrdenesServiciosDetalles\ListDetail.cshtml" />
+    <None Include="Views\OrdenesServiciosDetalles\ViewJS.cshtml" />
+    <None Include="Views\OrdenesServiciosDiagnosticos\EditDetail.cshtml" />
+    <None Include="Views\OrdenesServiciosDiagnosticos\ListDetail.cshtml" />
+    <None Include="Views\OrdenesServiciosDiagnosticos\ViewJS.cshtml" />
+    <None Include="Views\OrdenesServicios\Edit.cshtml" />
+    <None Include="Views\OrdenesServicios\EditDetail.cshtml" />
+    <None Include="Views\OrdenesServicios\List.cshtml" />
+    <None Include="Views\OrdenesServicios\ListDetail.cshtml" />
+    <None Include="Views\OrdenesServicios\ViewJS.cshtml" />
+    <None Include="Views\PacientesEntidades\Edit.cshtml" />
+    <None Include="Views\PacientesEntidades\EditDetail.cshtml" />
+    <None Include="Views\PacientesEntidades\List.cshtml" />
+    <None Include="Views\PacientesEntidades\ListDetail.cshtml" />
+    <None Include="Views\PacientesEntidades\ViewJS.cshtml" />
+    <None Include="Views\Pacientes\Edit.cshtml" />
+    <None Include="Views\Pacientes\List.cshtml" />
+    <None Include="Views\Pacientes\ViewJS.cshtml" />
+    <None Include="Views\Paises\Edit.cshtml" />
+    <None Include="Views\Paises\List.cshtml" />
+    <None Include="Views\Paises\ListDetail.cshtml" />
+    <None Include="Views\Paises\ViewJS.cshtml" />
+    <None Include="Views\ParametrosGenerales\Edit.cshtml" />
+    <None Include="Views\ParametrosGenerales\List.cshtml" />
+    <None Include="Views\ParametrosGenerales\ViewJS.cshtml" />
+    <None Include="Views\Parentescos\Edit.cshtml" />
+    <None Include="Views\Parentescos\EditDetail.cshtml" />
+    <None Include="Views\Parentescos\List.cshtml" />
+    <None Include="Views\Parentescos\ListDetail.cshtml" />
+    <None Include="Views\Parentescos\ViewJS.cshtml" />
+    <None Include="Views\PreciosServicios\Edit.cshtml" />
+    <None Include="Views\PreciosServicios\EditDetail.cshtml" />
+    <None Include="Views\PreciosServicios\List.cshtml" />
+    <None Include="Views\PreciosServicios\ListDetail.cshtml" />
+    <None Include="Views\PreciosServicios\ViewJS.cshtml" />
+    <None Include="Views\Profesiones\Edit.cshtml" />
+    <None Include="Views\Profesiones\List.cshtml" />
+    <None Include="Views\Profesiones\ListDetail.cshtml" />
+    <None Include="Views\Profesiones\ViewJS.cshtml" />
+    <None Include="Views\ProfileNavigation\EditDetail.cshtml" />
+    <None Include="Views\ProfileNavigation\EditProfileNavigation.cshtml" />
+    <None Include="Views\ProfileNavigation\ListDetail.cshtml" />
+    <None Include="Views\ProfileUser\EditDetail.cshtml" />
+    <None Include="Views\ProfileUser\ListDetailProfile.cshtml" />
+    <None Include="Views\ProfileUser\ListDetailUser.cshtml" />
+    <None Include="Views\Profile\Edit.cshtml" />
+    <None Include="Views\Profile\List.cshtml" />
+    <None Include="Views\Profile\ViewJS.cshtml" />
+    <None Include="Views\ProgramacionAgenda\Edit.cshtml" />
+    <None Include="Views\ProgramacionAgenda\List.cshtml" />
+    <None Include="Views\ProgramacionAgenda\ViewJS.cshtml" />
+    <None Include="Views\ProgramacionCitas\Edit.cshtml" />
+    <None Include="Views\ProgramacionCitas\List.cshtml" />
+    <None Include="Views\ProgramacionCitas\SchedulerVerAgenda.cshtml" />
+    <None Include="Views\ProgramacionCitas\ViewJS.cshtml" />
+    <None Include="Views\ProgramacionDisponible\Edit.cshtml" />
+    <None Include="Views\ProgramacionDisponible\EditDetail.cshtml" />
+    <None Include="Views\ProgramacionDisponible\List.cshtml" />
+    <None Include="Views\ProgramacionDisponible\ListDetail.cshtml" />
+    <None Include="Views\ProgramacionDisponible\ViewJS.cshtml" />
+    <None Include="Views\RadicacionCuentasDetalles\Edit.cshtml" />
+    <None Include="Views\RadicacionCuentasDetalles\EditDetail.cshtml" />
+    <None Include="Views\RadicacionCuentasDetalles\List.cshtml" />
+    <None Include="Views\RadicacionCuentasDetalles\ListDetail.cshtml" />
+    <None Include="Views\RadicacionCuentasDetalles\ViewJS.cshtml" />
+    <None Include="Views\RadicacionCuentas\Edit.cshtml" />
+    <None Include="Views\RadicacionCuentas\EditDetail.cshtml" />
+    <None Include="Views\RadicacionCuentas\List.cshtml" />
+    <None Include="Views\RadicacionCuentas\ListDetail.cshtml" />
+    <None Include="Views\RadicacionCuentas\ViewJS.cshtml" />
+    <None Include="Views\RangoEdad\Edit.cshtml" />
+    <None Include="Views\RangoEdad\EditDetail.cshtml" />
+    <None Include="Views\RangoEdad\List.cshtml" />
+    <None Include="Views\RangoEdad\ListDetail.cshtml" />
+    <None Include="Views\RangoEdad\ViewJS.cshtml" />
+    <None Include="Views\RecaudosDetalles\Edit.cshtml" />
+    <None Include="Views\RecaudosDetalles\EditDetail.cshtml" />
+    <None Include="Views\RecaudosDetalles\List.cshtml" />
+    <None Include="Views\RecaudosDetalles\ListDetail.cshtml" />
+    <None Include="Views\RecaudosDetalles\ViewJS.cshtml" />
+    <None Include="Views\Recaudos\Edit.cshtml" />
+    <None Include="Views\Recaudos\EditDetail.cshtml" />
+    <None Include="Views\Recaudos\List.cshtml" />
+    <None Include="Views\Recaudos\ListDetail.cshtml" />
+    <None Include="Views\Recaudos\ViewJS.cshtml" />
+    <None Include="Views\Rips\Edit.cshtml" />
+    <None Include="Views\Rips\List.cshtml" />
+    <None Include="Views\Rips\ViewJS.cshtml" />
+    <None Include="Views\SedesDocumentos\EditDetail.cshtml" />
+    <None Include="Views\SedesDocumentos\ListDetail.cshtml" />
+    <None Include="Views\SedesDocumentos\ViewJS.cshtml" />
+    <None Include="Views\Sedes\Edit.cshtml" />
+    <None Include="Views\Sedes\List.cshtml" />
+    <None Include="Views\Sedes\ListDetail.cshtml" />
+    <None Include="Views\Sedes\ViewJS.cshtml" />
+    <None Include="Views\ServiciosConsultorios\Edit.cshtml" />
+    <None Include="Views\ServiciosConsultorios\EditDetail.cshtml" />
+    <None Include="Views\ServiciosConsultorios\List.cshtml" />
+    <None Include="Views\ServiciosConsultorios\ListDetail.cshtml" />
+    <None Include="Views\ServiciosConsultorios\ViewJS.cshtml" />
+    <None Include="Views\ServiciosEmpleados\Edit.cshtml" />
+    <None Include="Views\ServiciosEmpleados\EditDetail.cshtml" />
+    <None Include="Views\ServiciosEmpleados\List.cshtml" />
+    <None Include="Views\ServiciosEmpleados\ListDetail.cshtml" />
+    <None Include="Views\ServiciosEmpleados\ViewJS.cshtml" />
+    <None Include="Views\ServiciosSedes\Edit.cshtml" />
+    <None Include="Views\ServiciosSedes\EditDetail.cshtml" />
+    <None Include="Views\ServiciosSedes\List.cshtml" />
+    <None Include="Views\ServiciosSedes\ListDetail.cshtml" />
+    <None Include="Views\ServiciosSedes\ViewJS.cshtml" />
+    <None Include="Views\Servicios\Edit.cshtml" />
+    <None Include="Views\Servicios\EditDetail.cshtml" />
+    <None Include="Views\Servicios\List.cshtml" />
+    <None Include="Views\Servicios\ListDetail.cshtml" />
+    <None Include="Views\Servicios\ViewJS.cshtml" />
+    <None Include="Views\Shared\_LayoutGentelella.cshtml" />
+    <None Include="Views\Shared\_ViewerDicom.cshtml" />
+    <None Include="Views\Shared\_ViewerReport.cshtml" />
+    <None Include="Views\TipoEntidades\Edit.cshtml" />
+    <None Include="Views\TipoEntidades\EditDetail.cshtml" />
+    <None Include="Views\TipoEntidades\List.cshtml" />
+    <None Include="Views\TipoEntidades\ListDetail.cshtml" />
+    <None Include="Views\TipoEntidades\ViewJS.cshtml" />
+    <None Include="Views\TiposAfiliados\Edit.cshtml" />
+    <None Include="Views\TiposAfiliados\EditDetail.cshtml" />
+    <None Include="Views\TiposAfiliados\List.cshtml" />
+    <None Include="Views\TiposAfiliados\ListDetail.cshtml" />
+    <None Include="Views\TiposAfiliados\ViewJS.cshtml" />
+    <None Include="Views\TiposAtencion\Edit.cshtml" />
+    <None Include="Views\TiposAtencion\List.cshtml" />
+    <None Include="Views\TiposAtencion\ListDetail.cshtml" />
+    <None Include="Views\TiposAtencion\ViewJS.cshtml" />
+    <None Include="Views\TiposContratos\Edit.cshtml" />
+    <None Include="Views\TiposContratos\List.cshtml" />
+    <None Include="Views\TiposContratos\ListDetail.cshtml" />
+    <None Include="Views\TiposContratos\ViewJS.cshtml" />
+    <None Include="Views\TiposDiagnosticos\Edit.cshtml" />
+    <None Include="Views\TiposDiagnosticos\List.cshtml" />
+    <None Include="Views\TiposDiagnosticos\ListDetail.cshtml" />
+    <None Include="Views\TiposDiagnosticos\ViewJS.cshtml" />
+    <None Include="Views\TiposDocumentos\Edit.cshtml" />
+    <None Include="Views\TiposDocumentos\List.cshtml" />
+    <None Include="Views\TiposDocumentos\ListDetail.cshtml" />
+    <None Include="Views\TiposDocumentos\ViewJS.cshtml" />
+    <None Include="Views\TiposIdentificacion\Edit.cshtml" />
+    <None Include="Views\TiposIdentificacion\List.cshtml" />
+    <None Include="Views\TiposIdentificacion\ListDetail.cshtml" />
+    <None Include="Views\TiposIdentificacion\ViewJS.cshtml" />
+    <None Include="Views\TiposRegimenes\Edit.cshtml" />
+    <None Include="Views\TiposRegimenes\List.cshtml" />
+    <None Include="Views\TiposRegimenes\ListDetail.cshtml" />
+    <None Include="Views\TiposRegimenes\ViewJS.cshtml" />
+    <None Include="Views\TiposSangre\Edit.cshtml" />
+    <None Include="Views\TiposSangre\EditDetail.cshtml" />
+    <None Include="Views\TiposSangre\List.cshtml" />
+    <None Include="Views\TiposSangre\ListDetail.cshtml" />
+    <None Include="Views\TiposSangre\ViewJS.cshtml" />
+    <None Include="Views\TiposServicios\Edit.cshtml" />
+    <None Include="Views\TiposServicios\List.cshtml" />
+    <None Include="Views\TiposServicios\ListDetail.cshtml" />
+    <None Include="Views\TiposServicios\ViewJS.cshtml" />
+    <None Include="Views\User\Edit.cshtml" />
+    <None Include="Views\User\List.cshtml" />
+    <None Include="Views\_ViewImports.cshtml" />
+    <None Include="Views\_ViewStart.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="DevExpress.AspNetCore.Common" Version="21.2.3" />
+    <PackageReference Include="DevExpress.AspNetCore.Reporting" Version="21.2.3" />
+    <PackageReference Include="DevExpress.CrossPlatform.Printing.DrawingEngine" Version="1.0.12" />
+    <PackageReference Include="jQuery.Ajax.Unobtrusive" Version="2.0.20710" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.4.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="NAudio.Lame" Version="2.0.0" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.0" />
+    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="3.21.4" />
+    <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.22" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="6.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Microsoft.jQuery.Unobtrusive.Ajax" Version="3.2.6" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
+    <PackageReference Include="Polly" Version="7.2.2" />
+    <PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
+    <PackageReference Include="System.IO.FileSystem.Primitives" Version="4.3.0" />
+    <PackageReference Include="System.Net.NameResolution" Version="4.3.0" />
+    <PackageReference Include="System.Threading.ThreadPool" Version="4.3.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Blazor.BusinessLogic\Blazor.BusinessLogic.csproj" />
+    <ProjectReference Include="..\Blazor.Infrastructure.Entities\Blazor.Infrastructure.Entities.csproj" />
+    <ProjectReference Include="..\Blazor.Infrastructure\Blazor.Infrastructure.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="DevExtreme.AspNet.Core">
+      <HintPath>..\Libs\DevExtreme.AspNet.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExtreme.AspNet.Data">
+      <HintPath>..\Libs\DevExtreme.AspNet.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Dominus">
+      <HintPath>..\Libs\Dominus.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="wwwroot\lib\ace-builds\ace-modules.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\ace-builds\ace.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\devexpress\analytics-core\dx-analytics-core.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\devexpress\analytics-core\dx-querybuilder.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\devexpress\devexpress-reporting\dx-reportdesigner.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\devexpress\devexpress-reporting\dx-webdocumentviewer.d.ts" />
+    <TypeScriptCompile Include="wwwroot\lib\knockout\build\types\knockout.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Reportes\AtencionesResultado\AtencionesResultadoReporte.cs">
+      <DependentUpon>AtencionesResultadoReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\AtencionesResultado\AtencionesResultadoReporte.Designer.cs">
+      <DependentUpon>AtencionesResultadoReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\AtencionNotaProcedimientos\AtencionNotaProcedimientosReporte.cs">
+      <SubType>Component</SubType>
+      <DependentUpon>AtencionNotaProcedimientosReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\AtencionNotaProcedimientos\AtencionNotaProcedimientosReporte.Designer.cs">
+      <DependentUpon>AtencionNotaProcedimientosReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\EntregaAdmisiones\EntregaAdmisionesReporte.cs">
+      <DependentUpon>EntregaAdmisionesReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\EntregaAdmisiones\EntregaAdmisionesReporte.Designer.cs">
+      <DependentUpon>EntregaAdmisionesReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\EntregaAdmisiones\EntregaAdmisionesTotalesSubReporte.cs">
+      <DependentUpon>EntregaAdmisionesTotalesSubReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\EntregaAdmisiones\EntregaAdmisionesTotalesSubReporte.Designer.cs">
+      <DependentUpon>EntregaAdmisionesTotalesSubReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\FacturaDetalle\FacturaDetalleReporte.cs">
+      <DependentUpon>FacturaDetalleReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\FacturaDetalle\FacturaDetalleReporte.Designer.cs">
+      <DependentUpon>FacturaDetalleReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\FacturaDetalle\FacturaDetalleTotalCategoriasSubReporte.cs">
+      <DependentUpon>FacturaDetalleTotalCategoriasSubReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\FacturaDetalle\FacturaDetalleTotalCategoriasSubReporte.Designer.cs">
+      <DependentUpon>FacturaDetalleTotalCategoriasSubReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\Facturas\FacturasParticularReporte.cs">
+      <DependentUpon>FacturasParticularReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\Facturas\FacturasParticularReporte.Designer.cs">
+      <DependentUpon>FacturasParticularReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\Facturas\FacturasReporte - Copy.cs">
+      <SubType>Component</SubType>
+      <DependentUpon>FacturasReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\Facturas\FacturasReporte - Copy.Designer.cs">
+      <DependentUpon>FacturasReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\Facturas\FacturasReporte.cs">
+      <DependentUpon>FacturasReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\Facturas\FacturasReporte.Designer.cs">
+      <DependentUpon>FacturasReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\HistoriasClinicasNotasAclaratorias\HistoriaClinicasNotasAclaratoriasReporte.cs">
+      <DependentUpon>HistoriaClinicasNotasAclaratoriasReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\HistoriasClinicasNotasAclaratorias\HistoriaClinicasNotasAclaratoriasReporte.Designer.cs">
+      <DependentUpon>HistoriaClinicasNotasAclaratoriasReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\HistoriasClinicas\HistoriasClinicasDiagnosticosSubReporte - Copy.cs">
+      <SubType>Component</SubType>
+      <DependentUpon>HistoriasClinicasDiagnosticosSubReporte.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\HistoriasClinicas\HistoriasClinicasDiagnosticosSubReporte - Copy.Designer.cs">
+      <DependentUpon>HistoriasClinicasDiagnosticosSubReporte.Designer.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\HistoriasClinicas\HistoriasClinicasDiagnosticosSubReporte.cs">
+      <DependentUpon>HistoriasClinicasDiagnosticosSubReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\HistoriasClinicas\HistoriasClinicasDiagnosticosSubReporte.Designer.cs">
+      <DependentUpon>HistoriasClinicasDiagnosticosSubReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\HistoriasClinicas\HistoriasClinicasIncapacidadesSubReporte.cs">
+      <DependentUpon>HistoriasClinicasIncapacidadesSubReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\HistoriasClinicas\HistoriasClinicasIncapacidadesSubReporte.Designer.cs">
+      <DependentUpon>HistoriasClinicasIncapacidadesSubReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\HistoriasClinicas\HistoriasClinicasIndicacionesMedicasSubReporte.cs">
+      <DependentUpon>HistoriasClinicasIndicacionesMedicasSubReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\HistoriasClinicas\HistoriasClinicasIndicacionesMedicasSubReporte.Designer.cs">
+      <DependentUpon>HistoriasClinicasIndicacionesMedicasSubReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\HistoriasClinicas\HistoriasClinicasOrdenesMedicamentosSubReporte - Copy.cs">
+      <SubType>Component</SubType>
+      <DependentUpon>HistoriasClinicasOrdenesMedicamentosSubReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\HistoriasClinicas\HistoriasClinicasOrdenesMedicamentosSubReporte - Copy.Designer.cs">
+      <DependentUpon>HistoriasClinicasOrdenesMedicamentosSubReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\HistoriasClinicas\HistoriasClinicasOrdenesMedicamentosSubReporte.cs">
+      <DependentUpon>HistoriasClinicasOrdenesMedicamentosSubReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\HistoriasClinicas\HistoriasClinicasOrdenesMedicamentosSubReporte.Designer.cs">
+      <DependentUpon>HistoriasClinicasOrdenesMedicamentosSubReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\HistoriasClinicas\HistoriasClinicasOrdenesServiciosSubReporte.cs">
+      <DependentUpon>HistoriasClinicasOrdenesServiciosSubReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\HistoriasClinicas\HistoriasClinicasOrdenesServiciosSubReporte.Designer.cs">
+      <DependentUpon>HistoriasClinicasOrdenesServiciosSubReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\HistoriasClinicas\HistoriasClinicasRespuestasSubReporte - Copy.cs">
+      <SubType>Component</SubType>
+      <DependentUpon>HistoriasClinicasRespuestasSubReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\HistoriasClinicas\HistoriasClinicasRespuestasSubReporte - Copy.Designer.cs">
+      <DependentUpon>HistoriasClinicasRespuestasSubReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\HistoriasClinicas\HistoriasClinicasRespuestasSubReporte.cs">
+      <DependentUpon>HistoriasClinicasRespuestasSubReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\HistoriasClinicas\HistoriasClinicasRespuestasSubReporte.Designer.cs">
+      <DependentUpon>HistoriasClinicasRespuestasSubReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\HistoriasClinicas\HistoriaClinicasReporte - Copy.cs">
+      <SubType>Component</SubType>
+      <DependentUpon>HistoriaClinicasReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\HistoriasClinicas\HistoriaClinicasReporte - Copy.Designer.cs">
+      <DependentUpon>HistoriaClinicasReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\HistoriasClinicas\HistoriaClinicasReporte.cs">
+      <DependentUpon>HistoriaClinicasReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\HistoriasClinicas\HistoriaClinicasReporte.Designer.cs">
+      <DependentUpon>HistoriaClinicasReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\HistoriasClinicas\DocumentosAPAcientesReporte.cs">
+      <DependentUpon>DocumentosAPacientesReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\HistoriasClinicas\DocumentosAPAcientesReporte.Designer.cs">
+      <DependentUpon>DocumentosAPacientesReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\Incapacidades\IncapacidadesReporte.cs">
+      <DependentUpon>IncapacidadesReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\Incapacidades\IncapacidadesReporte.Designer.cs">
+      <DependentUpon>IncapacidadesReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\IndicacionesMedicas\IndicacionesMedicasReporte.cs">
+      <DependentUpon>IndicacionesMedicasReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\IndicacionesMedicas\IndicacionesMedicasReporte.Designer.cs">
+      <DependentUpon>IndicacionesMedicasReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\LiquidacionHonorarios\LiquidacionHonorariosReporte.cs">
+      <DependentUpon>LiquidacionHonorariosReporte.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\LiquidacionHonorarios\LiquidacionHonorariosReporte.Designer.cs">
+      <DependentUpon>LiquidacionHonorariosReporte.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\Notas\NotasReporte.cs">
+      <DependentUpon>NotasReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\Notas\NotasReporte.Designer.cs">
+      <DependentUpon>NotasReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\OrdenesMedicamentos\OrdenesMedicamentosReporte.cs">
+      <DependentUpon>OrdenesMedicamentosReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\OrdenesMedicamentos\OrdenesMedicamentosReporte.Designer.cs">
+      <DependentUpon>OrdenesMedicamentosReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\OrdenesServicios\OrdenesServiciosReporte.cs">
+      <DependentUpon>OrdenesServiciosReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\OrdenesServicios\OrdenesServiciosReporte.Designer.cs">
+      <DependentUpon>OrdenesServiciosReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\RadicacionCuentasReporte\RadicacionCuentasReporte.cs">
+      <DependentUpon>RadicacionCuentasReporte.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reportes\RadicacionCuentasReporte\RadicacionCuentasReporte.Designer.cs">
+      <DependentUpon>RadicacionCuentasReporte.repx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="appsettings.prod.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="appsettings.dev.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Utils\resourcesESP.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Utils\infoApp.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Utils\menu.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+</Project>

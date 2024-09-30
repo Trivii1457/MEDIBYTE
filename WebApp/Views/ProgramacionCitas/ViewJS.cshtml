@@ -1,0 +1,465 @@
+@model ProgramacionCitasModel
+@{
+    string Prefix = "ProgramacionCitas";
+}
+
+<script>
+
+
+    var CitaNueva = ("@Model.Entity.IsNew" == "True");
+    var EsReprogramacionCita = false;
+
+    if (!CitaNueva) {
+        $('#LinkTabProgramacionCita').click();
+    }
+
+    function @(Prefix)OnContentReadyForm() {
+        $("#@(Prefix)Observaciones").dxTextArea("instance").option("readOnly",false);
+    }
+
+    function @(Prefix)ReprogramarCita() {
+        @(Prefix)OnClickVerAgenda();
+        EsReprogramacionCita = true;
+    }
+
+    function @(Prefix)CancelarCita() {
+        $("#PopupCancelarCita").dxPopup("instance").show();
+    }
+
+    function @(Prefix)ConfirmarReprogramarCita() {
+
+        var motivoReprogramacion = $("#@(Prefix)MotivoReprogramacionPopup").dxTextArea("instance").option("value");
+        if (motivoReprogramacion != null && motivoReprogramacion != "") {
+            $("#@(Prefix)MotivoReprogramacion").dxTextBox("instance").option("value", motivoReprogramacion);
+            DevExpress.ui.notify("Cita reprogramada.", "info");
+            BtnSave_click('@(Prefix)');
+        } else {
+            DevExpress.ui.notify("El motivo es obligatorio.", "error");
+        }
+    }
+
+    function @(Prefix)CancelarReprogramarCita() {
+        GetViewOnContainer('@Url.Action("Edit", "ProgramacionCitas", new { Id = Model.Entity.Id })');
+    }
+
+    function @(Prefix)ConfirmarCancelarCita() {
+
+        var motivoCancelacion = $("#@(Prefix)MotivoCancelacionPopup").dxTextArea("instance").option("value");
+        if (motivoCancelacion != null && motivoCancelacion != "") {
+            GetViewOnContainer('@Url.Action("CancelarCita", "ProgramacionCitas")', undefined, { Id : @(Model.Entity.Id) , motivoCancelacion: motivoCancelacion });
+            DevExpress.ui.notify("Cita cancelada.", "info");
+        } else {
+            DevExpress.ui.notify("El motivo es obligatorio.", "error");
+        }
+    }
+
+    function @(Prefix)CancelarCancelarCita() {
+        $("#PopupCancelarCita").dxPopup("instance").hide();
+    }
+
+    function @(Prefix)OnCellClickSchedulerVerAgenda(cell) {
+
+        var fechaInicio = JSON.parse(JSON.stringify(cell.cellData.startDate));
+        var servicioId = $("#@(Prefix)ServiciosId").dxSelectBox("instance").option("value");
+        var consultorioId = $("#@(Prefix)AgendaConsultorio").dxSelectBox("instance").option("value");
+        var empleadoId = $("#@(Prefix)AgendaEmpleado").dxSelectBox("instance").option("value");
+        var tipoDuracion = $("#@(Prefix)EstadosIdTipoDuracion").dxSelectBox("instance").option("value");
+        var duracion = $("#@(Prefix)Duracion").dxNumberBox("instance").option("value");
+
+        showLoadIndicator();
+        $.ajax({
+            url: '@Url.Action("ConsultarDisponibilidad", "ProgramacionCitas")',
+            data: { servicioId: servicioId, consultorioId: consultorioId, empleadoId: empleadoId, fechaInicio: fechaInicio, duracion: duracion, tipoDuracion: tipoDuracion},
+            type: 'GET',
+            success: function (data) {
+                hideLoadIndicator();
+                if (data.Disponible) {
+
+                    if (data.ObservacionesAgenda)
+                        DevExpress.ui.dialog.alert(data.ObservacionesAgenda, "Observación Agenda");
+
+                    if (data.Festivo) {
+                        var result = DevExpress.ui.dialog.confirm("El dia seleccionado es festivo (" + data.Festivo.Descripcion + "). ¿Esta seguro que desea programar la cita este dia?", "Dia Festivo");
+                        result.done(function (dialogResult) {
+                            if (dialogResult) {
+                                SetDatosAgendaDisponible(data.FechaInicio, data.FechaFinal);
+                            }
+                        });
+                    } else {
+                        SetDatosAgendaDisponible(data.FechaInicio, data.FechaFinal);
+                    }
+                }
+                else {
+                    var error = '<ul><li>Sin disponibilidad para el día seleccionado.</li><ul>';
+                    $("#@(Prefix)ErrorSeleccionarAgenda").html(error);
+                }
+            },
+            error: function (xhr) {
+                hideLoadIndicator();
+                DevExpress.ui.notify("Error de servidor " + xhr.status + " : " + xhr.statusText, "error");
+            }
+        });
+    }
+
+    function @(Prefix)SchedulerVerAgendaOnAppointmentDblClick(item) {
+        item.cancel = true;
+        var TiposCitasId = $("#@(Prefix)TiposCitasId").dxSelectBox("instance").option("value");
+        console.log(item.appointmentData);
+        var fechaInicio = JSON.parse(JSON.stringify(item.appointmentData.FechaInicio));
+
+        if (TiposCitasId == 3) {
+
+            showLoadIndicator();
+            $.ajax({
+                url: '@Url.Action("ConsultarDisponibilidadCitaAdicional", "ProgramacionCitas")',
+                data: { fechaInicio: fechaInicio, consultorioId: item.appointmentData.ConsultoriosId },
+                type: 'GET',
+                success: function (data) {
+                    hideLoadIndicator();
+                    if (data.Disponible) {
+                        SetDatosAgendaDisponible(item.appointmentData.FechaInicio, item.appointmentData.FechaFinal);
+                    } else {
+                        $("#@(Prefix)ErrorSeleccionarAgenda").html(data.Error);
+                    }
+                },
+                error: function (xhr) {
+                    hideLoadIndicator();
+                    DevExpress.ui.notify("Error de servidor " + xhr.status + " : " + xhr.statusText, "error");
+                }
+            });
+        }
+    }
+
+    function SetDatosAgendaDisponible(fechaInicial,fechaFinal) {
+
+        var consultorio = $("#@(Prefix)AgendaConsultorio").dxSelectBox("instance").option("value");
+        var empleado = $("#@(Prefix)AgendaEmpleado").dxSelectBox("instance").option("value");
+        var servicio = $("#@(Prefix)ServiciosId").dxSelectBox("instance").option("selectedItem");
+
+        var tieneError = false;
+        var errores = '<ul>';
+        if (consultorio == null || consultorio == "") {
+            errores += '<li>El consultorio es obligatorio</li>';
+            tieneError = true;
+        }
+
+        if (servicio.RequiereProfesional && (empleado == null || empleado == "")) {
+            errores += '<li>El profesional es obligatorio porque el servicio lo requiere.</li>';
+            tieneError = true;
+        }
+
+        if (tieneError) {
+            errores += '</ul>';
+            $("#@(Prefix)ErrorSeleccionarAgenda").html(errores);
+            return false;
+        }
+
+        $("#@(Prefix)ConsultoriosId").dxSelectBox("instance").option("value", consultorio);
+        $("#@(Prefix)EmpleadosId").dxSelectBox("instance").option("value", empleado);
+
+        $("#@(Prefix)FechaInicio").dxDateBox("instance").option("value", fechaInicial);
+        $("#@(Prefix)HoraInicio").dxDateBox("instance").option("value", fechaInicial);
+        $("#@(Prefix)FechaFinal").dxDateBox("instance").option("value", fechaFinal);
+        $("#@(Prefix)HoraFinal").dxDateBox("instance").option("value", fechaFinal);
+
+        $("#@(Prefix)PopUpProgramacionCitasVerAgenda").dxPopup("instance").hide();
+
+        if (EsReprogramacionCita) {
+            EsReprogramacionCita = false;
+            $("#PopupReprogramarCita").dxPopup("instance").show();
+        }
+    }
+
+    function @(Prefix)OnClickVerAgenda() {
+        $("#@(Prefix)PopUpProgramacionCitasVerAgenda").dxPopup("instance").show().done(() => {
+            $("#@(Prefix)AgendaConsultorio").dxSelectBox('instance').focus();
+        });
+        $("#@(Prefix)ErrorSeleccionarAgenda").html("");
+
+        $("#@(Prefix)AgendaConsultorio").dxSelectBox("getDataSource").reload();
+        $("#@(Prefix)AgendaConsultorio").dxSelectBox("instance").option("value",null);
+
+        $("#@(Prefix)AgendaEmpleado").dxSelectBox("getDataSource").reload();
+        $("#@(Prefix)AgendaEmpleado").dxSelectBox("instance").option("value", null);
+
+        var servicio = $("#@(Prefix)ServiciosId").dxSelectBox("instance").option("selectedItem");
+
+        if (servicio.RequiereProfesional) {
+            $("#@(Prefix)AgendaEmpleado").dxSelectBox("instance").option("readOnly", false);
+        } else {
+            $("#@(Prefix)AgendaEmpleado").dxSelectBox("instance").option("readOnly", true);
+        }
+
+        ObtenerSchedulerVerAgenda();
+    }
+
+    function ObtenerSchedulerVerAgenda() {
+
+        var servicioId = $("#@(Prefix)ServiciosId").dxSelectBox("instance").option("value");
+        var consultorioId = $("#@(Prefix)AgendaConsultorio").dxSelectBox("instance").option("value");
+        var empleadoId = $("#@(Prefix)AgendaEmpleado").dxSelectBox("instance").option("value");
+        var estadosIdTipoDuracion = $("#@(Prefix)EstadosIdTipoDuracion").dxSelectBox("instance").option("value");
+        var duracion = $("#@(Prefix)Duracion").dxNumberBox("instance").option("value");
+
+        var fechaScheduler = null;
+        if ($("#ProgramacionCitasSchedulerVerAgenda").length > 0) {
+            fechaScheduler = fechaScheduler = $("#@(Prefix)SchedulerVerAgenda").dxScheduler("instance").option("currentDate").toISOString();
+        }
+
+        showLoadIndicator();
+        $.ajax({
+            url: '@Url.Action("ObtenerSchedulerVerAgenda", "ProgramacionCitas")',
+            data: {
+                servicioId: servicioId,
+                consultorioId: consultorioId,
+                empleadoId: empleadoId,
+                estadosIdTipoDuracion: estadosIdTipoDuracion,
+                duracion: duracion,
+                fechaScheduler: fechaScheduler
+            },
+            type: 'GET',
+            success: function (data) {
+                hideLoadIndicator();
+                $("#@(Prefix)DivVerAgenda").html(data);
+            },
+            error: function (xhr) {
+                hideLoadIndicator();
+                DevExpress.ui.notify("Error de servidor " + xhr.status + " : " + xhr.statusText, "error");
+            }
+        });
+    }
+
+    function @(Prefix)VerificarAgendaDisponiblePorServicio(item) {
+        showLoadIndicator();
+        $.ajax({
+        url: '@Url.Action("VerificarAgendaDisponiblePorServicio", "ProgramacionCitas")',
+            data: { servicioId: item.selectedItem.Id},
+            type: 'GET',
+            success: function (data) {
+                hideLoadIndicator();
+                if (data) {
+                    $("#@(Prefix)EspecialidadesId").dxSelectBox("instance").option("value", item.selectedItem.EspecialidadesId);
+                    $("#@(Prefix)EstadosIdTipoDuracion").dxSelectBox("instance").option("value", item.selectedItem.EstadosIdTipoDuracion);
+                    $("#@(Prefix)Duracion").dxNumberBox("instance").option("value", item.selectedItem.Duracion);
+                    @(Prefix)ObtenerValorTarifaConvenio();
+                } else {
+                    $("#@(Prefix)ServiciosId").dxSelectBox("instance").option("value",null);
+                    DevExpress.ui.notify("No existe una programación disponible para este servicio a partir de la fecha actual.", "error", 4000);
+                }
+                return data;
+            },
+            error: function (xhr) {
+                hideLoadIndicator();
+                DevExpress.ui.notify("Error de servidor " + xhr.status + " : " + xhr.statusText, "error");
+            }
+        });
+    }
+
+    function @(Prefix)TiposCitasIdOnValueChanged(item) {
+
+        if (!CitaNueva)
+            return false;
+
+        $("#@(Prefix)FechaInicio").dxDateBox("instance").option("value", 0);
+        $("#@(Prefix)HoraInicio").dxDateBox("instance").option("value", 0);
+        $("#@(Prefix)FechaFinal").dxDateBox("instance").option("value", 0);
+        $("#@(Prefix)HoraFinal").dxDateBox("instance").option("value", 0);
+        $("#@(Prefix)ConsultoriosId").dxSelectBox("instance").option("value", 0);
+        $("#@(Prefix)EmpleadosId").dxSelectBox("instance").option("value",0);
+        @(Prefix)HabilitarBotonVerAgenda();
+    }
+
+    function @(Prefix)EntidadesIdOnValueChanged(item) {
+
+        if (!CitaNueva)
+            return false;
+
+        $("#@(Prefix)ConveniosId").dxSelectBox("instance").option("value", null);
+        $("#@(Prefix)ServiciosId").dxSelectBox("instance").option("value", null);
+        $("#@(Prefix)ConveniosId").dxSelectBox("getDataSource").reload();
+        $("#@(Prefix)ServiciosId").dxSelectBox("getDataSource").reload();
+    }
+
+    function @(Prefix)ConveniosIdOnSelectionChanged() {
+
+        @(Prefix)ObtenerValorTarifaConvenio();
+
+        if (!CitaNueva)
+            return false;
+
+        var item = $("#@(Prefix)ConveniosId").dxSelectBox("instance").option("value");
+        if (item && item != null && item != 0) {
+            $("#@(Prefix)ServiciosId").dxSelectBox("instance").option("value", null);
+            $("#@(Prefix)ServiciosId").dxSelectBox("getDataSource").reload();
+        } else {
+            $("#@(Prefix)TarifaConvenio").dxNumberBox("instance").option("value", null);
+            $("#@(Prefix)ServiciosId").dxSelectBox("instance").option("value", null);
+            $("#@(Prefix)ServiciosId").dxSelectBox("getDataSource").reload();
+        }
+    }
+
+    function @(Prefix)ObtenerValorTarifaConvenio() {
+
+        var convenioId = $("#@(Prefix)ConveniosId").dxSelectBox("instance").option("value");
+        var servicioId = $("#@(Prefix)ServiciosId").dxSelectBox("instance").option("value");
+
+        $.ajax({
+            url: '@Url.Action("ObtenerValorTarifaConvenio", "ProgramacionCitas")',
+            data: { convenioId: convenioId, servicioId: servicioId },
+            type: 'GET',
+            success: function (data) {
+                $("#@(Prefix)TarifaConvenio").dxNumberBox("instance").option("value", data);
+            },
+            error: function (xhr) {
+                hideLoadIndicator();
+                DevExpress.ui.notify("Error en traer Tarifa Convenio" + xhr.status + " : " + xhr.statusText, "error");
+            }
+        });
+    }
+
+    function @(Prefix)ServiciosIdOnSelectionChanged(item) {
+
+        if (item.selectedItem) {
+            $("#@(Prefix)TarifaPlena").dxNumberBox("instance").option("value", item.selectedItem.TarifaPlena);
+            if (item.selectedItem.Preparacion) {
+                $("#@(Prefix)PreparacionText").html(item.selectedItem.Preparacion);
+            }
+
+            if (!CitaNueva)
+                return false;
+
+            $("#@(Prefix)ConsultoriosId").dxSelectBox("instance").option("value",null);
+            $("#@(Prefix)EmpleadosId").dxSelectBox("instance").option("value",null);
+            @(Prefix)VerificarAgendaDisponiblePorServicio(item);
+
+        } else {
+            $("#@(Prefix)EstadosIdTipoDuracion").dxSelectBox("instance").option("value", null);
+            $("#@(Prefix)Duracion").dxNumberBox("instance").option("value", 0);
+            $("#@(Prefix)EspecialidadesId").dxSelectBox("instance").option("value", null);
+            $("#@(Prefix)PreparacionText").html("");
+        }
+        @(Prefix)HabilitarBotonVerAgenda();
+    }
+
+    function @(Prefix)HabilitarBotonVerAgenda() {
+        var TiposCitasId = $("#@(Prefix)TiposCitasId").dxSelectBox("instance").option("value");
+        var ServiciosId = $("#@(Prefix)ServiciosId").dxSelectBox("instance").option("value");
+        var SedesId = $("#@(Prefix)SedesId").dxSelectBox("instance").option("value");
+        var EstadosIdTipoDuracion = $("#@(Prefix)EstadosIdTipoDuracion").dxSelectBox("instance").option("value");
+        var Duracion = $("#@(Prefix)Duracion").dxNumberBox("instance").option("value");
+
+        if (ServiciosId != null && ServiciosId != ""
+            && TiposCitasId != null && TiposCitasId != ""
+            && SedesId != null && SedesId != ""
+            && EstadosIdTipoDuracion != null && EstadosIdTipoDuracion != ""
+            && Duracion != null && Duracion != "" && Duracion > 0
+        )
+        {
+            $("#@(Prefix)BotonVerAgenda").dxButton("instance").option("disabled", false);
+        } else {
+            $("#@(Prefix)BotonVerAgenda").dxButton("instance").option("disabled", true);
+        }
+    }
+
+    function @(Prefix)ValidarEntidad(params) {
+
+        var entidad = $("#@(Prefix)EntidadesId").dxSelectBox("instance").option("value");
+        var convenio = params.value;
+
+        if (entidad != null && entidad != "" && entidad != 0) {
+            if (convenio == null || convenio == "" || convenio == 0) {
+                params.rule.isValid = false;
+                params.rule.message = "El convenio es obligatorio si se selecciona una Entidad";
+                params.validator.validate();
+                return false;
+            }
+        } else {
+            params.rule.isValid = true;
+            params.rule.message = "";
+            params.validator.validate();
+            return true;
+        }
+        return true;
+    }
+
+    function @(Prefix)GetSedesId() {
+        var value = $("#@(Prefix)SedesId").dxSelectBox("instance");
+        if (value != undefined)
+            return value.option("value");
+        else
+            return 0;
+    }
+    function @(Prefix)GetPacientesId() {
+        var value = $("#@(Prefix)PacientesId").dxSelectBox("instance");
+        if (value != undefined)
+            return value.option("value");
+        else
+            return 0;
+    }
+    function @(Prefix)GetServiciosId() {
+        var value = $("#@(Prefix)ServiciosId").dxSelectBox("instance");
+        if (value != undefined)
+            return value.option("value");
+        else
+            return 0;
+    }
+    function @(Prefix)GetEntidadesId() {
+        var value = $("#@(Prefix)EntidadesId").dxSelectBox("instance");
+        if (value != undefined)
+            return value.option("value");
+        else
+            return 0;
+    }
+    function @(Prefix)GetConveniosId() {
+        var value = $("#@(Prefix)ConveniosId").dxSelectBox("instance");
+        if (value != undefined)
+            return value.option("value");
+        else
+            return 0;
+    }
+
+    function @(Prefix)FormSuccess(data)
+    {
+        hideLoadIndicator();
+        if ('@ViewData.ModelState.IsValid' == 'True')
+        {
+            if ("@ViewBag.Accion" == "Delete") {
+                DevExpress.ui.notify("Registro eliminado correctamente.","info");
+            } else if ("@ViewBag.Accion" == "Save") {
+                $('#LinkTabPreparacion').click();
+                DevExpress.ui.notify("Registro guardado correctamente.","info");
+            } else {
+                DevExpress.ui.notify("Error no accion en submit.","info");
+            }
+        }
+    }
+
+    function @(Prefix)FormFailure(data)
+    {
+        hideLoadIndicator();
+        DevExpress.ui.notify("Error en el formulario","error");
+    }
+
+    function @(Prefix)FormSuccessDetail(data)
+    {
+        hideLoadIndicator();
+        if ('@ViewData.ModelState.IsValid' == 'True')
+        {
+            $("#ProgramacionCitasDetalleDataGrid").dxDataGrid("instance").refresh();
+            if ("@ViewBag.Accion" == "Delete") {
+                DevExpress.ui.notify("Registro eliminado correctamente.","info");
+            } else if ("@ViewBag.Accion" == "Save") {
+                DevExpress.ui.notify("Registro guardado correctamente.","info");
+            } else {
+                DevExpress.ui.notify("Error no accion en submit.","info");
+            }
+        }
+    }
+
+    function @(Prefix)FormFailureDetail(data)
+    {
+        hideLoadIndicator();
+        DevExpress.ui.notify("Error en el formulario","error");
+    }
+
+</script>

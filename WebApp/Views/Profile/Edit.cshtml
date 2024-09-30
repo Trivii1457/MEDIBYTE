@@ -1,0 +1,82 @@
+﻿@model ProfileModel
+@{
+    string Prefix = "Profile";
+
+    string UrlSave = Url.Action("Edit", "Profile");
+    string UrlNew = Url.Action("New", "Profile");
+    string UrlDelete = Url.Action("Delete", "Profile", new { Id = Model.Entity.Id });
+    string UrlBack = Url.Action("ListPartial", "Profile");
+
+    var ToolbarConfig = new ToolbarConfiguration(Prefix)
+        .Title(DApp.DefaultLanguage.GetResource("Profiles"))
+        .Save(DApp.ActionViewSecurity(Context, UrlSave), Model.Entity.IsNew)
+        .New(UrlNew, DApp.ActionViewSecurity(Context, UrlNew))
+        .Delete(UrlDelete, DApp.ActionViewSecurity(Context, UrlDelete), UrlBack, Model.Entity.IsNew)
+        .Back(UrlBack);
+}
+
+<partial name="ViewJS.cshtml" model="Model" view-data="ViewData" />
+
+@(Html.DControls().Toolbar(ToolbarConfig))
+
+<div>
+    <div id="ProfileMainPanelForm">
+        <form id="@(Prefix)Form" asp-controller="Profile" asp-action="Edit" class="form-horizontal" data-ajax-mode="replace" data-ajax-update="#mainPanel" data-ajax-success="@(Prefix)FormSuccess" data-ajax-failure="@(Prefix)FormFailure" data-ajax="true">
+            @(Html.DControls().ValidationSummary().ValidationGroup(Prefix + "ValidationGroup").ElementAttr("class","ErrorValidationSummary"))
+            @using (Html.DevExtreme().ValidationGroup(Prefix + "ValidationGroup"))
+            {
+                @(Html.DControls().CheckBoxFor(m => m.Entity.IsNew).ID(Prefix + "IsNew").Visible(false))
+                @(Html.DControls().NumberBoxFor(m => m.Entity.Id).ID(Prefix + "Id").Visible(false))
+                @(Html.DControls().NumberBoxFor(m => m.Entity.EmpresasId).ID(Prefix + "EmpresasId").Visible(false))
+                @(Html.DControls().TextBoxFor(m => m.Entity.UpdatedBy).ID(Prefix + "UpdatedBy").Visible(false))
+                @(Html.DControls().DateBoxFor(m => m.Entity.LastUpdate).ID(Prefix + "LastUpdate").Type(DateBoxType.DateTime).Visible(false))
+                @(Html.DControls().TextBoxFor(m => m.Entity.CreatedBy).ID(Prefix + "CreatedBy").Visible(false))
+                @(Html.DControls().DateBoxFor(m => m.Entity.CreationDate).ID(Prefix + "CreationDate").Type(DateBoxType.DateTime).Visible(false))
+
+                @(Html.DControls().Form<ProfileModel>()
+                    .ID("ProfileModelForm").LabelLocation(FormLabelLocation.Top).ShowValidationSummary(false).FormData(Model)
+                    .Items(items =>
+                    {
+                        items.AddGroup().ColCount(12).Caption(DApp.DefaultLanguage.GetResource("DEFAULT.INFORMATIONGENERAL"))
+                            .Items(groupItems =>{
+                                groupItems.AddSimpleFor(m => m.Entity.Description).ColSpan(6)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Profiles.Description")))
+                                 .ValidationRules(rules => rules.AddStringLength().Min(0).Max(255).Message(DApp.GetStringLengthResource("Profiles.Description", 255)))
+                                      .Editor(e => e.TextBox().ID(Prefix + "Description").ShowClearButton(true));
+                                groupItems.AddSimpleFor(m => m.Entity.SecurityPolicy).ColSpan(3)
+                                      .Editor(e => e.SelectBox().ValueExpr("key").DisplayExpr("desc")
+                                    .DataSource(new List<object>() { new { key = false, desc = "Denegar Todo" }, new { key = true, desc = "Permitir todo" } }));
+                                groupItems.AddSimpleFor(m => m.Entity.IsActive).Label(x=>x.Visible(false)).ColSpan(3)
+                                    .Editor(e=>e.CheckBox().ID(Prefix + "IsActive").Text(DApp.DefaultLanguage.GetResource("Profiles.IsActive")));
+                            });
+                    })
+                )
+            }
+        </form>
+
+        @* Si el maestro maneja detalle descomentar el siguiente codigo y remplazar la palabra "MAESTRODETALLE" *@
+        <div>
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active">
+                    <a href="#ProfileNavigation" aria-controls="ProfileNavigation" role="tab" data-toggle="tab">
+                        @DApp.DefaultLanguage.GetResource("ProfileNavigation")
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a href="#Users" aria-controls="Users" role="tab" data-toggle="tab">
+                        @DApp.DefaultLanguage.GetResource("Users")
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="ProfileNavigation">
+                    <partial name="../ProfileNavigation/EditProfileNavigation.cshtml" model=Model view-data="ViewData" />
+                </div>
+                <div role="tabpanel" class="tab-pane" id="Users">
+                    <partial name="../ProfileUser/ListDetailProfile.cshtml" model=Model view-data="ViewData" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

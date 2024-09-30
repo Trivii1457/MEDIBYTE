@@ -1,0 +1,282 @@
+@model AtencionesModel
+@{
+    string Prefix = "Atenciones";
+
+    string UrlSave = Url.Action("Edit", "Atenciones");
+    //string UrlNew = Url.Action("New", "Atenciones");
+    //string UrlDelete = Url.Action("Delete", "Atenciones", new { Id = Model.Entity.Id });
+    string UrlBack = Url.Action("ListPartial", "Atenciones");
+
+    bool esServicioConsulta = Model.Entity.Admisiones.ProgramacionCitas.Servicios.TiposServicios.Nombre == "Consulta";
+
+    bool disabledButton = (Model.Entity.EstadosId == 10077 || Model.Entity.EstadosId == 10076);
+
+    var ToolbarConfig = new ToolbarConfiguration(Prefix)
+        .Title(DApp.DefaultLanguage.GetResource("Atenciones"))
+        .Save(DApp.ActionViewSecurity(Context, UrlSave) || disabledButton, Model.Entity.IsNew)
+        //.New(UrlNew, DApp.ActionViewSecurity(Context, UrlNew))
+        //.Delete(UrlDelete,DApp.ActionViewSecurity(Context,UrlDelete),UrlBack,Model.Entity.IsNew)
+        .AddButtons(new List<ButtonToolbar>()
+        {
+            new ButtonToolbar
+            {
+                Action = "AnularAtencion",
+                Text = @DApp.DefaultLanguage.GetResource("Atenciones.Anular"),
+                Disabled = disabledButton,
+                Location = ToolbarItemLocation.After,
+                LocateInMenu = ToolbarItemLocateInMenuMode.Auto,
+                Icon = "clear"
+            },
+            new ButtonToolbar
+            {
+                Action = $"{Prefix}PopupAbrirHC",
+                Text = @DApp.DefaultLanguage.GetResource("Atenciones.AbrirHC"),
+                Location = ToolbarItemLocation.After,
+                Disabled = (Model.Entity.EstadosId == 10077),
+                LocateInMenu = ToolbarItemLocateInMenuMode.Auto,
+                Icon = "parentfolder",
+                Visible = esServicioConsulta && Model.Entity.Empleados.TipoEmpleados == 2
+            },
+            new ButtonToolbar
+            {
+                Action = $"{Prefix}ImprimirNotaProcedimiento",
+                Id = $"{Prefix}ImprimirNotaProcedimiento",
+                Text = @DApp.DefaultLanguage.GetResource("DEFAULT.Imprimir"),
+                Disabled = Model.Entity.IsNew,
+                Visible = !esServicioConsulta,
+                Location = ToolbarItemLocation.After,
+                LocateInMenu = ToolbarItemLocateInMenuMode.Auto,
+                Icon = "pdffile"
+            }
+        })
+        .Back(UrlBack);
+
+}
+
+<partial name="ViewJS.cshtml" model="Model" view-data="ViewData" />
+
+@(Html.DControls().Toolbar(ToolbarConfig))
+
+<div>
+    <div id="AtencionesMainPanelForm">
+        <form id="@(Prefix)Form" asp-controller="Atenciones" asp-action="Edit" class="form-horizontal" data-ajax-mode="replace" data-ajax-update="#mainPanel" data-ajax-success="@(Prefix)FormSuccess" data-ajax-failure="@(Prefix)FormFailure" data-ajax="true">
+            @(Html.DControls().ValidationSummary().ValidationGroup(Prefix + "ValidationGroup").ElementAttr("class","ErrorValidationSummary"))
+            @using (Html.DevExtreme().ValidationGroup(Prefix + "ValidationGroup"))
+            {
+                @(Html.DControls().CheckBoxFor(m => m.Entity.IsNew).ID(Prefix + "IsNew").Visible(false))
+                @(Html.DControls().NumberBoxFor(m => m.Entity.Id).ID(Prefix + "Id").Visible(false))
+                @(Html.DControls().TextBoxFor(m => m.Entity.UpdatedBy).ID(Prefix + "UpdatedBy").Visible(false))
+                @(Html.DControls().DateBoxFor(m => m.Entity.LastUpdate).ID(Prefix + "LastUpdate").Type(DateBoxType.DateTime).Visible(false))
+                @(Html.DControls().TextBoxFor(m => m.Entity.CreatedBy).ID(Prefix + "CreatedBy").Visible(false))
+                @(Html.DControls().DateBoxFor(m => m.Entity.CreationDate).ID(Prefix + "CreationDate").Type(DateBoxType.DateTime).Visible(false))
+
+                @(Html.DControls().NumberBoxFor(m => m.Entity.AdmisionesId).ID(Prefix + "AdmisionesId").Visible(false))
+
+                @(Html.DControls().Form<AtencionesModel>()
+                    .ID("AtencionesModelForm").LabelLocation(FormLabelLocation.Top).ShowValidationSummary(false).FormData(Model)
+                    .Items(items =>
+                    {
+                        items.AddGroup().ColCount(12).Caption(DApp.DefaultLanguage.GetResource("DEFAULT.INFORMATIONGENERAL"))
+                            .Items(groupItems =>{
+
+                                groupItems.AddSimpleFor(m => m.Entity.Admisiones.Pacientes.TiposIdentificacion.Nombre).ColSpan(3)
+                                 .Label(x => x.Text(DApp.GetResource("Atenciones.PacientesTiposIdentificacion")))
+                                      .Editor(e => e.TextBox().ID(Prefix + "PacientesTiposIdentificacion").ReadOnly(true)
+                                 );
+
+                                groupItems.AddSimpleFor(m => m.Entity.Admisiones.Pacientes.NumeroIdentificacion).ColSpan(3)
+                                 .Label(x => x.Text(DApp.GetResource("Atenciones.NumeroIdentificacion")))
+                                      .Editor(e => e.NumberBox().ID(Prefix + "NumeroIdentificacion").ReadOnly(true)
+                                 );
+
+                                groupItems.AddSimpleFor(m => m.Entity.Admisiones.Pacientes.NombreCompleto).ColSpan(3)
+                                 .Label(x => x.Text(DApp.GetResource("Atenciones.PacienteNombreCompleto")))
+                                      .Editor(e => e.TextBox().ID(Prefix + "PacienteNombreCompleto").ReadOnly(true)
+                                 );
+
+                                groupItems.AddSimpleFor(m => m.Entity.EstadosId).ColSpan(3)
+                                .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Atenciones.EstadosId")))
+                                .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Atenciones.EstadosId")))
+                                     .Editor(e => e.SelectBox().ID(Prefix + "EstadosId").ReadOnly(true)
+                                     .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Atenciones").LoadAction("GetEstadosId").Key("Id"))
+                                     .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                     .ValueExpr("Id").DisplayExpr("Nombre").SearchExpr("Nombre")
+                                );
+
+                                groupItems.AddSimpleFor(m => m.Entity.Admisiones.Pacientes.FechaNacimiento).ColSpan(3)
+                                 .Label(x => x.Text(DApp.GetResource("Atenciones.PacienteFechaNacimiento")))
+                                      .Editor(e => e.DateBox().ID(Prefix + "PacienteFechaNacimiento").ReadOnly(true).DisplayFormat(DApp.DefaultLanguage.DateFormat)
+                                 );
+
+                                groupItems.AddSimple().Template(new TemplateName("TemplateCalcularEdad")).ColSpan(3);
+
+                                groupItems.AddSimpleFor(m => m.Entity.Admisiones.Pacientes.Generos.Nombre).ColSpan(3)
+                                 .Label(x=>x.Text(DApp.GetResource("Atenciones.PacienteGenero")))
+                                      .Editor(e => e.TextBox().ID(Prefix + "PacienteGenero").ReadOnly(true)
+                                 );
+
+                                groupItems.AddSimpleFor(m => m.Entity.FechaAtencion).ColSpan(3)
+                                  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Atenciones.FechaAtencion")))
+                                      .Editor(e => e.DateBox().ID(Prefix + "FechaAtencion").Type(DateBoxType.Time).ReadOnly(true)
+                                      .DisplayFormat(DApp.DefaultLanguage.DateFormat));
+
+                                groupItems.AddSimpleFor(m => m.Entity.Admisiones.ProgramacionCitas.Entidades.Nombre).ColSpan(6)
+                                 .Label(x => x.Text(DApp.GetResource("Atenciones.PacienteEntidad")))
+                                      .Editor(e => e.TextBox().ID(Prefix + "PacienteEntidad").ReadOnly(true)
+                                 );
+
+                                groupItems.AddSimpleFor(m => m.Entity.EmpleadosId).ColSpan(6)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Atenciones.EmpleadosId")))
+                                 .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Atenciones.EmpleadosId")))
+                                      .Editor(e => e.SelectBox().ID(Prefix + "EmpleadosId").ReadOnly(true)
+                                      .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Atenciones").LoadAction("GetEmpleadosId").Key("Id"))
+                                      .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                      .ValueExpr("Id").DisplayExpr("NombreCompleto")
+                                 );
+
+
+                                groupItems.AddSimpleFor(m => m.Entity.CausasExternasId).ColSpan(6)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Atenciones.CausasExternasId")))
+                                 .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Atenciones.CausasExternasId")))
+                                      .Editor(e => e.SelectBox().ID(Prefix + "CausasExternasId")
+                                      .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Atenciones").LoadAction("GetCausasExternasId").Key("Id"))
+                                      .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                      .ValueExpr("Id").DisplayExpr("Nombre").SearchExpr("Nombre")
+                                      .SearchEnabled(true).ShowClearButton(true)
+                                 );
+
+                                groupItems.AddSimpleFor(m => m.Entity.FinalidadConsultaId).ColSpan(6).Visible(esServicioConsulta)
+                                     .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Atenciones.FinalidadConsultaId")))
+                                     .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Atenciones.FinalidadConsultaId")))
+                                     .Editor(e => e.SelectBox().ID(Prefix + "FinalidadConsultaId")
+                                     .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Atenciones").LoadAction("GetFinalidadConsultaId").Key("Id"))
+                                     .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                     .ValueExpr("Id").DisplayExpr("Nombre").SearchExpr("Nombre")
+                                     .SearchEnabled(true).ShowClearButton(true)
+                                );
+                                groupItems.AddSimpleFor(m => m.Entity.FinalidadProcedimientoId).ColSpan(6).Visible(!esServicioConsulta)
+                                     .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Atenciones.FinalidadProcedimientoId")))
+                                     .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Atenciones.FinalidadProcedimientoId")))
+                                     .Editor(e => e.SelectBox().ID(Prefix + "FinalidadProcedimientoId")
+                                     .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Atenciones").LoadAction("GetFinalidadProcedimientoId").Key("Id"))
+                                     .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                     .ValueExpr("Id").DisplayExpr("Nombre").SearchExpr("Nombre")
+                                     .SearchEnabled(true).ShowClearButton(true)
+                                );
+
+                                groupItems.AddSimpleFor(m => m.Entity.AmbitoRealizacionProcedimientoId).ColSpan(6).Visible(!esServicioConsulta)
+                                     .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Atenciones.AmbitoRealizacionProcedimientoId")))
+                                     .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Atenciones.AmbitoRealizacionProcedimientoId")))
+                                     .Editor(e => e.SelectBox().ID(Prefix + "AmbitoRealizacionProcedimientoId")
+                                     .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Atenciones").LoadAction("GetAmbitoRealizacionProcedimientoId").Key("Id"))
+                                     .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                     .ValueExpr("Id").DisplayExpr("Nombre").SearchExpr("Nombre")
+                                     .SearchEnabled(true).ShowClearButton(true)
+                                );
+
+                                groupItems.AddEmpty().ColSpan(6).Visible(!esServicioConsulta);
+
+                                groupItems.AddSimpleFor(m => m.Entity.NotaProcedimientos).ColSpan(12).Visible(!esServicioConsulta)
+                                     //.ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Atenciones.NotaProcedimientos")))
+                                     //.ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Atenciones.NotaProcedimientos")))
+                                     .Editor(e => e.TextArea().ID(Prefix + "NotaProcedimientos").Height(150)
+                                );
+
+                                groupItems.AddSimpleFor(m => m.Entity.CreatedBy).ColSpan(3)
+                                                .Editor(e => e.TextBox().ReadOnly(true));
+                                groupItems.AddSimpleFor(m => m.Entity.CreationDate).ColSpan(3)
+                                    .Editor(e => e.DateBox().ReadOnly(true)
+                                    .Type(DateBoxType.DateTime)
+                                    .DisplayFormat(DApp.DefaultLanguage.DateTimeFormat));
+
+                                groupItems.AddSimpleFor(m => m.Entity.UpdatedBy).ColSpan(3)
+                                    .Editor(e => e.TextBox().ReadOnly(true));
+                                groupItems.AddSimpleFor(m => m.Entity.LastUpdate).ColSpan(3)
+                                    .Editor(e => e.DateBox().ReadOnly(true)
+                                    .Type(DateBoxType.DateTime)
+                                    .DisplayFormat(DApp.DefaultLanguage.DateTimeFormat));
+                            });
+                    })
+                )
+            }
+        </form>
+    </div>
+
+    <div class="card cardDeatil">
+        <div class="card-body">
+            <div class="box-body table-responsive no-padding">
+                @(Html.DControls().DataGridSimple<AdmisionesServiciosPrestados>()
+                    .ID(Prefix + "PrestadosDetalleDataGrid")
+                    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("AdmisionesServiciosPrestados").LoadAction("Get").Key("Id"))
+                    .DataSourceOptions(x=>x.Filter("['AdmisionesId','=','" + @Model.Entity.AdmisionesId+"']"))
+                    .SearchPanel(x=>x.Visible(false))
+                    .Columns(columns =>
+                    {
+
+                        columns.AddFor(m => m.Servicios.Nombre);
+
+                        columns.AddFor(m => m.ValorServicio);
+                        columns.AddFor(m => m.Cantidad);
+                        columns.AddFor(m => m.Observaciones);
+                        columns.AddFor(m => m.Recomendaciones);
+                    })
+                )
+            </div>
+            <div id="AdmisionesServiciosPrestadosMainPanelForm"></div>
+        </div>
+    </div>
+
+</div>
+
+@using (Html.DevExtreme().NamedTemplate("TemplateCalcularEdad"))
+{
+    <div id="PacientesCalculoEdad" class="text-in-simple"></div>
+    <script>
+        $(function () {
+            @(Prefix)OnValueChangedFechaNacimiento();
+        });
+    </script>
+}
+
+@(Html.DControls().Popup()
+    .ID("PopupAnularAtencion").Width(500).Height(210).ShowTitle(true)
+    .Title("Detalle").ShowCloseButton(true)
+    .Visible(false).DragEnabled(false)
+    .ContentTemplate(new TemplateName("TemplateAnularAtencion"))
+)
+@using (Html.DevExtreme().NamedTemplate("TemplateAnularAtencion"))
+{
+    <div class="form-group">
+        @(Html.DControls().TextAreaFor(m => m.Entity.DetalleAnulacion).ID(Prefix + "DetalleAnulacion").Placeholder("Detalle de la anulacion").InputAttr("class", "form-control"))
+    </div>
+    <div class="form-group">
+        <button class="btn btn-dark btn-block" onclick="ConfirmarAnularAtencion()">ACEPTAR</button>
+    </div>
+}
+
+@(Html.DControls().Popup()
+    .ID("PopupAbrirHC").Width(700).Height(200).ShowTitle(true)
+    .Title(DApp.DefaultLanguage.GetResource("Atenciones.AbrirHC")).ShowCloseButton(true)
+    .Visible(false).DragEnabled(false)
+    .ContentTemplate(new TemplateName("TemplateAbrirHC"))
+)
+@using (Html.DevExtreme().NamedTemplate("TemplateAbrirHC"))
+{
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <label for="@(Prefix)TipoHC">@DApp.DefaultLanguage.GetResource("Atenciones.TipoHC")</label>
+                @(Html.DControls().SelectBox().ID($"{Prefix}TipoHC")
+                .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Atenciones").LoadAction("GetHCTiposId").Key("Id"))
+                .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                .ValueExpr("Id").DisplayExpr("Descripcion").SearchExpr("Descripcion")
+                .SearchEnabled(true).ShowClearButton(true)
+            )
+            </div>
+        </div>
+        <div class="row justify-content-center" style=" margin-top: 16px; ">
+            <button type="button" class="btn btn-primary" onclick="@(Prefix)AbrirHC()">ACEPTAR</button>
+        </div>
+    </div>
+
+}

@@ -1,0 +1,24 @@
+@{ 
+    string Prefix = "Cups";
+    string UrlClick = Url.Action("Edit", "Cups");
+    string UrlNew = Url.Action("New", "Cups");
+
+    var DataGridConfig = new DataGridConfiguration<Cups>(Prefix)
+        .OnClick(UrlClick, new { Id = "Id" })
+        .New(UrlNew,DApp.ActionViewSecurity(Context,UrlNew))
+        .Exports(true,true).SetStorage()
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("Cups"), "mainPanel");
+} 
+
+<div class="box-body table-responsive no-padding"> 
+@(Html.DControls().DataGridSimple<Cups>(DataGridConfig)
+    .ID("CupsDataGrid")
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Cups").LoadAction("Get").Key("Id"))
+    .Columns(columns =>
+    {
+        columns.AddFor(m => m.Codigo);
+        columns.AddFor(m => m.Descripcion);
+        columns.AddFor(m => m.PBS);
+    })
+) 
+</div> 

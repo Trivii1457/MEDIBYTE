@@ -1,0 +1,65 @@
+@model OrdenesMedicamentosDiagnosticosModel 
+@{
+    string Prefix = "OrdenesMedicamentosDiagnosticos"; 
+    string UrlDelete = Url.Action("DeleteDetail", "OrdenesMedicamentosDiagnosticos", new { Id = Model.Entity.Id }); 
+
+    var toolbarDetailconfig = new ToolbarDetailConfiguration(Prefix).Delete(UrlDelete,Model.Entity.IsNew,true).Save(true).Cancel(); 
+} 
+
+<partial name="ViewJS.cshtml" model="Model" view-data="ViewData" /> 
+
+<div>@(Html.DControls().Toolbar(toolbarDetailconfig))</div>
+
+<div> 
+    <form id="@(Prefix)Form" asp-controller="OrdenesMedicamentosDiagnosticos" asp-action="EditDetail" class="form-horizontal" data-ajax-mode="replace" data-ajax-update="#OrdenesMedicamentosDiagnosticosMainPanelForm" data-ajax-success="@(Prefix)FormSuccessDetail" data-ajax-failure="@(Prefix)FormFailureDetail" data-ajax="true">
+        @(Html.DControls().ValidationSummary().ValidationGroup(Prefix + "ValidationGroup").ElementAttr("class","ErrorValidationSummary"))
+        @using (Html.DevExtreme().ValidationGroup(Prefix + "ValidationGroupDetail"))
+        {
+            @(Html.DControls().CheckBoxFor(m => m.Entity.IsNew).ID(Prefix + "IsNew").Visible(false))
+            @(Html.DControls().NumberBoxFor(m => m.Entity.Id).ID(Prefix + "Id").Visible(false))
+            @(Html.DControls().TextBoxFor(m => m.Entity.UpdatedBy).ID(Prefix + "UpdatedBy").Visible(false))
+            @(Html.DControls().DateBoxFor(m => m.Entity.LastUpdate).ID(Prefix + "LastUpdate").Type(DateBoxType.DateTime).Visible(false))
+            @(Html.DControls().TextBoxFor(m => m.Entity.CreatedBy).ID(Prefix + "CreatedBy").Visible(false))
+            @(Html.DControls().DateBoxFor(m => m.Entity.CreationDate).ID(Prefix + "CreationDate").Type(DateBoxType.DateTime).Visible(false))
+
+            @(Html.DControls().NumberBoxFor(m => m.Entity.OrdenesMedicamentosId).ID(Prefix + "OrdenesMedicamentosId").Visible(false))
+
+            @(Html.DControls().Form<OrdenesMedicamentosDiagnosticosModel>()
+                    .ID("OrdenesMedicamentosDiagnosticosModelForm").LabelLocation(FormLabelLocation.Top).ShowValidationSummary(false).FormData(Model)
+                    .Items(items =>
+                    {
+                        items.AddGroup().ColCount(12).Caption(DApp.DefaultLanguage.GetResource("DEFAULT.INFORMATIONGENERAL"))
+                            .Items(groupItems =>{
+
+                                groupItems.AddSimpleFor(m => m.Entity.TiposDiagnosticosId).ColSpan(6)
+                                       .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("OrdenesMedicamentosDiagnosticos.TiposDiagnosticosId")))
+                                       .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("OrdenesMedicamentosDiagnosticos.TiposDiagnosticosId")))
+                                           .Editor(e => e.SelectBox().ID(Prefix + "TiposDiagnosticosId")
+                                           .DataSource(d => d.Mvc().LoadMethod("POST").Controller("OrdenesMedicamentosDiagnosticos").LoadAction("GetTiposDiagnosticosId").Key("Id"))
+                                           .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                           .ValueExpr("Id").DisplayExpr("Nombre").SearchExpr("Nombre")
+                                           .SearchEnabled(true).ShowClearButton(true)
+                                   );
+
+                                groupItems.AddEmpty().ColSpan(6);
+
+                                groupItems.AddSimpleFor(m => m.Entity.DiagnosticosId).ColSpan(8)
+                                .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("OrdenesMedicamentosDiagnosticos.DiagnosticosId")))
+                                .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("OrdenesMedicamentosDiagnosticos.DiagnosticosId")))
+                                    .Editor(e => e.SelectBox().ID(Prefix + "DiagnosticosId")
+                                    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("OrdenesMedicamentosDiagnosticos").LoadAction("GetDiagnosticosId").Key("Id"))
+                                    .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                    .ValueExpr("Id").DisplayExpr("DescripcionCompleta").SearchExpr("Descripcion", "Codigo")
+                                    .SearchEnabled(true).ShowClearButton(true)
+                               );
+                                groupItems.AddSimpleFor(m => m.Entity.Principal).Label(x=>x.Visible(false)).ColSpan(4)
+                                      .Editor(e=>e.CheckBox().ID(Prefix + "Principal").Text(DApp.DefaultLanguage.GetResource("OrdenesMedicamentosDiagnosticos.Principal")));
+
+                            });
+                    })
+             )
+        }
+        <div asp-validation-summary="All" class="text-danger" id="@(Prefix)ListError"></div>
+    </form> 
+</div> 
+

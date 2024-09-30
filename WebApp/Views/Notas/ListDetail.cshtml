@@ -1,0 +1,185 @@
+@*  Remplazar FATHERModel por el modelo del padre al que pertenece   *@ 
+@* 
+@model FATHERModel 
+@{ 
+    string Prefix = "Notas"; 
+    string UrlOnClick = Url.Action("EditDetail", "Notas"); 
+    string UrlNew = Url.Action("NewDetail", "Notas", new { IdFather = Model.Entity.Id }); 
+
+    var DataGridDetailConfig = new DataGridConfiguration<Notas>(Prefix) 
+        .OnClick(UrlOnClick, new { Id = "Id" }, Prefix + "MainPanelForm") 
+        .New(UrlNew,Model.Entity.IsNew,Prefix + "MainPanelForm") 
+        .Exports(true,true); 
+} 
+*@ 
+
+
+@* ------------ Descomentar el siguiente codigo si es una edicion en maestro --------------- *@
+@* 
+
+<div class="card cardDeatil"> 
+    <div class="card-body">
+        <div class="box-body table-responsive no-padding"> 
+        @(Html.DControls().DataGridSimple<Notas>(DataGridDetailConfig) 
+            .ID("NotasDetalleDataGrid") 
+            .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Notas").LoadAction("Get").Key("Id")) 
+            .DataSourceOptions(x=>x.Filter("['IdFather','=','"+@Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+            .Columns(columns => 
+            { 
+             columns.AddFor(m => m.Documentos.Id); 
+             columns.AddFor(m => m.Sedes.Id); 
+             columns.AddFor(m => m.Empresas.Id); 
+             columns.AddFor(m => m.Entidades.Id); 
+             columns.AddFor(m => m.Pacientes.Id); 
+             columns.AddFor(m => m.Fecha); 
+             columns.AddFor(m => m.Consecutivo); 
+             columns.AddFor(m => m.PeriodoInicial); 
+             columns.AddFor(m => m.PeriodoFinal); 
+             columns.AddFor(m => m.Referencia); 
+             columns.AddFor(m => m.OrdenCompra); 
+             columns.AddFor(m => m.Facturas.Id); 
+             columns.AddFor(m => m.Saldo); 
+             columns.AddFor(m => m.ValorSubtotal); 
+             columns.AddFor(m => m.ValorDescuentos); 
+             columns.AddFor(m => m.ValorImpuestos); 
+             columns.AddFor(m => m.ValorTotal); 
+             columns.AddFor(m => m.Estados.Id); 
+             columns.AddFor(m => m.MontoEscrito); 
+             columns.AddFor(m => m.CUFE); 
+             columns.AddFor(m => m.IssueDate); 
+             columns.AddFor(m => m.DIANResponse); 
+             columns.AddFor(m => m.XmlUrl); 
+             columns.AddFor(m => m.ErrorReference); 
+             columns.AddFor(m => m.UrlTracking); 
+             columns.AddFor(m => m.IdDbusiness); 
+             columns.AddFor(m => m.NotasConceptos.Id); 
+            }) 
+        ) 
+        </div> 
+        <div id="NotasMainPanelForm"></div> 
+    </div> 
+</div> 
+*@ 
+
+
+@* ------------ Descomentar el siguiente codigo si es una edicion en grilla y COMENTAR LOS METODOS OnClick y New del DataGridDetailConfig --------------- *@
+@* 
+<script> 
+     function @(Prefix)OnInitNewRowDetalleDataGrid(model) { 
+         model = GetAuditoryData(model); 
+         model.data.IdFather = "@Model.Entity.Id"; // Cambiar IdFather por el campo foraneo hacia el padre 
+     } 
+</script> 
+<div class="card cardDeatil"> 
+    <div class="card-body">
+        <div class="box-body table-responsive no-padding"> 
+             @(Html.DControls().DataGridSimple<Notas>(DataGridDetailConfig) 
+                 .ID("NotasDetalleDataGrid") 
+                 .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Notas").LoadAction("Get").Key("Id") 
+                     .InsertAction("AddInGrid").InsertMethod("POST").UpdateAction("ModifyInGrid").UpdateMethod("POST").DeleteAction("DeleteInGrid").DeleteMethod("POST") 
+                 ) 
+                 .DataSourceOptions(x=>x.Filter("['IdFather','=','"+@Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+                 .Editing(editing => editing.Mode(GridEditMode.Batch).AllowAdding(!Model.Entity.IsNew).AllowUpdating(true).AllowDeleting(true)) 
+                 .OnInitNewRow(Prefix + "OnInitNewRowDetalleDataGrid") 
+                 .OnRowInserted("OnRowInsertedDetalleDataGrid").OnRowUpdated("OnRowUpdatedDetalleDataGrid").OnRowRemoved("OnRowRemovedDetalleDataGrid").OnDataErrorOccurred("OnDataErrorOccurredDetalleDataGrid") 
+                 .Columns(columns => 
+                 { 
+                     columns.AddFor(m => m.DocumentosId) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Notas.DocumentosId"))) 
+                         .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Notas.DocumentosId"))) 
+                             .Lookup(lookup => lookup 
+                             .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Notas").LoadAction("GetDocumentosId").Key("Id")) 
+                             .DataSourceOptions(o => o.Paginate(true).PageSize(10)) 
+                             .ValueExpr("Id").DisplayExpr("Id")); 
+                     columns.AddFor(m => m.SedesId) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Notas.SedesId"))) 
+                         .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Notas.SedesId"))) 
+                             .Lookup(lookup => lookup 
+                             .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Notas").LoadAction("GetSedesId").Key("Id")) 
+                             .DataSourceOptions(o => o.Paginate(true).PageSize(10)) 
+                             .ValueExpr("Id").DisplayExpr("Id")); 
+                     columns.AddFor(m => m.EmpresasId) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Notas.EmpresasId"))) 
+                         .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Notas.EmpresasId"))) 
+                             .Lookup(lookup => lookup 
+                             .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Notas").LoadAction("GetEmpresasId").Key("Id")) 
+                             .DataSourceOptions(o => o.Paginate(true).PageSize(10)) 
+                             .ValueExpr("Id").DisplayExpr("Id")); 
+                     columns.AddFor(m => m.EntidadesId) 
+                             .Lookup(lookup => lookup 
+                             .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Notas").LoadAction("GetEntidadesId").Key("Id")) 
+                             .DataSourceOptions(o => o.Paginate(true).PageSize(10)) 
+                             .ValueExpr("Id").DisplayExpr("Id")); 
+                     columns.AddFor(m => m.PacientesId) 
+                             .Lookup(lookup => lookup 
+                             .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Notas").LoadAction("GetPacientesId").Key("Id")) 
+                             .DataSourceOptions(o => o.Paginate(true).PageSize(10)) 
+                             .ValueExpr("Id").DisplayExpr("Id")); 
+                     columns.AddFor(m => m.Fecha).Format(DApp.DefaultLanguage.DateFormat) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Notas.Fecha"))); 
+                     columns.AddFor(m => m.Consecutivo).Format("#,##0.##") 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Notas.Consecutivo"))); 
+                     columns.AddFor(m => m.PeriodoInicial).Format(DApp.DefaultLanguage.DateFormat) 
+                     columns.AddFor(m => m.PeriodoFinal).Format(DApp.DefaultLanguage.DateFormat) 
+                     columns.AddFor(m => m.Referencia) 
+                         .ValidationRules(rules => rules.AddStringLength().Min(0).Max(50).Message(DApp.GetStringLengthResource("Notas.Referencia", 50))) 
+                     ; 
+                     columns.AddFor(m => m.OrdenCompra) 
+                         .ValidationRules(rules => rules.AddStringLength().Min(0).Max(50).Message(DApp.GetStringLengthResource("Notas.OrdenCompra", 50))) 
+                     ; 
+                     columns.AddFor(m => m.FacturasId) 
+                             .Lookup(lookup => lookup 
+                             .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Notas").LoadAction("GetFacturasId").Key("Id")) 
+                             .DataSourceOptions(o => o.Paginate(true).PageSize(10)) 
+                             .ValueExpr("Id").DisplayExpr("Id")); 
+                     columns.AddFor(m => m.Saldo).Format("#,##0.##") 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Notas.Saldo"))); 
+                     columns.AddFor(m => m.ValorSubtotal).Format("#,##0.##") 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Notas.ValorSubtotal"))); 
+                     columns.AddFor(m => m.ValorDescuentos).Format("#,##0.##") 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Notas.ValorDescuentos"))); 
+                     columns.AddFor(m => m.ValorImpuestos).Format("#,##0.##") 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Notas.ValorImpuestos"))); 
+                     columns.AddFor(m => m.ValorTotal).Format("#,##0.##") 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Notas.ValorTotal"))); 
+                     columns.AddFor(m => m.Estadosid) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Notas.Estadosid"))) 
+                         .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Notas.Estadosid"))) 
+                             .Lookup(lookup => lookup 
+                             .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Notas").LoadAction("GetEstadosid").Key("Id")) 
+                             .DataSourceOptions(o => o.Paginate(true).PageSize(10)) 
+                             .ValueExpr("Id").DisplayExpr("Id")); 
+                     columns.AddFor(m => m.MontoEscrito) 
+                         .ValidationRules(rules => rules.AddStringLength().Min(0).Max(1024).Message(DApp.GetStringLengthResource("Notas.MontoEscrito", 1024))) 
+                     ; 
+                     columns.AddFor(m => m.CUFE) 
+                         .ValidationRules(rules => rules.AddStringLength().Min(0).Max(255).Message(DApp.GetStringLengthResource("Notas.CUFE", 255))) 
+                     ; 
+                     columns.AddFor(m => m.IssueDate).Format(DApp.DefaultLanguage.DateFormat) 
+                     columns.AddFor(m => m.DIANResponse) 
+                         .ValidationRules(rules => rules.AddStringLength().Min(0).Max(1024).Message(DApp.GetStringLengthResource("Notas.DIANResponse", 1024))) 
+                     ; 
+                     columns.AddFor(m => m.XmlUrl) 
+                         .ValidationRules(rules => rules.AddStringLength().Min(0).Max(2048).Message(DApp.GetStringLengthResource("Notas.XmlUrl", 2048))) 
+                     ; 
+                     columns.AddFor(m => m.ErrorReference) 
+                     ; 
+                     columns.AddFor(m => m.UrlTracking) 
+                         .ValidationRules(rules => rules.AddStringLength().Min(0).Max(2048).Message(DApp.GetStringLengthResource("Notas.UrlTracking", 2048))) 
+                     ; 
+                     columns.AddFor(m => m.IdDbusiness) 
+                         .ValidationRules(rules => rules.AddStringLength().Min(0).Max(50).Message(DApp.GetStringLengthResource("Notas.IdDbusiness", 50))) 
+                     ; 
+                     columns.AddFor(m => m.NotasConceptosId) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Notas.NotasConceptosId"))) 
+                         .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Notas.NotasConceptosId"))) 
+                             .Lookup(lookup => lookup 
+                             .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Notas").LoadAction("GetNotasConceptosId").Key("Id")) 
+                             .DataSourceOptions(o => o.Paginate(true).PageSize(10)) 
+                             .ValueExpr("Id").DisplayExpr("Id")); 
+             }) 
+         ) 
+        </div> 
+    </div> 
+</div> 
+*@ 

@@ -1,0 +1,216 @@
+@model ProgramacionAgendaModel
+@{
+    string Prefix = "ProgramacionAgenda";
+}
+
+    <script>
+
+    function @(Prefix)OnValueChangedFechas()
+    {
+        var FechaInicio = $("#@(Prefix)FechaInicio").dxDateBox("instance").option("value");
+        var FechaFinal = $("#@(Prefix)FechaFinal").dxDateBox("instance").option("value");
+        var diffDays = (FechaFinal.getTime() - FechaInicio.getTime()) / (1000 * 3600 * 24);
+
+        if (diffDays > 2) {
+            $("#@(Prefix)TagDiasSemanas").dxTagBox("instance").option("readOnly", false);
+        } else {
+            $("#@(Prefix)TagDiasSemanas").dxTagBox("instance").option("value", []);
+            $("#@(Prefix)TagDiasSemanas").dxTagBox("instance").option("readOnly", true);
+        }
+    }
+
+
+    function @(Prefix)OnInitializedListConsultorios()
+    {
+        if ('@Model.Entity.IsNew' == 'False') {
+            showLoadIndicator();
+            $.ajax({
+                url: "@Url.Action("GetConsultoriosSeleccionados", "ProgramacionAgenda")",
+                data: { id : @Model.Entity.Id },
+                type: 'POST',
+                success: function (data) {
+                    hideLoadIndicator();
+                    $("#@(Prefix)ListConsultorios").dxDataGrid("instance").selectRows(data, false);
+                },
+                error: function (xhr) {
+                    hideLoadIndicator();
+                    DevExpress.ui.notify("Error: " + xhr.status, "error");
+                }
+            });
+        }
+    }
+
+    function @(Prefix)OnInitializedListEmpleados()
+    {
+        if ('@Model.Entity.IsNew' == 'False') {
+            showLoadIndicator();
+            $.ajax({
+                url: "@Url.Action("GetEmpleadosSeleccionados", "ProgramacionAgenda")",
+                data: { id : @Model.Entity.Id },
+                type: 'POST',
+                success: function (data) {
+                    hideLoadIndicator();
+                    $("#@(Prefix)ListEmpleados").dxDataGrid("instance").selectRows(data, false);
+                },
+                error: function (xhr) {
+                    hideLoadIndicator();
+                    DevExpress.ui.notify("Error: " + xhr.status, "error");
+                }
+            });
+        }
+    }
+
+    function @(Prefix)OnSelectionChangedListServiciosConsultorios(data)
+    {
+        $("#@(Prefix)SerializedServiciosConsultorios").dxTextBox("instance").option("value", JSON.stringify(data.selectedRowsData));
+    }
+
+    function @(Prefix)OnSelectionChangedListServiciosEmpleados(data)
+    {
+        $("#@(Prefix)SerializedServiciosEmpleados").dxTextBox("instance").option("value", JSON.stringify(data.selectedRowsData));
+    }
+
+    function @(Prefix)OnSelectionChangedListConsultorios(data)
+    {
+        if (data.selectedRowKeys.length > 0) {
+            showLoadIndicator();
+            $.ajax({
+                url: "@Url.Action("GetServiciosPorConsultorios", "ProgramacionAgenda")",
+                data: { consultoriosId: data.selectedRowKeys, id: @Model.Entity.Id },
+                type: 'POST',
+                success: function (data) {
+                    hideLoadIndicator();
+                    $("#@(Prefix)ListServiciosConsultorios").dxDataGrid("instance").option("dataSource", data.serviciosConsultorios);
+                    if (@Model.Entity.Id != 0)
+                        $("#@(Prefix)ListServiciosConsultorios").dxDataGrid("instance").selectRows(data.keyServiciosConsultorios, false);
+                },
+                error: function (xhr) {
+                    hideLoadIndicator();
+                    DevExpress.ui.notify("Error: " + xhr.status, "error");
+                }
+            });
+        } else {
+            $("#@(Prefix)ListServiciosConsultorios").dxDataGrid("instance").option("dataSource", null);
+        }
+    }
+
+    function @(Prefix)OnSelectionChangedListEmpleados(data)
+    {
+        if (data.selectedRowKeys.length > 0) {
+            showLoadIndicator();
+            $.ajax({
+                url: "@Url.Action("GetServiciosPorEmpleados", "ProgramacionAgenda")",
+                data: { empleadosId: data.selectedRowKeys, id : @Model.Entity.Id  },
+                type: 'POST',
+                success: function (data) {
+                    hideLoadIndicator();
+                    $("#@(Prefix)ListServiciosEmpleados").dxDataGrid("instance").option("dataSource", data.serviciosEmpleados);
+                    if (@Model.Entity.Id != 0)
+                        $("#@(Prefix)ListServiciosEmpleados").dxDataGrid("instance").selectRows(data.keyServiciosEmpleados, false);
+                },
+                error: function (xhr) {
+                    hideLoadIndicator();
+                    DevExpress.ui.notify("Error: " + xhr.status, "error");
+                }
+            });
+        } else {
+            $("#@(Prefix)ListServiciosEmpleados").dxDataGrid("instance").option("dataSource", null);
+        }
+    }
+
+    function @(Prefix)OnValueChangedTagDiasSemanas(data)
+    {
+        $("#@(Prefix)Lunes").dxCheckBox("instance").option("value", false);
+        $("#@(Prefix)Martes").dxCheckBox("instance").option("value", false);
+        $("#@(Prefix)Miercoles").dxCheckBox("instance").option("value", false);
+        $("#@(Prefix)Jueves").dxCheckBox("instance").option("value", false);
+        $("#@(Prefix)Viernes").dxCheckBox("instance").option("value", false);
+        $("#@(Prefix)Sabado").dxCheckBox("instance").option("value", false);
+        $("#@(Prefix)Domingo").dxCheckBox("instance").option("value", false);
+        for (var i = 0; i < data.value.length; i++) {
+            if (data.value[i] == 1)
+                $("#@(Prefix)Lunes").dxCheckBox("instance").option("value", true);
+            if (data.value[i] == 2)
+                $("#@(Prefix)Martes").dxCheckBox("instance").option("value", true);
+            if (data.value[i] == 3)
+                $("#@(Prefix)Miercoles").dxCheckBox("instance").option("value", true);
+            if (data.value[i] == 4)
+                $("#@(Prefix)Jueves").dxCheckBox("instance").option("value", true);
+            if (data.value[i] == 5)
+                $("#@(Prefix)Viernes").dxCheckBox("instance").option("value", true);
+            if (data.value[i] == 6)
+                $("#@(Prefix)Sabado").dxCheckBox("instance").option("value", true);
+            if (data.value[i] == 7)
+                $("#@(Prefix)Domingo").dxCheckBox("instance").option("value", true);
+        }
+    }
+
+    function @(Prefix)CargarDatosSiError()
+    {
+        var listadoConsultorios = JSON.parse($("#@(Prefix)SerializedServiciosConsultorios").dxTextBox("instance").option("value"));
+        var listadoEmpleados = JSON.parse($("#@(Prefix)SerializedServiciosEmpleados").dxTextBox("instance").option("value"));
+
+        if (listadoConsultorios != null) {
+            var idConsultorios = [];
+            for (var i = 0; i < listadoConsultorios.length; i++) {
+                idConsultorios.push(listadoConsultorios[i].ConsultoriosId);
+            }
+            $("#@(Prefix)ListConsultorios").dxDataGrid("instance").selectRows(idConsultorios, false);
+        }
+        if (listadoEmpleados != null) {
+            var idEmpleados = [];
+            for (var i = 0; i < listadoEmpleados.length; i++) {
+                idEmpleados.push(listadoEmpleados[i].EmpleadosId);
+            }
+            $("#@(Prefix)ListEmpleados").dxDataGrid("instance").selectRows(idEmpleados, false);
+        }
+    }
+
+    function @(Prefix)FormSuccess(data)
+    {
+        hideLoadIndicator();
+        if ('@ViewBag.EsError' == 'True') {
+            @(Prefix)CargarDatosSiError();
+        }
+
+        if ('@ViewData.ModelState.IsValid' == 'True')
+        {
+            if ("@ViewBag.Accion" == "Delete") {
+                DevExpress.ui.notify("Registro eliminado correctamente.","info");
+            } else if ("@ViewBag.Accion" == "Save") {
+                DevExpress.ui.notify("Registro guardado correctamente.","info");
+            } else {
+                DevExpress.ui.notify("Error no accion en submit.","info");
+            }
+        }
+    }
+
+    function @(Prefix)FormFailure(data)
+    {
+        hideLoadIndicator();
+        DevExpress.ui.notify("Error en el formulario","error");
+    }
+
+    function @(Prefix)FormSuccessDetail(data)
+    {
+        hideLoadIndicator();
+        if ('@ViewData.ModelState.IsValid' == 'True')
+        {
+            $("#ProgramacionAgendaDetalleDataGrid").dxDataGrid("instance").refresh();
+            if ("@ViewBag.Accion" == "Delete") {
+                DevExpress.ui.notify("Registro eliminado correctamente.","info");
+            } else if ("@ViewBag.Accion" == "Save") {
+                DevExpress.ui.notify("Registro guardado correctamente.","info");
+            } else {
+                DevExpress.ui.notify("Error no accion en submit.","info");
+            }
+        }
+    }
+
+    function @(Prefix)FormFailureDetail(data)
+    {
+        hideLoadIndicator();
+        DevExpress.ui.notify("Error en el formulario","error");
+    }
+
+    </script>

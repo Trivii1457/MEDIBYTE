@@ -1,0 +1,33 @@
+@*  Remplazar FATHERModel por el modelo del padre al que pertenece   *@ 
+@* 
+@model FATHERModel 
+@{ 
+    string Prefix = "TiposServicios"; 
+    string UrlOnClick = Url.Action("EditDetail", "TiposServicios"); 
+    string UrlNew = Url.Action("NewDetail", "TiposServicios", new { IdFather = Model.Entity.Id }); 
+
+    var DataGridDetailConfig = new DataGridConfiguration<TiposServicios>(Prefix) 
+        .OnClick(UrlOnClick, new { Id = "Id" }, Prefix + "MainPanelForm") 
+        .New(UrlNew,Model.Entity.IsNew,Prefix + "MainPanelForm") 
+        .Exports(true,true); 
+} 
+
+<div class="card"> 
+    <div class="card-body">
+        <div class="box-body table-responsive no-padding"> 
+        @(Html.DControls().DataGridSimple<TiposServicios>(DataGridDetailConfig) 
+            .ID("TiposServiciosDetalleDataGrid") 
+            .DataSource(d => d.Mvc().LoadMethod("POST").Controller("TiposServicios").LoadAction("Get").Key("Id")) 
+            .DataSourceOptions(x=>x.Filter("['IdFather','=','"+@Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+            .Columns(columns => 
+            { 
+        columns.AddFor(m => m.Nombre); 
+            }) 
+        ) 
+        </div> 
+        <div class="box box-info"> 
+            <div id="TiposServiciosMainPanelForm"></div> 
+        </div> 
+    </div> 
+</div> 
+*@ 

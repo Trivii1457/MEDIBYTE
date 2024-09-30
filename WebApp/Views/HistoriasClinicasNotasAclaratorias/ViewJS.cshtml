@@ -1,0 +1,80 @@
+@model HistoriasClinicasNotasAclaratoriasModel 
+@{
+    string Prefix = "HistoriasClinicasNotasAclaratorias"; 
+}
+
+<script>
+
+    function @(Prefix)DisplayExprHistoriasClinicasId(data) {
+        console.log(data)
+        if (data) {
+            var result = data.Consecutivo;
+            if (data.Pacientes)
+                result += ' - ' + data.Pacientes.PrimerNombre + ' - ' + data.Pacientes.SegundoNombre + ' - ' + data.Pacientes.PrimerApellido + ' - ' + data.Pacientes.SegundoApellido;
+
+            return result;
+        }
+    }
+
+    function ImprimirHCNAPorId() {
+        showLoadIndicator();
+        $.ajax({
+            url: "@Url.Action("ImprimirHCNAPorId", Prefix, new { Id = Model.Entity.Id })",
+            type: 'GET',
+            success: function (data) {
+                $("#VisorReporteria").dxPopup("instance").show();
+                $("#ContenidoReporte").html(data);
+                hideLoadIndicator();
+            },
+            error: function (xhr) {
+                console.log(xhr);
+                hideLoadIndicator();
+                DevExpress.ui.notify("Error inesperado " + xhr.statusText, "error");
+            }
+        });
+    }
+
+    function @(Prefix)FormSuccess(data) 
+    { 
+        hideLoadIndicator(); 
+        if ('@ViewData.ModelState.IsValid' == 'True') 
+        { 
+            if ("@ViewBag.Accion" == "Delete") {
+                DevExpress.ui.notify("Registro eliminado correctamente.","info"); 
+            } else if ("@ViewBag.Accion" == "Save") {
+                DevExpress.ui.notify("Registro guardado correctamente.","info"); 
+            } else {
+                DevExpress.ui.notify("Error no accion en submit.","info"); 
+            }
+        } 
+    } 
+
+    function @(Prefix)FormFailure(data) 
+    { 
+        hideLoadIndicator(); 
+        DevExpress.ui.notify("Error en el formulario","error"); 
+    } 
+
+    function @(Prefix)FormSuccessDetail(data) 
+    { 
+        hideLoadIndicator(); 
+        if ('@ViewData.ModelState.IsValid' == 'True') 
+        { 
+            $("#HistoriasClinicasNotasAclaratoriasDetalleDataGrid").dxDataGrid("instance").refresh();
+            if ("@ViewBag.Accion" == "Delete") {
+                DevExpress.ui.notify("Registro eliminado correctamente.","info"); 
+            } else if ("@ViewBag.Accion" == "Save") {
+                DevExpress.ui.notify("Registro guardado correctamente.","info"); 
+            } else {
+                DevExpress.ui.notify("Error no accion en submit.","info"); 
+            }
+        } 
+    } 
+
+    function @(Prefix)FormFailureDetail(data) 
+    { 
+        hideLoadIndicator(); 
+        DevExpress.ui.notify("Error en el formulario","error"); 
+    } 
+
+</script>

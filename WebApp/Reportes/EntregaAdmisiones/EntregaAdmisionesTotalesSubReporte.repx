@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<XtraReportsLayoutSerializer SerializerVersion="20.2.6.0" Ref="1" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v20.2, Version=20.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="HistoriasClinicasDiagnosticosSubReporte" Landscape="true" Margins="10, 7, 0, 10" PaperKind="Custom" PageWidth="1170" PageHeight="980" Version="20.2" EventsInfo="|HistoriasClinicasDiagnosticosSubReporte,BeforePrint,AtencionesResultadoReporte_BeforePrint" FilterString="[ADMISION_FECHA_CREACION] Between(?p_FechaDesde, ?p_FechaHasta) And [SEDE_ID] = ?p_SedeId" DataMember="VFacturasDetalleReporte" DataSource="#Ref-0" Font="Arial, 9.75pt" BorderColor="WhiteSmoke">
+  <Extensions>
+    <Item1 Ref="2" Key="VSReportExtInfo" Value=".repx" />
+  </Extensions>
+  <Parameters>
+    <Item1 Ref="4" Visible="false" Description="p_FechaDesde" ValueInfo="2021-04-05" Name="p_FechaDesde" Type="#Ref-3" />
+    <Item2 Ref="5" Visible="false" Description="p_FechaHasta" ValueInfo="2021-04-09" Name="p_FechaHasta" Type="#Ref-3" />
+    <Item3 Ref="7" Visible="false" Description="p_SedeId" ValueInfo="21" Name="p_SedeId" Type="#Ref-6" />
+  </Parameters>
+  <Bands>
+    <Item1 Ref="8" ControlType="TopMarginBand" Name="TopMargin" HeightF="0" />
+    <Item2 Ref="9" ControlType="BottomMarginBand" Name="BottomMargin" HeightF="10" />
+    <Item3 Ref="10" ControlType="DetailBand" Name="Detail" HeightF="0" />
+    <Item4 Ref="11" ControlType="ReportFooterBand" Name="ReportFooter" HeightF="114">
+      <Controls>
+        <Item1 Ref="12" ControlType="XRTable" Name="table3" SizeF="502.337219,84.99999" LocationFloat="640.6628,11.0000029" Padding="2,2,0,0,96">
+          <Rows>
+            <Item1 Ref="13" ControlType="XRTableRow" Name="tableRow10" Weight="1">
+              <Cells>
+                <Item1 Ref="14" ControlType="XRTableCell" Name="tableCell17" Weight="1" Multiline="true" Text="Recibe:" Font="Calibri, 6pt, charSet=0" BorderColor="Black" Borders="All">
+                  <StylePriority Ref="15" UseFont="false" UseBorderColor="false" UseBorders="false" />
+                </Item1>
+              </Cells>
+            </Item1>
+          </Rows>
+        </Item1>
+        <Item2 Ref="16" ControlType="XRTable" Name="table2" SizeF="630.625061,12" LocationFloat="0,102" Font="Calibri, 6pt, charSet=0" Padding="2,2,0,0,96" BorderColor="Black" Borders="All" BorderWidth="0.5">
+          <Rows>
+            <Item1 Ref="17" ControlType="XRTableRow" Name="tableRow9" Weight="0.48">
+              <Cells>
+                <Item1 Ref="18" ControlType="XRTableCell" Name="tableCell18" Weight="4.3532690413646531" Multiline="true" Text="Total cuentas por cobrar" TextAlignment="MiddleLeft" Font="Calibri, 6pt, style=Bold, charSet=0">
+                  <StylePriority Ref="19" UseFont="false" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="20" ControlType="XRTableCell" Name="tableCell19" Weight="0.82040466469003481" TextFormatString="{0:#,0.00}" Multiline="true" TextAlignment="MiddleRight" Font="Calibri, 6pt, style=Bold, charSet=0">
+                  <Summary Ref="21" Running="Report" />
+                  <ExpressionBindings>
+                    <Item1 Ref="22" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([VALOR_ENTIDAD] - [COP_MOD_REC_COM])" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="23" UseFont="false" UseTextAlignment="false" />
+                </Item2>
+              </Cells>
+            </Item1>
+          </Rows>
+          <StylePriority Ref="24" UseFont="false" UseBorderColor="false" UseBorders="false" UseBorderWidth="false" />
+        </Item2>
+        <Item3 Ref="25" ControlType="XRTable" Name="table1" SizeF="630.625,96" LocationFloat="0,0" Font="Calibri, 6pt, charSet=0" Padding="2,2,0,0,96" BorderColor="Black" Borders="All" BorderWidth="0.5">
+          <Rows>
+            <Item1 Ref="26" ControlType="XRTableRow" Name="tableRow1" Weight="0.48">
+              <Cells>
+                <Item1 Ref="27" ControlType="XRTableCell" Name="tableCell2" Weight="5.30625" Multiline="true" Text="Recaudos" TextAlignment="MiddleCenter" Font="Calibri, 6pt, style=Bold, charSet=0">
+                  <StylePriority Ref="28" UseFont="false" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="29" ControlType="XRTableCell" Name="tableCell3" Weight="1" Multiline="true" Text="Totales" TextAlignment="MiddleCenter" Font="Calibri, 6pt, style=Bold, charSet=0">
+                  <StylePriority Ref="30" UseFont="false" UseTextAlignment="false" />
+                </Item2>
+              </Cells>
+            </Item1>
+            <Item2 Ref="31" ControlType="XRTableRow" Name="tableRow2" Weight="0.48">
+              <Cells>
+                <Item1 Ref="32" ControlType="XRTableCell" Name="tableCell1" Weight="5.30625" Multiline="true" Text="Total copagos" TextAlignment="MiddleLeft">
+                  <StylePriority Ref="33" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="34" ControlType="XRTableCell" Name="tableCell4" Weight="1" TextFormatString="{0:#,0.00}" Multiline="true" TextAlignment="MiddleRight">
+                  <Summary Ref="35" Running="Report" />
+                  <ExpressionBindings>
+                    <Item1 Ref="36" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([COPAGO])" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="37" UseTextAlignment="false" />
+                </Item2>
+              </Cells>
+            </Item2>
+            <Item3 Ref="38" ControlType="XRTableRow" Name="tableRow3" Weight="0.48">
+              <Cells>
+                <Item1 Ref="39" ControlType="XRTableCell" Name="tableCell5" Weight="5.30625" Multiline="true" Text="Total cuotas moderadoras" TextAlignment="MiddleLeft">
+                  <StylePriority Ref="40" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="41" ControlType="XRTableCell" Name="tableCell6" Weight="1" TextFormatString="{0:#,0.00}" Multiline="true" TextAlignment="MiddleRight">
+                  <Summary Ref="42" Running="Report" />
+                  <ExpressionBindings>
+                    <Item1 Ref="43" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([CUOTA_MODERADORA])" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="44" UseTextAlignment="false" />
+                </Item2>
+              </Cells>
+            </Item3>
+            <Item4 Ref="45" ControlType="XRTableRow" Name="tableRow4" Weight="0.48">
+              <Cells>
+                <Item1 Ref="46" ControlType="XRTableCell" Name="tableCell7" Weight="5.30625" Multiline="true" Text="Total pagos compartidos" TextAlignment="MiddleLeft">
+                  <StylePriority Ref="47" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="48" ControlType="XRTableCell" Name="tableCell8" Weight="1" TextFormatString="{0:#,0.00}" Multiline="true" TextAlignment="MiddleRight">
+                  <Summary Ref="49" Running="Report" />
+                  <ExpressionBindings>
+                    <Item1 Ref="50" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([PAGO_COMPARTIDO])" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="51" UseTextAlignment="false" />
+                </Item2>
+              </Cells>
+            </Item4>
+            <Item5 Ref="52" ControlType="XRTableRow" Name="tableRow5" Weight="0.48">
+              <Cells>
+                <Item1 Ref="53" ControlType="XRTableCell" Name="tableCell9" Weight="5.30625" Multiline="true" Text="Total cuotas de recuperación" TextAlignment="MiddleLeft">
+                  <StylePriority Ref="54" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="55" ControlType="XRTableCell" Name="tableCell10" Weight="1" TextFormatString="{0:#,0.00}" Multiline="true" TextAlignment="MiddleRight">
+                  <Summary Ref="56" Running="Report" />
+                  <ExpressionBindings>
+                    <Item1 Ref="57" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([CUOTA_RECUPERACION])" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="58" UseTextAlignment="false" />
+                </Item2>
+              </Cells>
+            </Item5>
+            <Item6 Ref="59" ControlType="XRTableRow" Name="tableRow6" Weight="0.48">
+              <Cells>
+                <Item1 Ref="60" ControlType="XRTableCell" Name="tableCell11" Weight="5.30625" Multiline="true" Text="Total particular" TextAlignment="MiddleLeft">
+                  <StylePriority Ref="61" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="62" ControlType="XRTableCell" Name="tableCell12" Weight="1" TextFormatString="{0:#,0.00}" Multiline="true" TextAlignment="MiddleRight">
+                  <Summary Ref="63" Running="Report" />
+                  <ExpressionBindings>
+                    <Item1 Ref="64" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([PAGO_PARTICULAR])" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="65" UseTextAlignment="false" />
+                </Item2>
+              </Cells>
+            </Item6>
+            <Item7 Ref="66" ControlType="XRTableRow" Name="tableRow7" Weight="0.48">
+              <Cells>
+                <Item1 Ref="67" ControlType="XRTableCell" Name="tableCell13" Weight="5.30625" Multiline="true" Text="Total descuentos" TextAlignment="MiddleLeft">
+                  <StylePriority Ref="68" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="69" ControlType="XRTableCell" Name="tableCell14" Weight="1" TextFormatString="{0:#,0.00}" Multiline="true" TextAlignment="MiddleRight">
+                  <Summary Ref="70" Running="Report" />
+                  <ExpressionBindings>
+                    <Item1 Ref="71" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([VALOR_DESCUENTO])" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="72" UseTextAlignment="false" />
+                </Item2>
+              </Cells>
+            </Item7>
+            <Item8 Ref="73" ControlType="XRTableRow" Name="tableRow8" Weight="0.48">
+              <Cells>
+                <Item1 Ref="74" ControlType="XRTableCell" Name="tableCell15" Weight="5.30625" Multiline="true" Text="Total recaudado" TextAlignment="MiddleCenter" Font="Calibri, 6pt, style=Bold, charSet=0">
+                  <StylePriority Ref="75" UseFont="false" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="76" ControlType="XRTableCell" Name="tableCell16" Weight="1" TextFormatString="{0:#,0.00}" Multiline="true" TextAlignment="MiddleRight" Font="Calibri, 6pt, style=Bold, charSet=0">
+                  <Summary Ref="77" Running="Report" />
+                  <ExpressionBindings>
+                    <Item1 Ref="78" EventName="BeforePrint" PropertyName="Text" Expression="sumSum(([COPAGO] + [CUOTA_MODERADORA] + [PAGO_COMPARTIDO] + [CUOTA_RECUPERACION] + [PAGO_PARTICULAR]) - [VALOR_DESCUENTO])" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="79" UseFont="false" UseTextAlignment="false" />
+                </Item2>
+              </Cells>
+            </Item8>
+          </Rows>
+          <StylePriority Ref="80" UseFont="false" UseBorderColor="false" UseBorders="false" UseBorderWidth="false" />
+        </Item3>
+      </Controls>
+    </Item4>
+  </Bands>
+  <ComponentStorage>
+    <Item1 Ref="0" ObjectType="DevExpress.DataAccess.Sql.SqlDataSource,DevExpress.DataAccess.v20.2" Name="FuenteDatos" Base64="PFNxbERhdGFTb3VyY2UgTmFtZT0iRnVlbnRlRGF0b3MiPjxDb25uZWN0aW9uIE5hbWU9IkNPTkVYSU9OX1JFUE9SVEVSSUEiIEZyb21BcHBDb25maWc9InRydWUiIC8+PFF1ZXJ5IFR5cGU9IlNlbGVjdFF1ZXJ5IiBOYW1lPSJWRmFjdHVyYXNEZXRhbGxlUmVwb3J0ZSI+PFRhYmxlcz48VGFibGUgTmFtZT0iVkVudHJlZ2FBZG1pc2lvbmVzVG90YWxlc1N1YlJlcG9ydGUiIFg9IjMwIiBZPSIzMCIgV2lkdGg9IjEyNSIgSGVpZ2h0PSIzMDMiIC8+PC9UYWJsZXM+PENvbHVtbnM+PENvbHVtbiBUYWJsZT0iVkVudHJlZ2FBZG1pc2lvbmVzVG90YWxlc1N1YlJlcG9ydGUiIE5hbWU9IkFETUlTSU9OX0lEIiAvPjxDb2x1bW4gVGFibGU9IlZFbnRyZWdhQWRtaXNpb25lc1RvdGFsZXNTdWJSZXBvcnRlIiBOYW1lPSJBRE1JU0lPTl9GRUNIQV9DUkVBQ0lPTiIgLz48Q29sdW1uIFRhYmxlPSJWRW50cmVnYUFkbWlzaW9uZXNUb3RhbGVzU3ViUmVwb3J0ZSIgTmFtZT0iU0VERV9JRCIgLz48Q29sdW1uIFRhYmxlPSJWRW50cmVnYUFkbWlzaW9uZXNUb3RhbGVzU3ViUmVwb3J0ZSIgTmFtZT0iQ09QX01PRF9SRUNfQ09NIiAvPjxDb2x1bW4gVGFibGU9IlZFbnRyZWdhQWRtaXNpb25lc1RvdGFsZXNTdWJSZXBvcnRlIiBOYW1lPSJDT1BBR08iIC8+PENvbHVtbiBUYWJsZT0iVkVudHJlZ2FBZG1pc2lvbmVzVG90YWxlc1N1YlJlcG9ydGUiIE5hbWU9IkNVT1RBX01PREVSQURPUkEiIC8+PENvbHVtbiBUYWJsZT0iVkVudHJlZ2FBZG1pc2lvbmVzVG90YWxlc1N1YlJlcG9ydGUiIE5hbWU9IkNVT1RBX1JFQ1VQRVJBQ0lPTiIgLz48Q29sdW1uIFRhYmxlPSJWRW50cmVnYUFkbWlzaW9uZXNUb3RhbGVzU3ViUmVwb3J0ZSIgTmFtZT0iUEFHT19DT01QQVJUSURPIiAvPjxDb2x1bW4gVGFibGU9IlZFbnRyZWdhQWRtaXNpb25lc1RvdGFsZXNTdWJSZXBvcnRlIiBOYW1lPSJQQUdPX1BBUlRJQ1VMQVIiIC8+PENvbHVtbiBUYWJsZT0iVkVudHJlZ2FBZG1pc2lvbmVzVG90YWxlc1N1YlJlcG9ydGUiIE5hbWU9IlBPUkNfREVTQ1VFTlRPIiAvPjxDb2x1bW4gVGFibGU9IlZFbnRyZWdhQWRtaXNpb25lc1RvdGFsZXNTdWJSZXBvcnRlIiBOYW1lPSJWQUxPUl9FTlRJREFEIiAvPjxDb2x1bW4gVGFibGU9IlZFbnRyZWdhQWRtaXNpb25lc1RvdGFsZXNTdWJSZXBvcnRlIiBOYW1lPSJWQUxPUl9ERVNDVUVOVE8iIC8+PC9Db2x1bW5zPjwvUXVlcnk+PFJlc3VsdFNjaGVtYT48RGF0YVNldCBOYW1lPSJGdWVudGVEYXRvcyI+PFZpZXcgTmFtZT0iVkZhY3R1cmFzRGV0YWxsZVJlcG9ydGUiPjxGaWVsZCBOYW1lPSJBRE1JU0lPTl9JRCIgVHlwZT0iSW50NjQiIC8+PEZpZWxkIE5hbWU9IkFETUlTSU9OX0ZFQ0hBX0NSRUFDSU9OIiBUeXBlPSJEYXRlVGltZSIgLz48RmllbGQgTmFtZT0iU0VERV9JRCIgVHlwZT0iSW50NjQiIC8+PEZpZWxkIE5hbWU9IkNPUF9NT0RfUkVDX0NPTSIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iQ09QQUdPIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJDVU9UQV9NT0RFUkFET1JBIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJDVU9UQV9SRUNVUEVSQUNJT04iIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IlBBR09fQ09NUEFSVElETyIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iUEFHT19QQVJUSUNVTEFSIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJQT1JDX0RFU0NVRU5UTyIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iVkFMT1JfRU5USURBRCIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iVkFMT1JfREVTQ1VFTlRPIiBUeXBlPSJEZWNpbWFsIiAvPjwvVmlldz48L0RhdGFTZXQ+PC9SZXN1bHRTY2hlbWE+PENvbm5lY3Rpb25PcHRpb25zIENsb3NlQ29ubmVjdGlvbj0idHJ1ZSIgLz48L1NxbERhdGFTb3VyY2U+" />
+  </ComponentStorage>
+  <ObjectStorage>
+    <Item1 ObjectType="DevExpress.XtraReports.Serialization.ObjectStorageInfo, DevExpress.XtraReports.v20.2" Ref="3" Content="System.DateTime" Type="System.Type" />
+    <Item2 ObjectType="DevExpress.XtraReports.Serialization.ObjectStorageInfo, DevExpress.XtraReports.v20.2" Ref="6" Content="System.Int64" Type="System.Type" />
+  </ObjectStorage>
+</XtraReportsLayoutSerializer>

@@ -1,0 +1,122 @@
+@{ 
+    string Prefix = "HistoriasClinicas";
+    string UrlClick = Url.Action("Edit", "HistoriasClinicas");
+    //string UrlNew = Url.Action("New", "HistoriasClinicas"); 
+
+    string UrlReport = Url.Action("ImprimirHCPaciente", "HistoriasClinicas");
+
+    var DataGridConfig = new DataGridConfiguration<HistoriasClinicas>(Prefix)
+        .OnClick(UrlClick, new { Id = "Id" })
+        //.New(UrlNew,DApp.ActionViewSecurity(Context,UrlNew)) 
+        .Exports(true,true).SetStorage()
+
+        .AddButtons(new List<ButtonToolbar>()
+        {
+            new ButtonToolbar
+            {
+                Action = $"{Prefix}MostrarModalImprimirHCPaciente",
+                Id = $"{Prefix}MostrarModalImprimirHCPaciente",
+                Text = @DApp.DefaultLanguage.GetResource("HistoriasClinicas.ImprimirHCPaciente"),
+                Location = ToolbarItemLocation.After,
+                LocateInMenu = ToolbarItemLocateInMenuMode.Auto,
+                Icon = "pdffile"
+            }
+        })
+
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("HistoriasClinicas"), "mainPanel");
+} 
+
+<script>
+
+    function @(Prefix)MostrarModalImprimirHCPaciente() {
+        $("#@(Prefix)PopupImprimirHCPaciente").dxPopup("instance").show();
+    }
+
+    function @(Prefix)ImprimirHCPaciente() {
+
+        var PacienteId = $("#@(Prefix)SelectBoxPaciente").dxSelectBox("instance").option("value");
+
+        if (PacienteId == 0 || PacienteId == "" || PacienteId == null) {
+            DevExpress.ui.notify("Debe seleccionar un paciente.", "error");
+            return false;
+        }
+
+        showLoadIndicator();
+        $.ajax({
+            url: "@UrlReport",
+            type: 'GET',
+            data: { PacienteId: PacienteId },
+            success: function (data) {
+                $("#VisorReporteria").dxPopup("instance").show();
+                $("#ContenidoReporte").html(data);
+                hideLoadIndicator();
+                $("#@(Prefix)PopupImprimirHCPaciente").dxPopup("instance").hide();
+            },
+            error: function (xhr) {
+                console.log(xhr);
+                hideLoadIndicator();
+                DevExpress.ui.notify("Error: " + xhr.responseText, "error");
+                $("#@(Prefix)PopupImprimirHCPaciente").dxPopup("instance").hide();
+            }
+        });
+    }
+
+    function @(Prefix)PopupImprimirHCPacienteOnHidden() {
+        $("#@(Prefix)SelectBoxPaciente").dxSelectBox("instance").option("value",null);
+    }
+
+</script>
+
+<div class="box-body table-responsive no-padding"> 
+@(Html.DControls().DataGridSimple<HistoriasClinicas>(DataGridConfig)
+    .ID("HistoriasClinicasDataGrid")
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("HistoriasClinicas").LoadAction("Get").Key("Id"))
+    .Columns(columns =>
+    {
+        columns.AddFor(m => m.Pacientes.NumeroIdentificacion);
+        columns.AddFor(m => m.Pacientes.NombreCompleto);
+        columns.AddFor(m => m.FechaApertura).SortOrder(SortOrder.Desc);
+        columns.AddFor(m => m.Estados.Nombre);
+        columns.AddFor(m => m.Especialidad);
+        columns.AddFor(m => m.EsControl);
+        columns.AddFor(m => m.Profesional.NombreCompleto);
+    })
+) 
+</div> 
+
+<div id="@(Prefix)Importador" class="row">
+    <div class="col-md-12">
+        @(Html.DControls().Popup()
+            .ID($"{Prefix}PopupImprimirHCPaciente")
+            .Width(800)
+            .Height(200)
+            .ShowTitle(true)
+            .Title(DApp.DefaultLanguage.GetResource("HistoriasClinicas.PopupImprimirHCPaciente"))
+            .Visible(false)
+            .DragEnabled(false)
+            .CloseOnOutsideClick(false)
+            .OnHidden($"{Prefix}PopupImprimirHCPacienteOnHidden")
+            .ContentTemplate(new TemplateName($"{Prefix}TemplateImprimirHCPaciente"))
+        )
+
+        @using (Html.DControls().NamedTemplate($"{Prefix}TemplateImprimirHCPaciente"))
+        {
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-12">
+                    @(Html.DControls().SelectBox()
+                        .ID($"{Prefix}SelectBoxPaciente")
+                        .DataSource(d => d.Mvc().LoadMethod("POST").Controller("HistoriasClinicas").LoadAction("GetPacientesId").Key("Id"))
+                        .DataSourceOptions(x=>x.PageSize(20).Paginate(true))
+                        .ValueExpr("Id").DisplayExpr("NombreCompleto").SearchExpr("PrimerNombre", "SegundoNombre", "PrimerApellido", "SegundoApellido", "NumeroIdentificacion")
+                        .SearchEnabled(true).ShowClearButton(true)
+                    )
+                </div>
+            </div>
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-2" style=" margin-top: 15px;">
+                    <button class="btn btn-primary" onclick="@(Prefix)ImprimirHCPaciente()">ACEPTAR</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>

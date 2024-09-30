@@ -1,0 +1,29 @@
+@{ 
+    string Prefix = "Cajas";
+    string UrlClick = Url.Action("Edit", "Cajas");
+    string UrlNew = Url.Action("New", "Cajas");
+
+    var DataGridConfig = new DataGridConfiguration<Cajas>(Prefix)
+        .OnClick(UrlClick, new { Id = "Id" })
+        .New(UrlNew,DApp.ActionViewSecurity(Context,UrlNew))
+        .Exports(true,true).SetStorage()
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("Cajas"), "mainPanel");
+} 
+
+<div class="box-body table-responsive no-padding"> 
+@(Html.DControls().DataGridSimple<Cajas>(DataGridConfig)
+    .ID("CajasDataGrid")
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Cajas").LoadAction("Get").Key("Id"))
+    .Columns(columns =>
+    {
+        columns.AddFor(m => m.SedesId)
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Cajas.SedesId")))
+                         .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Cajas.SedesId")))
+                             .Lookup(lookup => lookup
+                             .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Cajas").LoadAction("GetSedesId").Key("Id"))
+                             .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                             .ValueExpr("Id").DisplayExpr("Nombre"));
+        columns.AddFor(m => m.Nombre);
+    })
+) 
+</div> 

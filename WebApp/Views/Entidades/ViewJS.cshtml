@@ -1,0 +1,56 @@
+@model EntidadesModel
+@{
+    string Prefix = "Entidades";
+}
+
+    <script>
+
+    function @(Prefix)OnValueChangedPaises(e) {
+        $("#DepartamentosId").dxSelectBox("instance").getDataSource().filter(["PaisesId", "=", e.value]);
+        $("#DepartamentosId").dxSelectBox("instance").getDataSource().reload();
+        $("#DepartamentosId").dxSelectBox("instance").option("value", null);
+    }
+
+    function @(Prefix)OnValueChangedDepartamentos(e) {
+        $("#CiudadesId").dxSelectBox("instance").getDataSource().filter(["DepartamentosId", "=", e.value]);
+        $("#CiudadesId").dxSelectBox("instance").getDataSource().reload();
+        $("#CiudadesId").dxSelectBox("instance").option("value", null);
+    }
+
+    // Calcular
+        function calcularDigito(item) {
+        // Verificar que haya un numero
+        let nit = item.component.option("value");
+        let isNitValid = nit >>> 0 === parseFloat(nit) ? true : false; // Validate a positive integer
+
+        // Si es un número se calcula el Dígito de Verificación
+        if (isNitValid) {
+            $("#@(Prefix)DV").dxTextBox("instance").option("value", CalcularDigitoVerificacion(nit));
+        }
+    }
+
+
+
+
+    function @(Prefix)FormSuccess(data)
+    {
+        hideLoadIndicator();
+        if ('@ViewData.ModelState.IsValid' == 'True')
+        {
+            if ("@ViewBag.Accion" == "Delete") {
+                DevExpress.ui.notify("Registro eliminado correctamente.","info");
+            } else if ("@ViewBag.Accion" == "Save") {
+                DevExpress.ui.notify("Registro guardado correctamente.","info");
+            } else {
+                DevExpress.ui.notify("Error no accion en submit.","info");
+            }
+        }
+    }
+
+    function @(Prefix)FormFailure(data)
+    {
+        hideLoadIndicator();
+        DevExpress.ui.notify("Error en el formulario","error");
+    }
+
+    </script>

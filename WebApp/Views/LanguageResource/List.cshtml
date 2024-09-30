@@ -1,0 +1,25 @@
+@{ 
+    string Prefix = "LanguageResource"; 
+    string UrlClick = Url.Action("Edit", "LanguageResource"); 
+    string UrlNew = Url.Action("New", "LanguageResource"); 
+
+    var DataGridConfig = new DataGridConfiguration<LanguageResource>(Prefix) 
+        .OnClick(UrlClick, new { Id = "Id" }) 
+        .New(UrlNew,DApp.ActionViewSecurity(Context,UrlNew)) 
+        .Exports(true,true) 
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("LanguageResources"), "mainPanel"); 
+} 
+
+<div class="box-body table-responsive no-padding"> 
+@(Html.DControls().DataGridSimple<LanguageResource>(DataGridConfig) 
+    .ID("LanguageResourceDataGrid") 
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("LanguageResource").LoadAction("Get").Key("Id")) 
+    .Columns(columns => 
+    { 
+        columns.AddFor(m => m.Language.Id); 
+        columns.AddFor(m => m.ResourceKey); 
+        columns.AddFor(m => m.ResourceValue); 
+        columns.AddFor(m => m.Active); 
+    }) 
+) 
+</div> 

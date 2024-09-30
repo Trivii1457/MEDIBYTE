@@ -1,0 +1,126 @@
+@{
+    string Prefix = "Atenciones";
+    string UrlClick = Url.Action("Edit", "Atenciones");
+    string UrlNew = Url.Action("New", "Atenciones");
+
+    var DataGridConfig = new DataGridConfiguration<Admisiones>(Prefix)
+        .OnClick(UrlClick, new { Id = "Id" })
+        //.New(UrlNew, DApp.ActionViewSecurity(Context, UrlNew))
+        .AddButtons(new List<ButtonToolbar>()
+        {
+            new ButtonToolbar
+            {
+                Action = "VerCitasProgramadas",
+                Text = @DApp.DefaultLanguage.GetResource("Atenciones.VerCitasProgramadas"),
+                Location = ToolbarItemLocation.After,
+                LocateInMenu = ToolbarItemLocateInMenuMode.Auto,
+                Icon = "event"
+            },
+            new ButtonToolbar
+            {
+                Action = "VerListaCitasProgramadas",
+                Text = @DApp.DefaultLanguage.GetResource("Atenciones.VerListaCitasProgramadas"),
+                Location = ToolbarItemLocation.After,
+                LocateInMenu = ToolbarItemLocateInMenuMode.Auto,
+                Icon = "detailslayout"
+            }
+        })
+        .Exports(true, true).SetStorage()
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("Atenciones"), "mainPanel");
+}
+
+<script>
+
+    function VerListaCitasProgramadas() {
+
+        showLoadIndicator();
+        $.ajax({
+            url: '@Url.Action("VerListaCitasProgramadas", "Atenciones")',
+            type: 'GET',
+                success: function (data) {
+                    hideLoadIndicator();
+                    $("#@(Prefix)VerListaCitasProgramadasPopup").dxPopup("instance").show();
+                    $("#DivListaCitasProgramadas").html(data);
+                },
+            error: function (xhr) {
+                hideLoadIndicator();
+                DevExpress.ui.notify("Error: " + xhr.responseText, "error");
+            }
+        });
+    }
+
+    function VerCitasProgramadas() {
+
+        showLoadIndicator();
+        $.ajax({
+            url: '@Url.Action("VerCitasProgramadas", "Atenciones")',
+            type: 'GET',
+                success: function (data) {
+                    hideLoadIndicator();
+                    $("#@(Prefix)VerCitasProgramadasPopup").dxPopup("instance").show();
+                    $("#DivCitasProgramadas").html(data);
+                },
+            error: function (xhr) {
+                hideLoadIndicator();
+                DevExpress.ui.notify("Error: " + xhr.responseText, "error");
+            }
+        });
+    }
+</script>
+
+@if (!string.IsNullOrWhiteSpace(ViewBag.Error))
+{
+    <div class="text-danger">@ViewBag.Error</div>
+}
+
+<div class="box-body table-responsive no-padding">
+    @(Html.DControls().DataGridSimple<Admisiones>(DataGridConfig)
+        .ID("AtencionesDataGrid")
+        .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Atenciones").LoadAction("GetAdmisiones").Key("Id"))
+        .DataSourceOptions(d=>d.Filter("['Estados.Tipo','=','ADMISION']"))
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.EsControl);
+            columns.AddFor(m => m.Estados.Nombre);
+            columns.AddFor(m => m.ProgramacionCitas.TiposCitas.Nombre).Caption(DApp.DefaultLanguage.GetResource("ProgramacionCitas.TiposCitasId"));
+
+            columns.AddFor(m => m.Pacientes.NombreCompleto);
+
+            columns.AddFor(m => m.ProgramacionCitas.Consecutivo).Caption(DApp.DefaultLanguage.GetResource("Atenciones.ConsecutivoCita"));
+            columns.AddFor(m => m.Id).Caption(DApp.DefaultLanguage.GetResource("Atenciones.ConsecutivoAdmision"));
+
+            columns.AddFor(m => m.CreationDate).AllowSearch(false).Format(DApp.DefaultLanguage.DateFormat).Caption(DApp.DefaultLanguage.GetResource("ProgramacionCitas.AdmisionFecha"));
+            columns.AddFor(m => m.CreationDate).AllowSearch(false).Format(DApp.DefaultLanguage.TimeFormat).Caption(DApp.DefaultLanguage.GetResource("ProgramacionCitas.AdmisionHora"));
+
+            columns.AddFor(m => m.ProgramacionCitas.FechaInicio).AllowSearch(false).Format(DApp.DefaultLanguage.DateFormat).Caption(DApp.DefaultLanguage.GetResource("ProgramacionCitas.CitaFecha")).SortOrder(SortOrder.Desc);
+            columns.AddFor(m => m.ProgramacionCitas.FechaInicio).AllowSearch(false).Format(DApp.DefaultLanguage.TimeFormat).Caption(DApp.DefaultLanguage.GetResource("ProgramacionCitas.CitaHora"));
+
+            columns.AddFor(m => m.ProgramacionCitas.Servicios.Nombre);
+            columns.AddFor(m => m.Diagnosticos.Descripcion);
+
+            columns.AddFor(m => m.ProgramacionCitas.Entidades.Nombre);
+            columns.AddFor(m => m.Convenios.Nombre);
+            columns.AddFor(m => m.Filiales.Nombre);
+            columns.AddFor(m => m.ProgramacionCitas.Sedes.Nombre);
+            columns.AddFor(m => m.ProgramacionCitas.Consultorios.Nombre);
+
+        })
+    )
+</div>
+
+@(Html.DControls().Popup()
+    .ID($"{Prefix}VerCitasProgramadasPopup")
+    .Content("<div id=\"DivCitasProgramadas\"></div>")
+    //.ContentTemplate(new TemplateName($"{Prefix}popup-citas"))
+    .Title(DApp.GetResource("Atenciones.VerCitasProgramadas"))
+    .CloseOnOutsideClick(true).ResizeEnabled(true)
+    .Height(700)
+)
+@(Html.DControls().Popup()
+    .ID($"{Prefix}VerListaCitasProgramadasPopup")
+    .Content("<div id=\"DivListaCitasProgramadas\"></div>")
+    //.ContentTemplate(new TemplateName($"{Prefix}popup-citas"))
+    .Title(DApp.GetResource("Atenciones.VerListaCitasProgramadas"))
+    .CloseOnOutsideClick(true).ResizeEnabled(true)
+    .Height(700)
+)

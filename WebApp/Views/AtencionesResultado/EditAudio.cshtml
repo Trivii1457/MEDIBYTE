@@ -1,0 +1,142 @@
+@model AtencionesResultadoModel
+@{
+    string Prefix = "AtencionesResultado";
+
+    string UrlSave = Url.Action("Edit", "AtencionesResultado");
+    string UrlNew = Url.Action("New", "AtencionesResultado");
+    string UrlDelete = Url.Action("Delete", "AtencionesResultado", new { Id = Model.Entity.Id });
+    string UrlBack = Url.Action("ListPartial", "AtencionesLectura");
+
+    var ToolbarConfig = new ToolbarConfiguration(Prefix)
+        .Title(DApp.DefaultLanguage.GetResource("AtencionesLectura"))
+        .Save(DApp.ActionViewSecurity(Context, UrlSave), Model.Entity.IsNew, $"{Prefix}SubirAudioAResultado")
+        //.New(UrlNew, DApp.ActionViewSecurity(Context, UrlNew))
+        //.Delete(UrlDelete, DApp.ActionViewSecurity(Context, UrlDelete), UrlBack, Model.Entity.IsNew)
+        .Back(UrlBack);
+}
+
+<partial name="ViewJS.cshtml" model="Model" view-data="ViewData" />
+
+@(Html.DControls().Toolbar(ToolbarConfig))
+
+<div>
+    <div id="AtencionesResultadoMainPanelForm">
+        <form id="@(Prefix)Form" asp-controller="AtencionesResultado" asp-action="Edit" class="form-horizontal" data-ajax-mode="replace" data-ajax-update="#mainPanel" data-ajax-success="@(Prefix)FormSuccess" data-ajax-failure="@(Prefix)FormFailure" data-ajax="true">
+            @(Html.DControls().ValidationSummary().ValidationGroup(Prefix + "ValidationGroup").ElementAttr("class","ErrorValidationSummary"))
+            @using (Html.DevExtreme().ValidationGroup(Prefix + "ValidationGroup"))
+            {
+                @(Html.DControls().CheckBoxFor(m => m.Entity.IsNew).ID(Prefix + "IsNew").Visible(false))
+                @(Html.DControls().NumberBoxFor(m => m.Entity.Id).ID(Prefix + "Id").Visible(false))
+                @(Html.DControls().TextBoxFor(m => m.Entity.UpdatedBy).ID(Prefix + "UpdatedBy").Visible(false))
+                @(Html.DControls().DateBoxFor(m => m.Entity.LastUpdate).ID(Prefix + "LastUpdate").Type(DateBoxType.DateTime).Visible(false))
+                @(Html.DControls().TextBoxFor(m => m.Entity.CreatedBy).ID(Prefix + "CreatedBy").Visible(false))
+                @(Html.DControls().DateBoxFor(m => m.Entity.CreationDate).ID(Prefix + "CreationDate").Type(DateBoxType.DateTime).Visible(false))
+
+                @(Html.DControls().NumberBoxFor(m => m.Entity.AdmisionesServiciosPrestadosId).ID(Prefix + "AdmisionesServiciosPrestadosId").Visible(false))
+                @(Html.DControls().NumberBoxFor(m => m.Entity.EstadosId).ID(Prefix + "EstadosId").Visible(false))
+
+                @(Html.DControls().TextBoxFor(m => m.Entity.Resultado).ID(Prefix + "Resultado").Visible(false))
+                @(Html.DControls().TextBoxFor(m => m.Entity.ResultadoAudio).ID(Prefix + "ResultadoAudio").Visible(false))
+
+                @(Html.DControls().Form<AtencionesResultadoModel>()
+                    .ID("AtencionesResultadoModelForm").LabelLocation(FormLabelLocation.Top).ShowValidationSummary(false).FormData(Model)
+                    .Items(items =>
+                    {
+                         items.AddGroup()
+                             .Items(groupItems =>{
+                                 groupItems.AddSimple().Template(new TemplateName($"{Prefix}TemplateArchivoAudio"));
+                         });
+                        items.AddSimpleFor(m => m.Entity.AdmisionesServiciosPrestados.Atenciones.NotaProcedimientos).ColSpan(12)
+                        .Editor(e => e.TextArea().ID(Prefix + "Resultado").Height(150).ReadOnly(true));
+                    })
+                )
+            }
+        </form>
+
+        @using (Html.DevExtreme().NamedTemplate($"{Prefix}TemplateArchivoAudio"))
+        {
+            <div class="row d-flex justify-content-center">
+                <div style="background-color: #c7c7c7;height: 50px;">
+                    <audio controls id="audio"></audio>
+                </div>
+                <div style="width:400px;height:50px;background-color:#c7c7c7;">
+                    <canvas id="level" style="height:100%;width:100%;"></canvas>
+                </div>
+            </div>
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-6">
+                    <div class="btn-group btn-block" role="group" aria-label="Basic example">
+                        <button type="button" id="@(Prefix)ButtonGrabarAudio" class="btn btn-primary" onclick="@(Prefix)GrabarAudio()"><i class="fa fa-microphone" aria-hidden="true"></i> GRABAR</button>
+                        <button type="button" style="display:none" disabled id="@(Prefix)ButtonPausarAudio" class="btn btn-primary" onclick="@(Prefix)PausarAudio()"><i class="fa fa-pause" aria-hidden="true"></i> PAUSAR</button>
+                        @*<button type="button" disabled id="@(Prefix)ButtonBorrarAudio" class="btn btn-danger" onclick="@(Prefix)BorrarAudio()"><i class="fa fa-ban" aria-hidden="true"></i> BORRAR</button>*@
+                        <button type="button" disabled id="@(Prefix)ButtonFinalizarAudio" class="btn btn-success" onclick="@(Prefix)FinalizarAudio()"><i class="fa fa-stop" aria-hidden="true"></i> FINALIZAR</button>
+                    </div>
+                </div>
+            </div>
+        }
+
+
+        @* Si el maestro maneja detalle descomentar el siguiente codigo y remplazar la palabra "MAESTRODETALLE" *@
+
+        <div>
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active">
+                    <a href="#ArchivosResultados" aria-controls="ArchivosResultados" role="tab" data-toggle="tab">
+                        @DApp.DefaultLanguage.GetResource("AtencionesResultado.ArchivosResultados")
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a href="#ImagenesDiagnosticas" aria-controls="ImagenesDiagnosticas" role="tab" data-toggle="tab">
+                        @DApp.DefaultLanguage.GetResource("AtencionesResultado.ImagenesDiagnosticas")
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content" style="margin-top:12px;">
+                <div role="tabpanel" class="tab-pane active" id="ArchivosResultados">
+                    <div class="box-body table-responsive no-padding">
+                        @(Html.DControls().DataGridSimple<AdmisionesServiciosPrestadosArchivos>()
+                            .ID("AdmisionesServiciosPrestadosArchivosDetalleDataGrid")
+                            .DataSource(d => d.Mvc().LoadMethod("POST").Controller("AtencionesResultado").LoadAction("GetArchivosResultado").Key("Id")
+                                .LoadParams(new { admisionesServiciosPrestadosId = Model.Entity.AdmisionesServiciosPrestadosId })
+                            )
+                            .Paging(x=>x.PageSize(10))
+                            .Columns(columns =>
+                            {
+                            columns.AddFor(m => m.Nombre);
+                                columns.Add().Width("50").Caption("").Alignment(HorizontalAlignment.Center).CellTemplate(
+                                @<text>
+                                <a href="/AdmisionesServiciosPrestadosArchivos/DescargarArchivoResultado/<%- data.Id %>" target="_blank"><i class="fa fa-cloud-download" aria-hidden="true"></i></a>
+                                </text>);
+                            })
+                        )
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="ImagenesDiagnosticas">
+                    <div class="box-body table-responsive no-padding">
+                        @(Html.DControls().DataGridSimple<ImagenesDiagnosticasDetalle>()
+                            .ID("ImagenesDiagnosticasDetalleDataGrid")
+                            .DataSource(d => d.Mvc().LoadMethod("POST").Controller("AtencionesResultado").LoadAction("GetImagenesDiagnosticas").Key("Id")
+                                .LoadParams(new { admisionesServiciosPrestadosId = Model.Entity.AdmisionesServiciosPrestadosId })
+                            )
+                            .Paging(x=>x.PageSize(10))
+                            .Columns(columns =>
+                            {
+                            columns.AddFor(m => m.Nombre);
+                                columns.Add().Width("50").Caption("").Alignment(HorizontalAlignment.Center).CellTemplate(
+                                @<text>
+                                <a href="/ImagenesDiagnosticasDetalle/DescargarImagenDiagnostica/<%- data.Id %>" target="_blank"><i class="fa fa-cloud-download" aria-hidden="true"></i></a>
+                                </text>);
+                            columns.Add().Width("50").Caption("").Alignment(HorizontalAlignment.Center).CellTemplate(
+                                @<text>
+                                <a href="/Home/DicomViewerImageDisco/<%- data.Id %>" target="_blank"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                                </text>);
+                            })
+                        )
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+

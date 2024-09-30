@@ -1,0 +1,22 @@
+@{ 
+    string Prefix = "CausasExternas";
+    string UrlClick = Url.Action("Edit", "CausasExternas");
+    string UrlNew = Url.Action("New", "CausasExternas");
+
+    var DataGridConfig = new DataGridConfiguration<CausasExternas>(Prefix)
+        .OnClick(UrlClick, new { Id = "Id" })
+        .New(UrlNew,DApp.ActionViewSecurity(Context,UrlNew))
+        .Exports(true,true).SetStorage()
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("CausasExternas"), "mainPanel");
+} 
+
+<div class="box-body table-responsive no-padding"> 
+@(Html.DControls().DataGridSimple<CausasExternas>(DataGridConfig) 
+    .ID("CausasExternasDataGrid") 
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("CausasExternas").LoadAction("Get").Key("Id")) 
+    .Columns(columns => 
+    { 
+        columns.AddFor(m => m.Nombre); 
+    }) 
+) 
+</div> 

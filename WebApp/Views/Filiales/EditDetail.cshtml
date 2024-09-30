@@ -1,0 +1,110 @@
+@model FilialesModel 
+@{
+    string Prefix = "Filiales"; 
+    string UrlDelete = Url.Action("DeleteDetail", "Filiales", new { Id = Model.Entity.Id }); 
+
+    var toolbarDetailconfig = new ToolbarDetailConfiguration(Prefix).Delete(UrlDelete).Save().Cancel(); 
+} 
+
+<partial name="ViewJS.cshtml" model="Model" view-data="ViewData" /> 
+
+<div>@(Html.DControls().Toolbar(toolbarDetailconfig))</div>
+
+<div> 
+    <form id="@(Prefix)Form" asp-controller="Filiales" asp-action="EditDetail" class="form-horizontal" data-ajax-mode="replace" data-ajax-update="#FilialesMainPanelForm" data-ajax-success="@(Prefix)FormSuccessDetail" data-ajax-failure="@(Prefix)FormFailureDetail" data-ajax="true">
+        @(Html.DControls().ValidationSummary().ValidationGroup(Prefix + "ValidationGroup").ElementAttr("class", "ErrorValidationSummary"))
+        @using (Html.DevExtreme().ValidationGroup(Prefix + "ValidationGroupDetail"))
+        {
+            @(Html.DControls().CheckBoxFor(m => m.Entity.IsNew).ID(Prefix + "IsNew").Visible(false))
+            @(Html.DControls().NumberBoxFor(m => m.Entity.Id).ID(Prefix + "Id").Visible(false))
+            @(Html.DControls().TextBoxFor(m => m.Entity.UpdatedBy).ID(Prefix + "UpdatedBy").Visible(false))
+            @(Html.DControls().DateBoxFor(m => m.Entity.LastUpdate).ID(Prefix + "LastUpdate").Type(DateBoxType.DateTime).Visible(false))
+            @(Html.DControls().TextBoxFor(m => m.Entity.CreatedBy).ID(Prefix + "CreatedBy").Visible(false))
+            @(Html.DControls().DateBoxFor(m => m.Entity.CreationDate).ID(Prefix + "CreationDate").Type(DateBoxType.DateTime).Visible(false))
+            @(Html.DControls().NumberBoxFor(m => m.Entity.EntidadesId).ID(Prefix + "EntidadesId").Visible(false))
+
+            @(Html.DControls().Form<FilialesModel>()
+                .ID("FilialesModelForm").LabelLocation(FormLabelLocation.Top).ShowValidationSummary(false).FormData(Model)
+                .Items(items =>
+                {
+                    items.AddGroup().ColCount(12).Caption(DApp.DefaultLanguage.GetResource("DEFAULT.INFORMATIONGENERAL"))
+                        .Items(groupItems =>
+                        {
+
+                           groupItems.AddSimpleFor(m => m.Entity.Nombre).ColSpan(5)
+                              .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Filiales.Nombre")))
+                              .ValidationRules(rules => rules.AddStringLength().Min(0).Max(250).Message(DApp.GetStringLengthResource("Filiales.Nombre", 250)))
+                                  .Editor(e => e.TextBox().ID(Prefix + "Nombre").ShowClearButton(true));
+
+                            groupItems.AddSimpleFor(m => m.Entity.CorreoElectronico).ColSpan(5)
+                              .ValidationRules(rules => rules.AddStringLength().Min(0).Max(200).Message(DApp.GetStringLengthResource("Filiales.CorreoElectronico", 200)))
+                                  .Editor(e => e.TextBox().ID(Prefix + "CorreoElectronico").Mode(TextBoxMode.Email).ValidationMessageMode(ValidationMessageMode.Always).ShowClearButton(true));
+
+                              groupItems.AddSimpleFor(m => m.Entity.Fax).ColSpan(2)
+                              .ValidationRules(rules => rules.AddStringLength().Min(0).Max(100).Message(DApp.GetStringLengthResource("Filiales.Fax", 100)))
+                                  .Editor(e => e.TextBox().ID(Prefix + "Fax").ShowClearButton(true));
+
+
+
+                             groupItems.AddSimpleFor(m => m.PaisId).Label(x => x.Text(DApp.DefaultLanguage.GetResource("Generico.Paises")))
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Generico.Paises")))
+                                 .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Generico.Paises")))
+                                      .Editor(e => e.SelectBox().ID(Prefix + "Paises")
+                                      .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Filiales").LoadAction("GetPaisesId").Key("Id"))
+                                      .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                      .ValueExpr("Id").DisplayExpr("Nombre")
+                                      .SearchEnabled(true).ShowClearButton(true)
+                                      .OnValueChanged(Prefix + "OnValueChangedPaises")
+                                 ).ColSpan(4);
+
+                                groupItems.AddSimpleFor(m => m.DepartamentoId).Label(x => x.Text(DApp.DefaultLanguage.GetResource("Filiales.Departamentos")))
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Filiales.Departamentos")))
+                                 .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Filiales.Departamentos")))
+                                      .Editor(e => e.SelectBox().ID(Prefix + "Departamentos")
+                                      .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Filiales").LoadAction("GetDepartamentosId").Key("Id"))
+                                      .DataSourceOptions(o => o.Paginate(true).PageSize(10).Filter("['PaisesId','=','" + Model.PaisId + "']"))
+                                      .ValueExpr("Id").DisplayExpr("Nombre")
+                                      .SearchEnabled(true).ShowClearButton(true)
+                                      .OnValueChanged(Prefix + "OnValueChangedDepartamentos")
+                                 ).ColSpan(4);
+
+                                groupItems.AddSimpleFor(m => m.Entity.CiudadesId)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Filiales.CiudadesId")))
+                                 .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Filiales.CiudadesId")))
+                                      .Editor(e => e.SelectBox().ID(Prefix + "CiudadesId")
+                                      .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Filiales").LoadAction("GetCiudadesId").Key("Id"))
+                                      .DataSourceOptions(o => o.Paginate(true).PageSize(10).Filter("['DepartamentosId','=','" + Model.DepartamentoId + "']"))
+                                      .ValueExpr("Id").DisplayExpr("Nombre")
+                                      .SearchEnabled(true).ShowClearButton(true)
+                                 ).ColSpan(4);
+
+
+
+                            groupItems.AddSimpleFor(m => m.Entity.Direccion).ColSpan(4)
+                            .ValidationRules(rules => rules.AddStringLength().Min(0).Max(255).Message(DApp.GetStringLengthResource("Filiales.Direccion", 255)))
+                                .Editor(e => e.TextBox().ID(Prefix + "Direccion").ShowClearButton(true));
+
+
+                            groupItems.AddSimpleFor(m => m.Entity.PaginaWeb).ColSpan(4)
+                               .ValidationRules(rules => rules.AddStringLength().Min(0).Max(255).Message(DApp.GetStringLengthResource("Filiales.PaginaWeb", 255)))
+                                   .Editor(e => e.TextBox().ID(Prefix + "PaginaWeb").ShowClearButton(true));
+
+
+                              groupItems.AddSimpleFor(m => m.Entity.EstadosId).ColSpan(4)
+                              .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Filiales.EstadosId")))
+                              .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Filiales.EstadosId")))
+                                   .Editor(e => e.SelectBox().ID(Prefix + "EstadosId")
+                                   .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Filiales").LoadAction("GetEstadosId").Key("Id"))
+                                   .DataSourceOptions(o => o.Paginate(true).PageSize(10).Filter("['Tipo','=','FILIALES']"))
+                                   .ValueExpr("Id").DisplayExpr("Nombre").SearchExpr("Id")
+                                   .SearchEnabled(true).ShowClearButton(true)
+                              );
+
+                });
+        })
+            )
+        }
+        
+    </form> 
+</div> 
+

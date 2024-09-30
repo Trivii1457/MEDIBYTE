@@ -1,0 +1,25 @@
+@{
+    string Prefix = "AtencionesLectura";
+    string UrlClick = Url.Action("NewAtencionLecturaAudio", "AtencionesResultado");
+
+    var DataGridConfig = new DataGridConfiguration<AdmisionesServiciosPrestados>(Prefix)
+        .OnClick(UrlClick, new { Id = "Id" })
+        //.New(UrlNew, DApp.ActionViewSecurity(Context, UrlNew))
+        .Exports(true, true).SetStorage()
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("AtencionesLectura"), "mainPanel");
+}
+
+<div class="box-body table-responsive no-padding">
+    @(Html.DControls().DataGridSimple<AdmisionesServiciosPrestados>(DataGridConfig)
+    .ID("AtencionesLecturaDataGrid")
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("AtencionesLectura").LoadAction("GetAtencionesLectura").Key("Id"))
+    .Columns(columns =>
+    {
+        columns.AddFor(m => m.Admisiones.Pacientes.NumeroIdentificacion);
+        columns.AddFor(m => m.Admisiones.Pacientes.NombreCompleto).Caption(DApp.DefaultLanguage.GetResource("AtencionesLectura.Paciente"));
+        columns.AddFor(m => m.Servicios.Nombre).Caption(DApp.DefaultLanguage.GetResource("AtencionesLectura.Servicio"));
+        columns.AddFor(m => m.Atenciones.FechaAtencion).Caption(DApp.DefaultLanguage.GetResource("AtencionesLectura.Fecha"));
+
+    })
+)
+</div>

@@ -1,0 +1,35 @@
+.card.image-viewer-control {
+    max-width: 12rem;
+    height: max-content;
+    margin: auto;
+}
+
+.card.image-viewer-control .card-header img {
+    max-height: 8.5rem;
+    /*max-width: 12rem;*/
+    box-shadow: 1px 1px 9px lightgray;
+}
+.card.image-viewer-control .dx-fileuploader-input-wrapper, .card.image-viewer-control .dx-fileuploader-wrapper, .card.image-viewer-control .dx-fileuploader-files-container {
+    padding: 0;
+}
+
+.card.image-viewer-control .dx-fileuploader-button {
+    padding: 5px 10px;
+}
+
+.card.image-viewer-control .dx-fileuploader-input-label {
+    font-size: 0.7rem;
+}
+
+.card.image-viewer-control .card-header button.close {
+    height: 25px;
+    width: 25px;
+    border-radius: 15px;
+    background: red;
+    opacity: 1;
+    position: absolute;
+    margin-top: -25px;
+    margin-left: 25px;
+    margin-right: -25px;
+    box-shadow: 1px 1px 10px gray;
+}

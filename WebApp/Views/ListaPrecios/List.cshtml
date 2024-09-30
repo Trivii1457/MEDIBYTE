@@ -1,0 +1,34 @@
+@{ 
+    string Prefix = "ListaPrecios";
+    string UrlClick = Url.Action("Edit", "ListaPrecios");
+    string UrlNew = Url.Action("New", "ListaPrecios");
+
+    var DataGridConfig = new DataGridConfiguration<ListaPrecios>(Prefix)
+        .OnClick(UrlClick, new { Id = "Id" })
+        .New(UrlNew,DApp.ActionViewSecurity(Context,UrlNew))
+        .Exports(true,true).SetStorage()
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("ListaPrecios"), "mainPanel");
+} 
+
+<div class="box-body table-responsive no-padding"> 
+@(Html.DControls().DataGridSimple<ListaPrecios>(DataGridConfig)
+    .ID("ListaPreciosDataGrid")
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("ListaPrecios").LoadAction("Get").Key("Id"))
+    .Columns(columns =>
+    {
+        columns.AddFor(m => m.Nombre);
+        columns.AddFor(m => m.Tarifa);
+
+        columns.AddFor(m => m.TipoEstadosId)
+       .Lookup(lookup => lookup
+                              .DataSource(d => d.Mvc().LoadMethod("POST").Controller("ListaPrecios").LoadAction("GetTipoEstadosId").Key("Id"))
+                              .DataSourceOptions(o=>o.Filter("['Tipo','=','TIPOPRECIO']"))
+                              .DisplayExpr("Nombre")
+                              .ValueExpr("Id"));
+        columns.AddFor(m => m.Porcentaje);
+        columns.AddFor(m => m.Valor);
+        columns.AddFor(m => m.Total);
+
+    })
+) 
+</div> 

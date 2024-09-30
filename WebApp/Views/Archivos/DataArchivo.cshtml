@@ -1,0 +1,15 @@
+@model Archivos
+@{
+    string Prefix = $"{Model.Maestro}{Model.NombreCampoForanea}";
+}
+<div id="@(Prefix)DivContenidoArchivoEntidad">
+    @(Html.DControls().TextBox().Value(Model.Maestro).Name($"Entity.{Model.NombreCampoForanea}.Maestro").ID($"{Prefix}Maestro").Visible(false))
+    @(Html.DControls().TextBox().Value(Model.NombreCampoForanea).Name($"Entity.{Model.NombreCampoForanea}.NombreCampoForanea").ID($"{Prefix}NombreCampoForanea").Visible(false))
+    @(Html.DControls().CheckBox().Value(Model.EliminarArchivo).Name($"Entity.{Model.NombreCampoForanea}.EliminarArchivo").ID($"{Prefix}EliminarArchivo").Visible(false))
+    @(Html.DControls().CheckBox().Value(Model.IsNew).Name($"Entity.{Model.NombreCampoForanea}.IsNew").ID($"{Prefix}IsNew").Visible(false))
+    @(Html.DControls().TextBox().Value(Model.Nombre).Name($"Entity.{Model.NombreCampoForanea}.Nombre").ID($"{Prefix}Nombre").Visible(false))
+    @(Html.DControls().TextBox().Value(Model.TipoContenido).Name($"Entity.{Model.NombreCampoForanea}.TipoContenido").ID($"{Prefix}TipoContenido").Visible(false))
+    @(Html.DControls().TextBox().Value(Model.CreatedBy).Name($"Entity.{Model.NombreCampoForanea}.CreatedBy").ID($"{Prefix}CreatedBy").Visible(false))
+    @(Html.DControls().TextBox().Value(Model.UpdatedBy).Name($"Entity.{Model.NombreCampoForanea}.UpdatedBy").ID($"{Prefix}UpdatedBy").Visible(false))
+    @(Html.DControls().TextBox().Value(Model.StringToBase64).Name($"Entity.{Model.NombreCampoForanea}.StringToBase64").ID($"{Prefix}StringToBase64").Visible(false))
+</div>

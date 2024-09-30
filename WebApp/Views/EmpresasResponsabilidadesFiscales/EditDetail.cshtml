@@ -1,0 +1,56 @@
+@model EmpresasResponsabilidadesFiscalesModel 
+@{
+    string Prefix = "EmpresasResponsabilidadesFiscales"; 
+    string UrlDelete = Url.Action("DeleteDetail", "EmpresasResponsabilidadesFiscales", new { Id = Model.Entity.Id }); 
+
+    var toolbarDetailconfig = new ToolbarDetailConfiguration(Prefix).Delete(UrlDelete).Save().Cancel(); 
+} 
+
+<partial name="ViewJS.cshtml" model="Model" view-data="ViewData" /> 
+
+<div>@(Html.DControls().Toolbar(toolbarDetailconfig))</div>
+
+<div> 
+     <form id="@(Prefix)Form" asp-controller="EmpresasResponsabilidadesFiscales" asp-action="EditDetail" class="form-horizontal" data-ajax-mode="replace" data-ajax-update="#EmpresasResponsabilidadesFiscalesMainPanelForm" data-ajax-success="@(Prefix)FormSuccessDetail" data-ajax-failure="@(Prefix)FormFailureDetail" data-ajax="true"> 
+         @(Html.DControls().ValidationSummary().ValidationGroup(Prefix + "ValidationGroup").ElementAttr("class","ErrorValidationSummary")) 
+         @using (Html.DevExtreme().ValidationGroup(Prefix + "ValidationGroupDetail")) 
+         { 
+             @(Html.DControls().CheckBoxFor(m => m.Entity.IsNew).ID(Prefix + "IsNew").Visible(false)) 
+                @(Html.DControls().NumberBoxFor(m => m.Entity.Id).ID(Prefix + "Id").Visible(false)) 
+                @(Html.DControls().TextBoxFor(m => m.Entity.UpdatedBy).ID(Prefix + "UpdatedBy").Visible(false)) 
+                @(Html.DControls().DateBoxFor(m => m.Entity.LastUpdate).ID(Prefix + "LastUpdate").Type(DateBoxType.DateTime).Visible(false)) 
+                @(Html.DControls().TextBoxFor(m => m.Entity.CreatedBy).ID(Prefix + "CreatedBy").Visible(false)) 
+                @(Html.DControls().DateBoxFor(m => m.Entity.CreationDate).ID(Prefix + "CreationDate").Type(DateBoxType.DateTime).Visible(false)) 
+
+                @(Html.DControls().Form<EmpresasResponsabilidadesFiscalesModel>() 
+                    .ID("EmpresasResponsabilidadesFiscalesModelForm").LabelLocation(FormLabelLocation.Top).ShowValidationSummary(false).FormData(Model) 
+                    .Items(items => 
+                    { 
+                         items.AddGroup().ColCount(12).Caption(DApp.DefaultLanguage.GetResource("DEFAULT.INFORMATIONGENERAL"))
+                             .Items(groupItems =>{
+                                groupItems.AddSimpleFor(m => m.Entity.EmpresasId).ColSpan(1) 
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("EmpresasResponsabilidadesFiscales.EmpresasId"))) 
+                                 .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("EmpresasResponsabilidadesFiscales.EmpresasId"))) 
+                                     .Editor(e => e.SelectBox().ID(Prefix + "EmpresasId") 
+                                     .DataSource(d => d.Mvc().LoadMethod("POST").Controller("EmpresasResponsabilidadesFiscales").LoadAction("GetEmpresasId").Key("Id")) 
+                                     .DataSourceOptions(o => o.Paginate(true).PageSize(10)) 
+                                     .ValueExpr("Id").DisplayExpr("Id").SearchExpr("Id") 
+                                     .SearchEnabled(true).ShowClearButton(true) 
+                                ); 
+                                groupItems.AddSimpleFor(m => m.Entity.ResponsabilidadesFiscalesId).ColSpan(1) 
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("EmpresasResponsabilidadesFiscales.ResponsabilidadesFiscalesId"))) 
+                                 .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("EmpresasResponsabilidadesFiscales.ResponsabilidadesFiscalesId"))) 
+                                     .Editor(e => e.SelectBox().ID(Prefix + "ResponsabilidadesFiscalesId") 
+                                     .DataSource(d => d.Mvc().LoadMethod("POST").Controller("EmpresasResponsabilidadesFiscales").LoadAction("GetResponsabilidadesFiscalesId").Key("Id")) 
+                                     .DataSourceOptions(o => o.Paginate(true).PageSize(10)) 
+                                     .ValueExpr("Id").DisplayExpr("Id").SearchExpr("Id") 
+                                     .SearchEnabled(true).ShowClearButton(true) 
+                                ); 
+                     }); 
+                 }) 
+             ) 
+         } 
+         <div asp-validation-summary="All" class="text-danger" id="@(Prefix)ListError"></div> 
+     </form> 
+</div> 
+

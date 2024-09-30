@@ -1,0 +1,74 @@
+@*  Remplazar FATHERModel por el modelo del padre al que pertenece   *@ 
+
+@model DocumentosModel 
+@{ 
+    string Prefix = "SedesDocumentos";
+    string UrlOnClick = Url.Action("EditDetail", "SedesDocumentos");
+    string UrlNew = Url.Action("NewDetail", "SedesDocumentos", new { IdFather = Model.Entity.Id });
+
+    var DataGridDetailConfig = new DataGridConfiguration<SedesDocumentos>(Prefix)
+        //.OnClick(UrlOnClick, new { Id = "Id" }, Prefix + "MainPanelForm") 
+        //.New(UrlNew,Model.Entity.IsNew,Prefix + "MainPanelForm") 
+        .Exports(true,true);
+} 
+
+
+
+@* ------------ Descomentar el siguiente codigo si es una edicion en maestro --------------- *@
+@* 
+
+<div class="card cardDeatil"> 
+    <div class="card-body">
+        <div class="box-body table-responsive no-padding"> 
+        @(Html.DControls().DataGridSimple<SedesDocumentos>(DataGridDetailConfig) 
+            .ID("SedesDocumentosDetalleDataGrid") 
+            .DataSource(d => d.Mvc().LoadMethod("POST").Controller("SedesDocumentos").LoadAction("Get").Key("Id")) 
+            .DataSourceOptions(x=>x.Filter("['IdFather','=','"+@Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+            .Columns(columns => 
+            { 
+             columns.AddFor(m => m.Sedes.Id); 
+             columns.AddFor(m => m.Documentos.Id); 
+            }) 
+        ) 
+        </div> 
+        <div id="SedesDocumentosMainPanelForm"></div> 
+    </div> 
+</div> 
+*@ 
+
+
+@* ------------ Descomentar el siguiente codigo si es una edicion en grilla y COMENTAR LOS METODOS OnClick y New del DataGridDetailConfig --------------- *@
+ 
+<script> 
+     function @(Prefix)OnInitNewRowDetalleDataGrid(model) { 
+         model = GetAuditoryData(model); 
+         model.data.DocumentosId = "@Model.Entity.Id"; // Cambiar IdFather por el campo foraneo hacia el padre 
+     } 
+</script> 
+<div class="card cardDeatil"> 
+    <div class="card-body">
+        <div class="box-body table-responsive no-padding"> 
+             @(Html.DControls().DataGridSimple<SedesDocumentos>(DataGridDetailConfig)
+                 .ID("SedesDocumentosDetalleDataGrid")
+                 .DataSource(d => d.Mvc().LoadMethod("POST").Controller("SedesDocumentos").LoadAction("Get").Key("Id")
+                     .InsertAction("AddInGrid").InsertMethod("POST").UpdateAction("ModifyInGrid").UpdateMethod("POST").DeleteAction("DeleteInGrid").DeleteMethod("POST")
+                 )
+                 .DataSourceOptions(x=>x.Filter("['DocumentosId','=','" + @Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+                 .Editing(editing => editing.Mode(GridEditMode.Batch).AllowAdding(!Model.Entity.IsNew).AllowUpdating(true).AllowDeleting(true))
+                 .OnInitNewRow(Prefix + "OnInitNewRowDetalleDataGrid")
+                 .OnRowInserted("OnRowInsertedDetalleDataGrid").OnRowUpdated("OnRowUpdatedDetalleDataGrid").OnRowRemoved("OnRowRemovedDetalleDataGrid").OnDataErrorOccurred("OnDataErrorOccurredDetalleDataGrid")
+                 .Columns(columns =>
+                 {
+                     columns.AddFor(m => m.SedesId)
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("SedesDocumentos.SedesId")))
+                         .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("SedesDocumentos.SedesId")))
+                             .Lookup(lookup => lookup
+                             .DataSource(d => d.Mvc().LoadMethod("POST").Controller("SedesDocumentos").LoadAction("GetSedesId").Key("Id"))
+                             .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                             .ValueExpr("Id").DisplayExpr("Nombre"));
+                 })
+         ) 
+        </div> 
+    </div> 
+</div> 
+

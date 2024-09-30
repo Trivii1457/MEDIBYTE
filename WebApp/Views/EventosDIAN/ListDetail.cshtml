@@ -1,0 +1,135 @@
+@*  Remplazar FATHERModel por el modelo del padre al que pertenece   *@ 
+@* 
+@model FATHERModel 
+@{ 
+    string Prefix = "EventosDIAN"; 
+    string UrlOnClick = Url.Action("EditDetail", "EventosDIAN"); 
+    string UrlNew = Url.Action("NewDetail", "EventosDIAN", new { IdFather = Model.Entity.Id }); 
+
+    var DataGridDetailConfig = new DataGridConfiguration<EventosDIAN>(Prefix) 
+        .OnClick(UrlOnClick, new { Id = "Id" }, Prefix + "MainPanelForm") 
+        .New(UrlNew,Model.Entity.IsNew,Prefix + "MainPanelForm") 
+        .Exports(true,true); 
+} 
+*@ 
+
+
+@* ------------ Descomentar el siguiente codigo si es una edicion en maestro --------------- *@
+@* 
+
+<div class="card cardDeatil"> 
+    <div class="card-body">
+        <div class="box-body table-responsive no-padding"> 
+        @(Html.DControls().DataGridSimple<EventosDIAN>(DataGridDetailConfig) 
+            .ID("EventosDIANDetalleDataGrid") 
+            .DataSource(d => d.Mvc().LoadMethod("POST").Controller("EventosDIAN").LoadAction("Get").Key("Id")) 
+            .DataSourceOptions(x=>x.Filter("['IdFather','=','"+@Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+            .Columns(columns => 
+            { 
+             columns.AddFor(m => m.TipoEvento); 
+             columns.AddFor(m => m.CodigoEvento); 
+             columns.AddFor(m => m.Descripcion); 
+             columns.AddFor(m => m.Uri); 
+             columns.AddFor(m => m.NumDocEmisor); 
+             columns.AddFor(m => m.NumDocReceptor); 
+             columns.AddFor(m => m.TipoDoc); 
+             columns.AddFor(m => m.SubtipoDoc); 
+             columns.AddFor(m => m.NroId); 
+             columns.AddFor(m => m.Uuid); 
+             columns.AddFor(m => m.FechaEmision); 
+             columns.AddFor(m => m.FechaEvento); 
+             columns.AddFor(m => m.Observacion); 
+             columns.AddFor(m => m.XmlDoc); 
+             columns.AddFor(m => m.Pdf); 
+            }) 
+        ) 
+        </div> 
+        <div id="EventosDIANMainPanelForm"></div> 
+    </div> 
+</div> 
+*@ 
+
+
+@* ------------ Descomentar el siguiente codigo si es una edicion en grilla y COMENTAR LOS METODOS OnClick y New del DataGridDetailConfig --------------- *@
+@* 
+<script> 
+     function @(Prefix)OnInitNewRowDetalleDataGrid(model) { 
+         model = GetAuditoryData(model); 
+         model.data.IdFather = "@Model.Entity.Id"; // Cambiar IdFather por el campo foraneo hacia el padre 
+     } 
+</script> 
+<div class="card cardDeatil"> 
+    <div class="card-body">
+        <div class="box-body table-responsive no-padding"> 
+             @(Html.DControls().DataGridSimple<EventosDIAN>(DataGridDetailConfig) 
+                 .ID("EventosDIANDetalleDataGrid") 
+                 .DataSource(d => d.Mvc().LoadMethod("POST").Controller("EventosDIAN").LoadAction("Get").Key("Id") 
+                     .InsertAction("AddInGrid").InsertMethod("POST").UpdateAction("ModifyInGrid").UpdateMethod("POST").DeleteAction("DeleteInGrid").DeleteMethod("POST") 
+                 ) 
+                 .DataSourceOptions(x=>x.Filter("['IdFather','=','"+@Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+                 .Editing(editing => editing.Mode(GridEditMode.Batch).AllowAdding(!Model.Entity.IsNew).AllowUpdating(true).AllowDeleting(true)) 
+                 .OnInitNewRow(Prefix + "OnInitNewRowDetalleDataGrid") 
+                 .OnRowInserted("OnRowInsertedDetalleDataGrid").OnRowUpdated("OnRowUpdatedDetalleDataGrid").OnRowRemoved("OnRowRemovedDetalleDataGrid").OnDataErrorOccurred("OnDataErrorOccurredDetalleDataGrid") 
+                 .Columns(columns => 
+                 { 
+                     columns.AddFor(m => m.TipoEvento) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("EventosDIAN.TipoEvento"))) 
+                         .ValidationRules(rules => rules.AddStringLength().Min(0).Max(10).Message(DApp.GetStringLengthResource("EventosDIAN.TipoEvento", 10))) 
+                     ; 
+                     columns.AddFor(m => m.CodigoEvento) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("EventosDIAN.CodigoEvento"))) 
+                         .ValidationRules(rules => rules.AddStringLength().Min(0).Max(10).Message(DApp.GetStringLengthResource("EventosDIAN.CodigoEvento", 10))) 
+                     ; 
+                     columns.AddFor(m => m.Descripcion) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("EventosDIAN.Descripcion"))) 
+                         .ValidationRules(rules => rules.AddStringLength().Min(0).Max(128).Message(DApp.GetStringLengthResource("EventosDIAN.Descripcion", 128))) 
+                     ; 
+                     columns.AddFor(m => m.Uri) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("EventosDIAN.Uri"))) 
+                         .ValidationRules(rules => rules.AddStringLength().Min(0).Max(1024).Message(DApp.GetStringLengthResource("EventosDIAN.Uri", 1024))) 
+                     ; 
+                     columns.AddFor(m => m.NumDocEmisor) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("EventosDIAN.NumDocEmisor"))) 
+                         .ValidationRules(rules => rules.AddStringLength().Min(0).Max(20).Message(DApp.GetStringLengthResource("EventosDIAN.NumDocEmisor", 20))) 
+                     ; 
+                     columns.AddFor(m => m.NumDocReceptor) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("EventosDIAN.NumDocReceptor"))) 
+                         .ValidationRules(rules => rules.AddStringLength().Min(0).Max(20).Message(DApp.GetStringLengthResource("EventosDIAN.NumDocReceptor", 20))) 
+                     ; 
+                     columns.AddFor(m => m.TipoDoc) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("EventosDIAN.TipoDoc"))) 
+                         .ValidationRules(rules => rules.AddStringLength().Min(0).Max(10).Message(DApp.GetStringLengthResource("EventosDIAN.TipoDoc", 10))) 
+                     ; 
+                     columns.AddFor(m => m.SubtipoDoc) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("EventosDIAN.SubtipoDoc"))) 
+                         .ValidationRules(rules => rules.AddStringLength().Min(0).Max(10).Message(DApp.GetStringLengthResource("EventosDIAN.SubtipoDoc", 10))) 
+                     ; 
+                     columns.AddFor(m => m.NroId) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("EventosDIAN.NroId"))) 
+                         .ValidationRules(rules => rules.AddStringLength().Min(0).Max(50).Message(DApp.GetStringLengthResource("EventosDIAN.NroId", 50))) 
+                     ; 
+                     columns.AddFor(m => m.Uuid) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("EventosDIAN.Uuid"))) 
+                         .ValidationRules(rules => rules.AddStringLength().Min(0).Max(255).Message(DApp.GetStringLengthResource("EventosDIAN.Uuid", 255))) 
+                     ; 
+                     columns.AddFor(m => m.FechaEmision).Format(DApp.DefaultLanguage.DateFormat) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("EventosDIAN.FechaEmision"))); 
+                     columns.AddFor(m => m.FechaEvento).Format(DApp.DefaultLanguage.DateFormat) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("EventosDIAN.FechaEvento"))); 
+                     columns.AddFor(m => m.Observacion) 
+                         .ValidationRules(rules => rules.AddStringLength().Min(0).Max(1024).Message(DApp.GetStringLengthResource("EventosDIAN.Observacion", 1024))) 
+                     ; 
+                     columns.AddFor(m => m.XmlDoc) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("EventosDIAN.XmlDoc"))) 
+                         .ValidationRules(rules => rules.AddStringLength().Min(0).Max(1024).Message(DApp.GetStringLengthResource("EventosDIAN.XmlDoc", 1024))) 
+                     ; 
+                     columns.AddFor(m => m.Pdf) 
+                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("EventosDIAN.Pdf"))) 
+                         .ValidationRules(rules => rules.AddStringLength().Min(0).Max(1024).Message(DApp.GetStringLengthResource("EventosDIAN.Pdf", 1024))) 
+                     ; 
+             }) 
+         ) 
+        </div> 
+    </div> 
+</div> 
+*@ 

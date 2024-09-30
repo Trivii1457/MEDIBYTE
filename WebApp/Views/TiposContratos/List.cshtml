@@ -1,0 +1,22 @@
+@{ 
+    string Prefix = "TiposContratos"; 
+    string UrlClick = Url.Action("Edit", "TiposContratos"); 
+    string UrlNew = Url.Action("New", "TiposContratos"); 
+
+    var DataGridConfig = new DataGridConfiguration<TiposContratos>(Prefix) 
+        .OnClick(UrlClick, new { Id = "Id" }) 
+        .New(UrlNew,DApp.ActionViewSecurity(Context,UrlNew)) 
+        .Exports(true,true) 
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("TiposContratos"), "mainPanel"); 
+} 
+
+<div class="box-body table-responsive no-padding"> 
+@(Html.DControls().DataGridSimple<TiposContratos>(DataGridConfig) 
+    .ID("TiposContratosDataGrid") 
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("TiposContratos").LoadAction("Get").Key("Id")) 
+    .Columns(columns => 
+    { 
+        columns.AddFor(m => m.Nombre); 
+    }) 
+) 
+</div> 

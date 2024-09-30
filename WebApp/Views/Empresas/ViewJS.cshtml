@@ -1,0 +1,84 @@
+@model EmpresasModel 
+@{
+    string Prefix = "Empresas"; 
+}
+
+<script>
+
+    function @(Prefix)Downloadlogo(item) {
+        location.href = "@Url.Action("DownloadFiles","Empresas", new { Id= Model.Entity.LogoArchivosId })";
+    }
+
+    function @(Prefix)OnUploadedLogoArchivos(e) {
+        $("#@(Prefix)LogoPath").dxTextBox("instance").option("value",e.request.response);
+        $("#@(Prefix)LogoArchivos_Nombre").dxTextBox("instance").option("value",e.file.name);
+        $("#@(Prefix)LogoArchivos_TipoContenido").dxTextBox("instance").option("value",e.file.type);
+    }
+
+    function @(Prefix)OnValueChangedPaises(e) {
+        $("#@(Prefix)Departamentos").dxSelectBox("instance").getDataSource().filter(["PaisesId", "=", e.value]);
+        $("#@(Prefix)Departamentos").dxSelectBox("instance").getDataSource().reload();
+        $("#@(Prefix)Departamentos").dxSelectBox("instance").option("value", null);
+    }
+
+    function @(Prefix)OnValueChangedDepartamentos(e) {
+        $("#@(Prefix)CiudadesId").dxSelectBox("instance").getDataSource().filter(["DepartamentosId", "=", e.value]);
+        $("#@(Prefix)CiudadesId").dxSelectBox("instance").getDataSource().reload();
+        $("#@(Prefix)CiudadesId").dxSelectBox("instance").option("value", null);
+    }
+
+
+    function calcularDigito(item) {
+
+        let nit = item.component.option("value");
+        let isNitValid = nit >>> 0 === parseFloat(nit) ? true : false; 
+
+        if (isNitValid) {
+            $("#@(Prefix)DV").dxTextBox("instance").option("value", CalcularDigitoVerificacion(nit));
+        }
+    }
+
+    function @(Prefix)FormSuccess(data) 
+    { 
+        hideLoadIndicator(); 
+        if ('@ViewData.ModelState.IsValid' == 'True') 
+        { 
+            if ("@ViewBag.Accion" == "Delete") {
+                DevExpress.ui.notify("Registro eliminado correctamente.","info"); 
+            } else if ("@ViewBag.Accion" == "Save") {
+                DevExpress.ui.notify("Registro guardado correctamente.","info"); 
+            } else {
+                DevExpress.ui.notify("Error no accion en submit.","info"); 
+            }
+        } 
+    } 
+
+    function @(Prefix)FormFailure(data) 
+    { 
+        hideLoadIndicator(); 
+        DevExpress.ui.notify("Error en el formulario","error"); 
+    } 
+
+    function @(Prefix)FormSuccessDetail(data) 
+    { 
+        hideLoadIndicator(); 
+        if ('@ViewData.ModelState.IsValid' == 'True') 
+        { 
+            $("#EmpresasDetalleDataGrid").dxDataGrid("instance").refresh();
+            if ("@ViewBag.Accion" == "Delete") {
+                DevExpress.ui.notify("Registro eliminado correctamente.","info"); 
+            } else if ("@ViewBag.Accion" == "Save") {
+                DevExpress.ui.notify("Registro guardado correctamente.","info"); 
+            } else {
+                DevExpress.ui.notify("Error no accion en submit.","info"); 
+            }
+        } 
+    } 
+
+    function @(Prefix)FormFailureDetail(data) 
+    { 
+        hideLoadIndicator(); 
+        DevExpress.ui.notify("Error en el formulario","error"); 
+    } 
+
+</script>

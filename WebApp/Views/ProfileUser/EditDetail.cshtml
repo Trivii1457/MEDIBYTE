@@ -1,0 +1,71 @@
+﻿@model ProfileUserModel 
+@{
+    string Prefix = "ProfileUser"; 
+    string UrlDelete = Url.Action("DeleteDetail", "ProfileUser", new { Id = Model.Entity.Id }); 
+
+    var toolbarDetailconfig = new ToolbarDetailConfiguration(Prefix); 
+}
+
+<div class="box box-info"> 
+    <div id = "ProfileUserMainPanelForm"> 
+        <form id = "@(Prefix)Form" asp-controller="ProfileUser" asp-action="EditDetail" class="form-horizontal" data-ajax-mode="replace" data-ajax-update="#ProfileUserMainPanelForm" data-ajax-success="@(Prefix)FormSuccess" data-ajax-failure="@(Prefix)FormFailure" data-ajax="true"> 
+            @using (Html.DevExtreme().ValidationGroup()) 
+            { 
+                @(Html.DControls().CheckBoxFor(m => m.Entity.IsNew).ID(Prefix + "IsNew").Visible(false)) 
+                @(Html.DControls().NumberBoxFor(m => m.Entity.Id).ID(Prefix + "Id").Visible(false)) 
+                @(Html.DControls().TextBoxFor(m => m.Entity.UpdatedBy).ID(Prefix + "UpdatedBy").Visible(false)) 
+                @(Html.DControls().DateBoxFor(m => m.Entity.LastUpdate).ID(Prefix + "LastUpdate").Type(DateBoxType.DateTime).Visible(false)) 
+                @(Html.DControls().TextBoxFor(m => m.Entity.CreatedBy).ID(Prefix + "CreatedBy").Visible(false)) 
+                @(Html.DControls().DateBoxFor(m => m.Entity.CreationDate).ID(Prefix + "CreationDate").Type(DateBoxType.DateTime).Visible(false)) 
+
+                @(Html.DControls().Form<ProfileUserModel>() 
+                    .ID("ProfileUserModelForm").ColCount(1).ShowValidationSummary(true).FormData(Model) 
+                    .Items(items => 
+                    { 
+                        items.AddSimpleFor(m => m.Entity.ProfileId) 
+                            .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("ProfileUsers.ProfileId"))) 
+                            .Editor(e => e.SelectBox() 
+                            .DataSource(d => d.Mvc().LoadMethod("POST").Controller("ProfileUser").LoadAction("GetProfileId").Key("Id")) 
+                            .DataSourceOptions(o => o.Paginate(true).PageSize(10)) 
+                            .DisplayExpr("Description").ValueExpr("Id") 
+                            .SearchEnabled(true).ShowClearButton(true)); 
+                        items.AddSimpleFor(m => m.Entity.UserId) 
+                            .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("ProfileUsers.UserId"))) 
+                            .Editor(e => e.SelectBox() 
+                            .DataSource(d => d.Mvc().LoadMethod("POST").Controller("ProfileUser").LoadAction("GetUserId").Key("Id")) 
+                            .DataSourceOptions(o => o.Paginate(true).PageSize(10)) 
+                            .DisplayExpr("Names").ValueExpr("Id") 
+                            .SearchEnabled(true).ShowClearButton(true)); 
+                    }) 
+                ) 
+            } 
+            <div asp-validation-summary="All" class="text-danger" id="@(Prefix)ListError"></div> 
+        </form> 
+    </div> 
+</div> 
+
+<script lang = "javascript"> 
+
+    function @(Prefix)FormSuccess(data) 
+    { 
+        hideLoadIndicator(); 
+        if ('@ViewData.ModelState.IsValid' == 'True') 
+        { 
+            $("#DetalleDataGrid").dxDataGrid("instance").refresh();
+            if ("@ViewBag.Accion" == "Delete") {
+                DevExpress.ui.notify("Registro eliminado correctamente.","info"); 
+            } else if ("@ViewBag.Accion" == "Save") {
+                DevExpress.ui.notify("Registro guardado correctamente.","info"); 
+            } else {
+                DevExpress.ui.notify("Error no accion en submit.","info"); 
+            }
+        } 
+    } 
+
+    function @(Prefix)FormFailure(data) 
+    { 
+        hideLoadIndicator(); 
+        DevExpress.ui.notify("Error en el formulario","error"); 
+    } 
+
+</script>

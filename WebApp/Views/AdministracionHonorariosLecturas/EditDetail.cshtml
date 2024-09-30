@@ -1,0 +1,68 @@
+@model AdministracionHonorariosLecturasModel 
+@{
+    string Prefix = "AdministracionHonorariosLecturas"; 
+    string UrlDelete = Url.Action("DeleteDetail", "AdministracionHonorariosLecturas", new { Id = Model.Entity.Id }); 
+
+    var toolbarDetailconfig = new ToolbarDetailConfiguration(Prefix).Delete(UrlDelete).Save().Cancel(); 
+} 
+
+<partial name="ViewJS.cshtml" model="Model" view-data="ViewData" /> 
+
+<div>@(Html.DControls().Toolbar(toolbarDetailconfig))</div>
+
+<div> 
+    <form id="@(Prefix)Form" asp-controller="AdministracionHonorariosLecturas" asp-action="EditDetail" class="form-horizontal" data-ajax-mode="replace" data-ajax-update="#AdministracionHonorariosLecturasMainPanelForm" data-ajax-success="@(Prefix)FormSuccessDetail" data-ajax-failure="@(Prefix)FormFailureDetail" data-ajax="true">
+        @(Html.DControls().ValidationSummary().ValidationGroup(Prefix + "ValidationGroup").ElementAttr("class","ErrorValidationSummary"))
+        @using (Html.DevExtreme().ValidationGroup(Prefix + "ValidationGroupDetail"))
+        {
+            @(Html.DControls().CheckBoxFor(m => m.Entity.IsNew).ID(Prefix + "IsNew").Visible(false))
+            @(Html.DControls().NumberBoxFor(m => m.Entity.Id).ID(Prefix + "Id").Visible(false))
+            @(Html.DControls().TextBoxFor(m => m.Entity.UpdatedBy).ID(Prefix + "UpdatedBy").Visible(false))
+            @(Html.DControls().DateBoxFor(m => m.Entity.LastUpdate).ID(Prefix + "LastUpdate").Type(DateBoxType.DateTime).Visible(false))
+            @(Html.DControls().TextBoxFor(m => m.Entity.CreatedBy).ID(Prefix + "CreatedBy").Visible(false))
+            @(Html.DControls().DateBoxFor(m => m.Entity.CreationDate).ID(Prefix + "CreationDate").Type(DateBoxType.DateTime).Visible(false))
+
+            @(Html.DControls().NumberBoxFor(m => m.Entity.AdministracionHonorariosId).ID(Prefix + "AdministracionHonorariosId").Visible(false))
+
+            @(Html.DControls().Form<AdministracionHonorariosLecturasModel>()
+                    .ID("AdministracionHonorariosLecturasModelForm").LabelLocation(FormLabelLocation.Top).ShowValidationSummary(false).FormData(Model)
+                    .Items(items =>
+                    {
+                        items.AddGroup().ColCount(12).Caption(DApp.DefaultLanguage.GetResource("DEFAULT.INFORMATIONGENERAL"))
+                            .Items(groupItems =>{
+                                groupItems.AddSimpleFor(m => m.Entity.ServiciosId).ColSpan(12)
+                                  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("AdministracionHonorariosLecturas.ServiciosId")))
+                                  .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("AdministracionHonorariosLecturas.ServiciosId")))
+                                      .Editor(e => e.SelectBox().ID(Prefix + "ServiciosId")
+                                      .DataSource(d => d.Mvc().LoadMethod("POST").Controller("AdministracionHonorariosLecturas").LoadAction("GetServiciosId").Key("Id"))
+                                      .DataSourceOptions(o => o.Paginate(true).PageSize(10).Filter("[['RequiereProfesional','<>','true'],'and',['RequiereLecturaResultados','=','true']]"))
+                                      .ValueExpr("Id").DisplayExpr("DescripcionCompleta").SearchExpr("Codigo", "Nombre")
+                                      .SearchEnabled(true).ShowClearButton(true).ReadOnly(!Model.Entity.IsNew)
+                                      .OnValueChanged($"{Prefix}OnValueChangedServiciosId")
+                                 );
+
+                                groupItems.AddSimpleFor(m => m.Entity.TipoPagoLecturaEstadosId).ColSpan(3)
+                                  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("AdministracionHonorariosLecturas.TipoPagoLecturaEstadosId")))
+                                  .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("AdministracionHonorariosLecturas.TipoPagoLecturaEstadosId")))
+                                      .Editor(e => e.SelectBox().ID(Prefix + "TipoPagoLecturaEstadosId")
+                                      .DataSource(d => d.Mvc().LoadMethod("POST").Controller("AdministracionHonorariosLecturas").LoadAction("GetEstadosId").Key("Id"))
+                                      .DataSourceOptions(o => o.Paginate(true).PageSize(10).Filter("['Tipo','=','TIPOPAGOHONORARIO']"))
+                                      .ValueExpr("Id").DisplayExpr("Nombre").SearchExpr("Nombre")
+                                      .SearchEnabled(true).ShowClearButton(true).ReadOnly(Model.Entity.IsNew)
+                                      .OnValueChanged($"{Prefix}OnValueChangedTipoPagoLecturaEstadosId")
+                                 );
+
+                                groupItems.AddSimpleFor(m => m.Entity.ValorHonorarioLectura).ColSpan(3)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("AdministracionHonorariosLecturas.ValorHonorarioLectura")))
+                                 .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("AdministracionHonorariosServicios.ValorHonorarioLectura")))
+                                     .Editor(e => e.NumberBox().ID(Prefix + "ValorHonorarioLectura").Format("#,##0").Min(0).ShowClearButton(true).ShowSpinButtons(true).ReadOnly(Model.Entity.IsNew)
+                                );
+
+                            });
+                    })
+             )
+        }
+        <div asp-validation-summary="All" class="text-danger" id="@(Prefix)ListError"></div>
+    </form> 
+</div> 
+

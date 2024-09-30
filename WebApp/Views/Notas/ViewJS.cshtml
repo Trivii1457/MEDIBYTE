@@ -1,0 +1,210 @@
+@model NotasModel
+@{
+    string Prefix = "Notas";
+    string UrlEnviarDian = Url.Action("EnviarNotasDIAN", Prefix, new { Id = Model.Entity.Id });
+    string UrlEnviarNota = Url.Action("EnviarNota", Prefix, new { id = Model.Entity.Id });
+}
+
+<script>
+
+    var EsNuevo = ("@Model.Entity.IsNew" == "True")
+
+    function @(Prefix)EnviarNota() {
+
+        showLoadIndicator();
+        $.ajax({
+            url: "@UrlEnviarNota",
+            type: 'GET',
+            success: function (data) {
+                hideLoadIndicator();
+                DevExpress.ui.notify("Envio de correo satisfactorio.", "info");
+            },
+            error: function (xhr) {
+                console.log(xhr);
+                hideLoadIndicator();
+                DevExpress.ui.notify("Error: " + xhr.responseText + " Verificar log de correo.", "error");
+            }
+        });
+    }
+
+    function @(Prefix)DisplayExprFacturaId(data) {
+        if (data)
+            return (data.Documentos != undefined ? data.Documentos.Prefijo : "") + "  " + data.NroConsecutivo;
+        else
+            return "";
+     }
+
+    function @(Prefix)MostrarPopupSeleciconarPacientes() {
+        $("#@(Prefix)PopupSeleccionarPacientes").dxPopup("instance").show();
+        $("#@(Prefix)ListPacientesSeleccionar").dxDataGrid("instance").refresh();
+    }
+
+    function @(Prefix)OnSelectionChangedListPacientesSeleccionar(data) {
+        var serializedPacientes = JSON.stringify(data.selectedRowsData);
+        $("#@(Prefix)SerializedPacientes").dxTextBox("instance").option("value", serializedPacientes);
+    }
+
+    function @(Prefix)AceptarPacientes() {
+        $("#@(Prefix)PopupSeleccionarPacientes").dxPopup("instance").hide();
+    }
+
+    function @(Prefix)CancelarPacientes() {
+        $("#@(Prefix)ListPacientesSeleccionar").dxDataGrid("instance").deselectAll();
+        $("#@(Prefix)PopupSeleccionarPacientes").dxPopup("instance").hide();
+        $("#@(Prefix)SerializedPacientes").dxTextBox("instance").option("value", null);
+    }
+
+    function @(Prefix)ValidarSeleccionarPacientes() {
+        var concepto = $("#@(Prefix)NotasConceptosId").dxSelectBox("instance").option("selectedItem");
+        var facturaId = $("#@(Prefix)FacturasId").dxSelectBox("instance").option("value");
+
+        if (concepto == null || facturaId == null || facturaId == 0 || facturaId == "") {
+            return false;
+        }
+
+        console.log("concepto.Codigo-facturaId", concepto.Codigo, facturaId);
+
+        if (concepto.Codigo == 1) {
+            $("#@(Prefix)ButtonSeleciconarPacientes").dxButton("instance").option("disabled",false);
+        } else {
+            $("#@(Prefix)ButtonSeleciconarPacientes").dxButton("instance").option("disabled",true);
+        }
+
+    }
+
+    function @(Prefix)GetFacturaId() {
+        return $("#@(Prefix)FacturasId").dxSelectBox("instance").option("value");
+    }
+
+    function @(Prefix)AnularNota() {
+
+        showLoadIndicator();
+        $('#@(Prefix)Form').attr('action', "@Url.Action("AnularNota", Prefix)");
+        $('#@(Prefix)Form').submit();
+    }
+
+    function @(Prefix)AprobarNota() {
+
+        showLoadIndicator();
+        $('#@(Prefix)Form').attr('action', "@Url.Action("AprobarNota", Prefix)");
+        $('#@(Prefix)Form').submit();
+    }
+
+    function @(Prefix)ImprimirNotaPorId() {
+        showLoadIndicator();
+        $.ajax({
+            url: "@Url.Action("ImprimirNotaPorId", Prefix, new { Id = Model.Entity.Id })",
+            type: 'GET',
+            success: function (data) {
+                $("#VisorReporteria").dxPopup("instance").show();
+                $("#ContenidoReporte").html(data);
+                hideLoadIndicator();
+            },
+            error: function (xhr) {
+                console.log(xhr);
+                hideLoadIndicator();
+                DevExpress.ui.notify("Error inesperado " + xhr.statusText, "error");
+            }
+        });
+    }
+
+    function @(Prefix)FormSuccess(data)
+    {
+        hideLoadIndicator();
+        if ('@ViewData.ModelState.IsValid' == 'True')
+        {
+            if ("@ViewBag.Accion" == "Delete") {
+                DevExpress.ui.notify("Registro eliminado correctamente.","info");
+            } else if ("@ViewBag.Accion" == "Save") {
+                DevExpress.ui.notify("Registro guardado correctamente.","info");
+            } else {
+                DevExpress.ui.notify("Registro procesado correctamente.","info");
+            }
+        }
+    }
+
+    function @(Prefix)FormFailure(data)
+    {
+        hideLoadIndicator();
+        DevExpress.ui.notify("Error en el formulario","error");
+    }
+
+    function @(Prefix)FormSuccessDetail(data)
+    {
+        hideLoadIndicator();
+        if ('@ViewData.ModelState.IsValid' == 'True')
+        {
+            $("#NotasDetalleDataGrid").dxDataGrid("instance").refresh();
+            if ("@ViewBag.Accion" == "Delete") {
+                DevExpress.ui.notify("Registro eliminado correctamente.","info");
+            } else if ("@ViewBag.Accion" == "Save") {
+                DevExpress.ui.notify("Registro guardado correctamente.","info");
+            } else {
+                DevExpress.ui.notify("Error no accion en submit.","info");
+            }
+        }
+    }
+
+    function @(Prefix)FormFailureDetail(data)
+    {
+        hideLoadIndicator();
+        DevExpress.ui.notify("Error en el formulario","error");
+    }
+
+    function @(Prefix)FacturasIdOnSelectionChanged(item) {
+
+        if (item.selectedItem) {
+            $("#@(Prefix)EmpresasId").dxSelectBox("instance").option("value", item.selectedItem.EmpresasId);
+            $("#@(Prefix)SedesId").dxSelectBox("instance").option("value", item.selectedItem.SedesId);
+            $("#@(Prefix)EntidadesId").dxSelectBox("instance").option("value", item.selectedItem.EntidadesId);
+            $("#@(Prefix)PacientesId").dxSelectBox("instance").option("value", item.selectedItem.PacientesId);
+            @(Prefix)ValidarSeleccionarPacientes();
+        }
+    }
+
+    function @(Prefix)DocumentosIdOnSelectionChanged(item) {
+
+        if (EsNuevo) {
+            $("#@(Prefix)NotasConceptosId").dxSelectBox("instance").option("value", null);
+            $("#@(Prefix)FacturasId").dxSelectBox("instance").option("value", null);
+        }
+
+        if (item.selectedItem) {
+
+            if(item.selectedItem.Transaccion == 3){
+                $("#@(Prefix)NotasConceptosId").dxSelectBox("instance").getDataSource().filter(["Documentos.Transaccion", "=", 3]);
+                $("#@(Prefix)NotasConceptosId").dxSelectBox("instance").getDataSource().reload();
+
+                //$("#@(Prefix)FacturasId").dxSelectBox("instance").getDataSource().filter(["CUFE", "!=", "null"]);
+                $("#@(Prefix)FacturasId").dxSelectBox("instance").getDataSource().reload();
+            }
+            else
+            {
+                $("#@(Prefix)NotasConceptosId").dxSelectBox("instance").getDataSource().filter(["Documentos.Transaccion", "=", 4]);
+                $("#@(Prefix)NotasConceptosId").dxSelectBox("instance").getDataSource().reload();
+
+                //$("#@(Prefix)FacturasId").dxSelectBox("instance").getDataSource().filter([]);
+                $("#@(Prefix)FacturasId").dxSelectBox("instance").getDataSource().reload();
+            }
+        }
+    }
+
+    function EnviarDIAN() {
+
+        showLoadIndicator();
+        $.ajax({
+            url: "@UrlEnviarDian",
+            type: 'GET',
+            success: function (data) {
+                hideLoadIndicator();
+                $("#mainPanel").html(data);
+            },
+            error: function (xhr) {
+                console.log(xhr);
+                hideLoadIndicator();
+                DevExpress.ui.notify("Error inesperado " + xhr.statusText, "error");
+            }
+        });
+    }
+
+</script>

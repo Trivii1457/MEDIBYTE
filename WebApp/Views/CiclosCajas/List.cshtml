@@ -1,0 +1,39 @@
+@{ 
+    string Prefix = "CiclosCajas";
+    string UrlClick = Url.Action("Edit", "CiclosCajas");
+    string UrlNew = Url.Action("New", "CiclosCajas");
+
+    var DataGridConfig = new DataGridConfiguration<CiclosCajas>(Prefix)
+        .OnClick(UrlClick, new { Id = "Id" })
+        .New(UrlNew,DApp.ActionViewSecurity(Context,UrlNew))
+        .Exports(true,true).SetStorage()
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("CiclosCajas"), "mainPanel");
+} 
+
+<partial name="ViewJS.cshtml" model="Model" view-data="ViewData" />
+
+<div class="box-body table-responsive no-padding"> 
+@(Html.DControls().DataGridSimple<CiclosCajas>(DataGridConfig)
+    .ID("CiclosCajasDataGrid")
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("CiclosCajas").LoadAction("Get").Key("Id"))
+    .Columns(columns =>
+    {
+        columns.AddFor(m => m.Id);
+        columns.AddFor(m => m.CajasId)
+                        .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("CiclosCajas.CajasId")))
+                        .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("CiclosCajas.CajasId")))
+                            .Lookup(lookup => lookup
+                            .DataSource(d => d.Mvc().LoadMethod("POST").Controller("CiclosCajas").LoadAction("GetCajasId").Key("Id"))
+                            .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                            .ValueExpr("Id").DisplayExpr(new JS(Prefix + "DisplayExprCiclosCajasId")));
+        columns.AddFor(m => m.OpenUsers.UserName);
+        columns.AddFor(m => m.FechaApertura);
+        columns.AddFor(m => m.ValorApertura);
+        columns.AddFor(m => m.CloseUsers.UserName);
+        columns.AddFor(m => m.FechaCierre);
+        columns.AddFor(m => m.ValorCierre);
+        columns.AddFor(m => m.TotalFaltante);
+        columns.AddFor(m => m.TotalSobrante);
+    })
+) 
+</div> 

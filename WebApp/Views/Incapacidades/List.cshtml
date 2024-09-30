@@ -1,0 +1,31 @@
+@{ 
+    string Prefix = "Incapacidades";
+    string UrlClick = Url.Action("Edit", "Incapacidades");
+    //string UrlNew = Url.Action("New", "Incapacidades"); 
+
+    var DataGridConfig = new DataGridConfiguration<Incapacidades>(Prefix)
+        .OnClick(UrlClick, new { Id = "Id" })
+        //.New(UrlNew,DApp.ActionViewSecurity(Context,UrlNew)) 
+        .Exports(true,true).SetStorage()
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("Incapacidades"), "mainPanel");
+} 
+
+<div class="box-body table-responsive no-padding"> 
+@(Html.DControls().DataGridSimple<Incapacidades>(DataGridConfig)
+    .ID("IncapacidadesDataGrid")
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Incapacidades").LoadAction("Get").Key("Id"))
+    .Columns(columns =>
+    {
+        columns.AddFor(m => m.NroOrden);
+        columns.AddFor(m => m.Pacientes.NumeroIdentificacion);
+        columns.AddFor(m => m.Pacientes.NombreCompleto);
+        columns.AddFor(m => m.Profesional.NombreCompleto);
+        columns.AddFor(m => m.Fecha).SortOrder(SortOrder.Desc);
+        columns.AddFor(m => m.HIstoriasClinicas.EnfermedadActual);
+        columns.AddFor(m => m.NroDias);
+        columns.AddFor(m => m.FechaInicio);
+        columns.AddFor(m => m.Diagnosticos.Descripcion);
+        columns.AddFor(m => m.Observaciones);
+    })
+) 
+</div> 

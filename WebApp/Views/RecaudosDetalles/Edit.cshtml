@@ -1,0 +1,87 @@
+@model RecaudosDetallesModel 
+@{
+    string Prefix = "RecaudosDetalles"; 
+
+    string UrlSave = Url.Action("Edit", "RecaudosDetalles"); 
+    string UrlNew = Url.Action("New", "RecaudosDetalles"); 
+    string UrlDelete = Url.Action("Delete", "RecaudosDetalles", new { Id = Model.Entity.Id }); 
+    string UrlBack = Url.Action("ListPartial", "RecaudosDetalles"); 
+
+    var ToolbarConfig = new ToolbarConfiguration(Prefix) 
+        .Title(DApp.DefaultLanguage.GetResource("RecaudosDetalles")) 
+        .Save(DApp.ActionViewSecurity(Context, UrlSave),Model.Entity.IsNew) 
+        .New(UrlNew, DApp.ActionViewSecurity(Context, UrlNew)) 
+        .Delete(UrlDelete,DApp.ActionViewSecurity(Context,UrlDelete),UrlBack,Model.Entity.IsNew) 
+        .Back(UrlBack); 
+}
+
+<partial name="ViewJS.cshtml" model="Model" view-data="ViewData" /> 
+
+@(Html.DControls().Toolbar(ToolbarConfig)) 
+
+<div> 
+    <div id = "RecaudosDetallesMainPanelForm"> 
+        <form id = "@(Prefix)Form" asp-controller="RecaudosDetalles" asp-action="Edit" class="form-horizontal" data-ajax-mode="replace" data-ajax-update="#mainPanel" data-ajax-success="@(Prefix)FormSuccess" data-ajax-failure="@(Prefix)FormFailure" data-ajax="true"> 
+            @(Html.DControls().ValidationSummary().ValidationGroup(Prefix + "ValidationGroup").ElementAttr("class","ErrorValidationSummary")) 
+            @using (Html.DevExtreme().ValidationGroup(Prefix + "ValidationGroup")) 
+            { 
+                @(Html.DControls().CheckBoxFor(m => m.Entity.IsNew).ID(Prefix + "IsNew").Visible(false)) 
+                @(Html.DControls().NumberBoxFor(m => m.Entity.Id).ID(Prefix + "Id").Visible(false)) 
+
+                @(Html.DControls().Form<RecaudosDetallesModel>()
+                    .ID("RecaudosDetallesModelForm").LabelLocation(FormLabelLocation.Top).ShowValidationSummary(false).FormData(Model)
+                    .Items(items =>
+                    {
+                        items.AddGroup().ColCount(12).Caption(DApp.DefaultLanguage.GetResource("DEFAULT.INFORMATIONGENERAL"))
+                            .Items(groupItems =>{
+                                groupItems.AddSimpleFor(m => m.Entity.RecaudosId).ColSpan(1)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("RecaudosDetalles.RecaudosId")))
+                                 .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("RecaudosDetalles.RecaudosId")))
+                                      .Editor(e => e.SelectBox().ID(Prefix + "RecaudosId")
+                                      .DataSource(d => d.Mvc().LoadMethod("POST").Controller("RecaudosDetalles").LoadAction("GetRecaudosId").Key("Id"))
+                                      .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                      .ValueExpr("Id").DisplayExpr("Id").SearchExpr("Id")
+                                      .SearchEnabled(true).ShowClearButton(true)
+                                 );
+                                groupItems.AddSimpleFor(m => m.Entity.FacturasId).ColSpan(1)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("RecaudosDetalles.FacturasId")))
+                                 .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("RecaudosDetalles.FacturasId")))
+                                      .Editor(e => e.SelectBox().ID(Prefix + "FacturasId")
+                                      .DataSource(d => d.Mvc().LoadMethod("POST").Controller("RecaudosDetalles").LoadAction("GetFacturasId").Key("Id"))
+                                      .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                      .ValueExpr("Id").DisplayExpr(new JS(Prefix + "DisplayExprFacturaId")).SearchExpr("Prefijo", "NroConsecutivo")
+                                      .SearchEnabled(true).ShowClearButton(true)
+                                 );
+                                groupItems.AddSimpleFor(m => m.Entity.ValorAplicado).ColSpan(1)
+                                  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("RecaudosDetalles.ValorAplicado")))
+                                      .Editor(e=>e.NumberBox().ID(Prefix + "ValorAplicado").Format("#,##0.##").ShowClearButton(true).ShowSpinButtons(true));
+                                groupItems.AddSimpleFor(m => m.Entity.ValorRetencion).ColSpan(1)
+                                  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("RecaudosDetalles.ValorRetencion")))
+                                      .Editor(e=>e.NumberBox().ID(Prefix + "ValorRetencion").Format("#,##0.##").ShowClearButton(true).ShowSpinButtons(true));
+                            });
+                    })
+                ) 
+            } 
+        </form> 
+
+        @* Si el maestro maneja detalle descomentar el siguiente codigo y remplazar la palabra "MAESTRODETALLE" *@
+        @* 
+        <div> 
+           <ul class="nav nav-tabs" role="tablist"> 
+               <li role="presentation" class="active"> 
+                   <a href="#MAESTRODETALLE" aria-controls="MAESTRODETALLE" role="tab" data-toggle="tab"> 
+                       @DApp.DefaultLanguage.GetResource("MAESTRODETALLE") 
+                   </a> 
+               </li> 
+           </ul> 
+           <div class="tab-content"> 
+               <div role="tabpanel" class="tab-pane active" id="MAESTRODETALLE">
+                   <partial name="../MAESTRODETALLE/ListDetail.cshtml" model=Model view-data="ViewData" />
+               </div>
+           </div>
+        </div>
+        *@
+
+    </div> 
+</div> 
+

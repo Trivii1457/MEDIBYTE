@@ -1,0 +1,23 @@
+@{ 
+    string Prefix = "MediosPago"; 
+    string UrlClick = Url.Action("Edit", "MediosPago"); 
+    string UrlNew = Url.Action("New", "MediosPago"); 
+
+    var DataGridConfig = new DataGridConfiguration<MediosPago>(Prefix) 
+        .OnClick(UrlClick, new { Id = "Id" }) 
+        .New(UrlNew,DApp.ActionViewSecurity(Context,UrlNew)) 
+        .Exports(true,true) 
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("MediosPago"), "mainPanel"); 
+} 
+
+<div class="box-body table-responsive no-padding"> 
+@(Html.DControls().DataGridSimple<MediosPago>(DataGridConfig)
+    .ID("MediosPagoDataGrid")
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("MediosPago").LoadAction("Get").Key("Id"))
+    .Columns(columns =>
+    {
+        columns.AddFor(m => m.Codigo);
+        columns.AddFor(m => m.Descripcion);
+    })
+) 
+</div> 

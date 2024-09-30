@@ -1,0 +1,22 @@
+@{ 
+    string Prefix = "MedicamentosConcentraciones"; 
+    string UrlClick = Url.Action("Edit", "MedicamentosConcentraciones"); 
+    string UrlNew = Url.Action("New", "MedicamentosConcentraciones"); 
+
+    var DataGridConfig = new DataGridConfiguration<MedicamentosConcentraciones>(Prefix) 
+        .OnClick(UrlClick, new { Id = "Id" }) 
+        .New(UrlNew,DApp.ActionViewSecurity(Context,UrlNew)) 
+        .Exports(true,true) 
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("MedicamentosConcentraciones"), "mainPanel"); 
+} 
+
+<div class="box-body table-responsive no-padding"> 
+@(Html.DControls().DataGridSimple<MedicamentosConcentraciones>(DataGridConfig) 
+    .ID("MedicamentosConcentracionesDataGrid") 
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("MedicamentosConcentraciones").LoadAction("Get").Key("Id")) 
+    .Columns(columns => 
+    { 
+        columns.AddFor(m => m.Nombre); 
+    }) 
+) 
+</div> 

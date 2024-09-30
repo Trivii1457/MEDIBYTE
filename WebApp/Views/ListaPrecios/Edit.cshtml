@@ -1,0 +1,205 @@
+@model ListaPreciosModel
+@{
+    string Prefix = "ListaPrecios";
+    string PrefixDuplicar = "ListaPreciosDuplicar";
+
+    string UrlSave = Url.Action("Edit", "ListaPrecios");
+    string UrlNew = Url.Action("New", "ListaPrecios");
+    string UrlDelete = Url.Action("Delete", "ListaPrecios", new { Id = Model.Entity.Id });
+    string UrlBack = Url.Action("ListPartial", "ListaPrecios");
+
+    var ToolbarConfig = new ToolbarConfiguration(Prefix)
+        .Title(DApp.DefaultLanguage.GetResource("ListaPrecios"))
+        .Save(DApp.ActionViewSecurity(Context, UrlSave), Model.Entity.IsNew)
+        .New(UrlNew, DApp.ActionViewSecurity(Context, UrlNew))
+        .Delete(UrlDelete, DApp.ActionViewSecurity(Context, UrlDelete), UrlBack, Model.Entity.IsNew)
+        .Back(UrlBack);
+
+    if (!Model.Entity.IsNew)
+    {
+        ToolbarConfig.AddButtons(new List<ButtonToolbar>
+{
+            new ButtonToolbar(){Id=$"{Prefix}Duplicar", Text="Duplicar", Action=$"{Prefix}ShowPopUpDuplicar", Icon="redo" }
+        });
+    }
+}
+
+<partial name="ViewJS.cshtml" model="Model" view-data="ViewData" />
+
+@(Html.DControls().Toolbar(ToolbarConfig))
+
+<div>
+    <div id="ListaPreciosMainPanelForm">
+        <form id="@(Prefix)Form" asp-controller="ListaPrecios" asp-action="Edit" class="form-horizontal" data-ajax-mode="replace" data-ajax-update="#mainPanel" data-ajax-success="@(Prefix)FormSuccess" data-ajax-failure="@(Prefix)FormFailure" data-ajax="true">
+            @(Html.DControls().ValidationSummary().ValidationGroup(Prefix + "ValidationGroup").ElementAttr("class", "ErrorValidationSummary"))
+            @using (Html.DevExtreme().ValidationGroup(Prefix + "ValidationGroup"))
+            {
+                @(Html.DControls().CheckBoxFor(m => m.Entity.IsNew).ID(Prefix + "IsNew").Visible(false))
+                @(Html.DControls().NumberBoxFor(m => m.Entity.Id).ID(Prefix + "Id").Visible(false))
+                @(Html.DControls().TextBoxFor(m => m.Entity.UpdatedBy).ID(Prefix + "UpdatedBy").Visible(false))
+                @(Html.DControls().DateBoxFor(m => m.Entity.LastUpdate).ID(Prefix + "LastUpdate").Type(DateBoxType.DateTime).Visible(false))
+                @(Html.DControls().TextBoxFor(m => m.Entity.CreatedBy).ID(Prefix + "CreatedBy").Visible(false))
+                @(Html.DControls().DateBoxFor(m => m.Entity.CreationDate).ID(Prefix + "CreationDate").Type(DateBoxType.DateTime).Visible(false))
+                @(Html.DControls().NumberBoxFor(m => m.Entity.EmpresasId).ID(Prefix + "EmpresasId").Visible(false))
+                @(Html.DControls().NumberBoxFor(m => m.Entity.RelacionaListaPreciosId).ID(Prefix + "RelacionaListaPreciosId").Visible(false))
+
+
+                @(Html.DControls().Form<ListaPreciosModel>()
+                    .ID("ListaPreciosModelForm").LabelLocation(FormLabelLocation.Top).ShowValidationSummary(true).FormData(Model)
+                    .Items(items =>
+                    {
+                        items.AddGroup().ColCount(12).Caption(DApp.DefaultLanguage.GetResource("DEFAULT.INFORMATIONGENERAL"))
+                            .Items(groupItems =>
+                            {
+                                groupItems.AddSimpleFor(m => m.Entity.Nombre).ColSpan(4)
+                                .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("ListaPrecios.Nombre")))
+                                .ValidationRules(rules => rules.AddStringLength().Min(0).Max(255).Message(DApp.GetStringLengthResource("ListaPrecios.Nombre", 255)))
+                                     .Editor(e => e.TextBox().ID(Prefix + "Nombre").ShowClearButton(true));
+
+                                groupItems.AddSimpleFor(m => m.Entity.Tarifa).ColSpan(4)
+                               .ValidationRules(rules => rules.AddStringLength().Min(0).Max(100).Message(DApp.GetStringLengthResource("ListaPrecios.Tarifa", 100)))
+                                    .Editor(e => e.TextBox().ID(Prefix + "Tarifa").ShowClearButton(true));
+
+                                groupItems.AddEmpty().ColSpan(4);
+
+                                groupItems.AddSimpleFor(m => m.Entity.TipoEstadosId).ColSpan(4)
+                              .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("ListaPrecios.TipoEstadosId")))
+                              .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("ListaPrecios.TipoEstadosId")))
+                                   .Editor(e => e.SelectBox().ID(Prefix + "TipoEstadosId")
+                                   .DataSource(d => d.Mvc().LoadMethod("POST").Controller("ListaPrecios").LoadAction("GetTipoEstadosId").Key("Id"))
+                                   .DataSourceOptions(o => o.Paginate(true).PageSize(10).Filter("['Tipo','=','TIPOPRECIO']"))
+                                   .ValueExpr("Id").DisplayExpr("Nombre").SearchExpr("Id")
+                                   .OnValueChanged(Prefix + "OnChangeValueEstado")
+                                   .SearchEnabled(true).ShowClearButton(true)
+                              );
+
+                                groupItems.AddSimpleFor(m => m.Entity.Porcentaje).ColSpan(4)
+                                   .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("ListaPrecios.Porcentaje")))
+                                       .Editor(e => e.NumberBox().ID(Prefix + "Porcentaje").Format("#,##0.##").ShowClearButton(true).ShowSpinButtons(true).ReadOnly(Model.Entity.TipoEstadosId != 53 ? false : true));
+
+                                groupItems.AddSimpleFor(m => m.Entity.Valor).ColSpan(4)
+                                   .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("ListaPrecios.Valor")))
+                                       .Editor(e => e.NumberBox().ID(Prefix + "Valor").Format("#,##0.##").ShowClearButton(true).ShowSpinButtons(true).ReadOnly(Model.Entity.TipoEstadosId != 54 ? false : true));
+
+                                groupItems.AddSimpleFor(m => m.Entity.CreatedBy).ColSpan(3)
+                                        .Editor(e => e.TextBox().ReadOnly(true));
+                                groupItems.AddSimpleFor(m => m.Entity.CreationDate).ColSpan(3)
+                                     .Editor(e => e.DateBox().ReadOnly(true)
+                                     .Type(DateBoxType.DateTime)
+                                     .DisplayFormat(DApp.DefaultLanguage.DateTimeFormat));
+
+                                groupItems.AddSimpleFor(m => m.Entity.UpdatedBy).ColSpan(3)
+                                     .Editor(e => e.TextBox().ReadOnly(true));
+                                groupItems.AddSimpleFor(m => m.Entity.LastUpdate).ColSpan(3)
+                                     .Editor(e => e.DateBox().ReadOnly(true)
+                                     .Type(DateBoxType.DateTime)
+                                     .DisplayFormat(DApp.DefaultLanguage.DateTimeFormat));
+                            });
+                    })
+                )
+            }
+
+        </form>
+
+        @* Si el maestro maneja detalle descomentar el siguiente codigo y remplazar la palabra "MAESTRODETALLE" *@
+
+        <div>
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active">
+                    <a href="#PreciosServicios" aria-controls="PreciosServicios" role="tab" data-toggle="tab">
+                        @DApp.DefaultLanguage.GetResource("PreciosServicios")
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="PreciosServicios">
+                    <partial name="../PreciosServicios/ListDetail.cshtml" model=Model view-data="ViewData" />
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+@(Html.DControls().Popup()
+        .ID($"{Prefix}DuplicarPopUp")
+        .ContentTemplate(new TemplateName($"{Prefix}duplicar-PopUp"))
+        //.CloseOnBackButton(true)
+        .CloseOnOutsideClick(true))
+
+@using (Html.DevExtreme().NamedTemplate($"{Prefix}duplicar-PopUp"))
+{
+    <div id="ListaPreciosMainDuplicarPanelForm">
+        <form id="@(Prefix)DuplicateForm" asp-controller="ListaPrecios" asp-action="Duplicate" class="form-horizontal" data-ajax-mode="replace" data-ajax-update="#mainPanel" data-ajax-success="@(Prefix)FormSuccess" data-ajax-failure="@(Prefix)FormFailure" data-ajax="true">
+            @(Html.DControls().ValidationSummary().ValidationGroup(PrefixDuplicar + "ValidationGroup").ElementAttr("class", "ErrorValidationSummary"))
+            @using (Html.DevExtreme().ValidationGroup(PrefixDuplicar + "ValidationGroup"))
+            {
+                @(Html.DControls().CheckBoxFor(m => m.Entity.IsNew).ID(PrefixDuplicar + "IsNew").Visible(false))
+                @(Html.DControls().NumberBoxFor(m => m.Entity.Id).ID(PrefixDuplicar + "Id").Visible(false))
+                @(Html.DControls().TextBoxFor(m => m.Entity.UpdatedBy).ID(PrefixDuplicar + "UpdatedBy").Visible(false))
+                @(Html.DControls().DateBoxFor(m => m.Entity.LastUpdate).ID(PrefixDuplicar + "LastUpdate").Visible(false))
+                @(Html.DControls().TextBoxFor(m => m.Entity.CreatedBy).ID(PrefixDuplicar + "CreatedBy").Visible(false))
+                @(Html.DControls().DateBoxFor(m => m.Entity.CreationDate).ID(PrefixDuplicar + "CreationDate").Visible(false))
+                @(Html.DControls().TextBoxFor(m => m.Entity.Nombre).ID(PrefixDuplicar + "Nombre").Visible(false))
+                @(Html.DControls().TextBoxFor(m => m.Entity.Tarifa).ID(PrefixDuplicar + "Tarifa").Visible(false))
+                @(Html.DControls().NumberBoxFor(m => m.Entity.TipoEstadosId).ID(PrefixDuplicar + "TipoEstadosId").Visible(false))
+                @(Html.DControls().NumberBoxFor(m => m.Entity.Porcentaje).ID(PrefixDuplicar + "Porcentaje").Visible(false))
+                @(Html.DControls().NumberBoxFor(m => m.Entity.Valor).ID(PrefixDuplicar + "Valor").Visible(false))
+                @(Html.DControls().NumberBoxFor(m => m.Entity.EmpresasId).ID(PrefixDuplicar + "EmpresasId").Visible(false))
+                @(Html.DControls().NumberBoxFor(m => m.Entity.RelacionaListaPreciosId).ID(PrefixDuplicar + "RelacionaListaPreciosId").Visible(false))
+
+                @(Html.DControls().Form<ListaPreciosModel>()
+                    .ID("ListaPreciosDuplicarModelForm").LabelLocation(FormLabelLocation.Top).ShowValidationSummary(false).FormData(Model)
+                    .Items(items =>
+                    {
+                        items.AddGroup().ColCount(12).Caption(DApp.GetResource("DuplicarListaPrecios"))
+                            .Items(groupItems =>
+                            {
+                                groupItems.AddSimpleFor(m => m.NombreDuplicar).ColSpan(4)
+                                .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("ListaPrecios.NombreDuplicar")))
+                                .ValidationRules(rules => rules.AddStringLength().Min(0).Max(255).Message(DApp.GetStringLengthResource("ListaPrecios.NombreDuplicar", 255)))
+                                     .Editor(e => e.TextBox().ID(PrefixDuplicar + "NombreDuplicar").ShowClearButton(true));
+
+                                groupItems.AddSimpleFor(m => m.PorcentajeIncrementoServicio).ColSpan(4)
+                               .ValidationRules(rules => rules.AddStringLength().Min(0).Max(100).Message(DApp.GetStringLengthResource("ListaPrecios.PorcentajeIncrementoServicio", 100)))
+                                    .Editor(e => e.NumberBox().ID(PrefixDuplicar + "PorcentajeIncrementoServicio").Format("#,##0.##").ShowClearButton(true).ShowSpinButtons(true));
+
+                                groupItems.AddEmpty().ColSpan(4);
+
+                                groupItems.AddSimpleFor(m => m.TipoEstadoDuplicar).ColSpan(4)
+                              .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("ListaPrecios.TipoEstadoDuplicar")))
+                              .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("ListaPrecios.TipoEstadoDuplicar")))
+                                   .Editor(e => e.SelectBox().ID(PrefixDuplicar + "TipoEstadoDuplicar")
+                                   .DataSource(d => d.Mvc().LoadMethod("POST").Controller("ListaPrecios").LoadAction("GetTipoEstadosId").Key("Id"))
+                                   .DataSourceOptions(o => o.Paginate(true).PageSize(10).Filter("['Tipo','=','TIPOPRECIO']"))
+                                   .ValueExpr("Id").DisplayExpr("Nombre").SearchExpr("Id")
+                                   .OnValueChanged(Prefix + "OnChangeValueEstadoDuplicar")
+                                   .SearchEnabled(true).ShowClearButton(true)
+                              );
+
+                                groupItems.AddSimpleFor(m => m.PorcentajeDuplicar).ColSpan(4)
+                                   .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("ListaPrecios.Porcentaje")))
+                                       .Editor(e => e.NumberBox().ID(PrefixDuplicar + "PorcentajeDuplicar").Format("#,##0.##").ShowClearButton(true).ShowSpinButtons(true)
+                                        .ReadOnly(true)
+                                       );
+
+                                groupItems.AddSimpleFor(m => m.ValorDuplicar).ColSpan(4)
+                                   .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("ListaPrecios.Valor")))
+                                       .Editor(e => e.NumberBox().ID(PrefixDuplicar + "ValorDuplicar").Format("#,##0.##").ShowClearButton(true).ShowSpinButtons(true)
+                                        .ReadOnly(true)
+                                       );
+
+                                groupItems.AddEmpty().ColSpan(12);
+
+                                groupItems.AddButton().ButtonOptions(x => x.Text(DApp.GetResource("Duplicar")).UseSubmitBehavior(true)).HorizontalAlignment(HorizontalAlignment.Center).ColSpan(12);
+                            });
+                    })
+                )
+            }
+            
+        </form>
+
+      </div>
+}
+

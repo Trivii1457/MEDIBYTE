@@ -1,0 +1,22 @@
+@{ 
+    string Prefix = "MedicamentosViaAdministracion"; 
+    string UrlClick = Url.Action("Edit", "MedicamentosViaAdministracion"); 
+    string UrlNew = Url.Action("New", "MedicamentosViaAdministracion"); 
+
+    var DataGridConfig = new DataGridConfiguration<MedicamentosViaAdministracion>(Prefix) 
+        .OnClick(UrlClick, new { Id = "Id" }) 
+        .New(UrlNew,DApp.ActionViewSecurity(Context,UrlNew)) 
+        .Exports(true,true) 
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("MedicamentosViaAdministracion"), "mainPanel"); 
+} 
+
+<div class="box-body table-responsive no-padding"> 
+@(Html.DControls().DataGridSimple<MedicamentosViaAdministracion>(DataGridConfig) 
+    .ID("MedicamentosViaAdministracionDataGrid") 
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("MedicamentosViaAdministracion").LoadAction("Get").Key("Id")) 
+    .Columns(columns => 
+    { 
+        columns.AddFor(m => m.Nombre); 
+    }) 
+) 
+</div> 

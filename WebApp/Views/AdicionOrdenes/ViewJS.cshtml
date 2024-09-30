@@ -1,0 +1,26 @@
+@model HistoriasClinicasModel
+@{
+    string Prefix = "AdicionOrdenes";
+}
+
+<script>
+
+    function ImprimirDocumentosAPacientes() {
+        showLoadIndicator();
+        $.ajax({
+            url: "@Url.Action("ImprimirDocumentosAPacientes", "HistoriasClinicas", new { Id = Model.Entity.Id })",
+            type: 'GET',
+            success: function (data) {
+                $("#VisorReporteria").dxPopup("instance").show();
+                $("#ContenidoReporte").html(data);
+                hideLoadIndicator();
+            },
+            error: function (xhr) {
+                console.log(xhr);
+                hideLoadIndicator();
+                DevExpress.ui.notify("Error inesperado " + xhr.statusText, "error");
+            }
+        });
+    }
+
+</script>

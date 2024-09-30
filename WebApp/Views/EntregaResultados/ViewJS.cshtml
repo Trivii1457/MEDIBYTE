@@ -1,0 +1,107 @@
+@model EntregaResultadosModel 
+@{
+    string Prefix = "EntregaResultados";
+    string UrlReport = Url.Action("ImprimirAtencionesResultadoPorId", Prefix, new { Id = Model.Entity.Id });
+}
+
+<script>
+
+    function ImprimirAtencionesResultadoPorId() {
+        showLoadIndicator();
+        $.ajax({
+            url: "@UrlReport",
+            type: 'GET',
+            success: function (data) {
+                $("#VisorReporteria").dxPopup("instance").show();
+                $("#ContenidoReporte").html(data);
+                hideLoadIndicator();
+            },
+            error: function (xhr) {
+                console.log(xhr);
+                hideLoadIndicator();
+                DevExpress.ui.notify("Error inesperado " + xhr.statusText, "error");
+            }
+        });
+    }
+
+    function @(Prefix)OnValueChangedPacientesId(data)
+    {
+        console.log(data);
+
+        if (data.value == null || data.value == "" || data.value == 0) {
+            return;
+        }
+
+        $("#@(Prefix)PopupResultados").dxPopup("instance").show();
+
+        $("#@(Prefix)SerializedResultados").dxTextBox("instance").option("value", null);
+        $("#@(Prefix)GridResultados").dxDataGrid("instance").option("selectedRowKeys", []);
+
+        var gridResultados = $("#@(Prefix)GridResultados").dxDataGrid("instance");
+        gridResultados.getDataSource().filter(["AdmisionesServiciosPrestados.Admisiones.PacientesId", "=", data.value]);
+        gridResultados.getDataSource().reload();
+
+
+    }
+
+    function @(Prefix)OnSelectionChangedResultados(data)
+    {
+        console.log(data);
+        $("#@(Prefix)SerializedResultados").dxTextBox("instance").option("value", JSON.stringify(data.selectedRowKeys));
+    }
+
+    function @(Prefix)AceptarResultados()
+    {
+        $("#@(Prefix)PopupResultados").dxPopup("instance").hide();
+    }
+
+    function @(Prefix)LimpiarResultados()
+    {
+        $("#@(Prefix)SerializedResultados").dxTextBox("instance").option("value", null);
+        $("#@(Prefix)GridResultados").dxDataGrid("instance").option("selectedRowKeys", []);
+    }
+
+    function @(Prefix)FormSuccess(data)
+    {
+        hideLoadIndicator();
+        if ('@ViewData.ModelState.IsValid' == 'True')
+        {
+            if ("@ViewBag.Accion" == "Delete") {
+                DevExpress.ui.notify("Registro eliminado correctamente.","info");
+            } else if ("@ViewBag.Accion" == "Save") {
+                DevExpress.ui.notify("Registro guardado correctamente.","info");
+            } else {
+                DevExpress.ui.notify("Error no accion en submit.","info");
+            }
+        }
+    }
+
+    function @(Prefix)FormFailure(data)
+    {
+        hideLoadIndicator();
+        DevExpress.ui.notify("Error en el formulario","error");
+    }
+
+    function @(Prefix)FormSuccessDetail(data)
+    {
+        hideLoadIndicator();
+        if ('@ViewData.ModelState.IsValid' == 'True')
+        {
+            $("#EntregaResultadosDetalleDataGrid").dxDataGrid("instance").refresh();
+            if ("@ViewBag.Accion" == "Delete") {
+                DevExpress.ui.notify("Registro eliminado correctamente.","info");
+            } else if ("@ViewBag.Accion" == "Save") {
+                DevExpress.ui.notify("Registro guardado correctamente.","info");
+            } else {
+                DevExpress.ui.notify("Error no accion en submit.","info");
+            }
+        }
+    }
+
+    function @(Prefix)FormFailureDetail(data)
+    {
+        hideLoadIndicator();
+        DevExpress.ui.notify("Error en el formulario","error");
+    }
+
+</script>

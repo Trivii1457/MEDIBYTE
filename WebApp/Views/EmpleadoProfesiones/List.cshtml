@@ -1,0 +1,23 @@
+@{ 
+    string Prefix = "EmpleadoProfesiones"; 
+    string UrlClick = Url.Action("Edit", "EmpleadoProfesiones"); 
+    string UrlNew = Url.Action("New", "EmpleadoProfesiones"); 
+
+    var DataGridConfig = new DataGridConfiguration<EmpleadoProfesiones>(Prefix) 
+        .OnClick(UrlClick, new { Id = "Id" }) 
+        .New(UrlNew,DApp.ActionViewSecurity(Context,UrlNew)) 
+        .Exports(true,true) 
+        .ToolbarTop(DApp.DefaultLanguage.GetResource("EmpleadoProfesiones"), "mainPanel"); 
+} 
+
+<div class="box-body table-responsive no-padding"> 
+@(Html.DControls().DataGridSimple<EmpleadoProfesiones>(DataGridConfig) 
+    .ID("EmpleadoProfesionesDataGrid") 
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("EmpleadoProfesiones").LoadAction("Get").Key("Id")) 
+    .Columns(columns => 
+    { 
+        columns.AddFor(m => m.Empleados.Id); 
+        columns.AddFor(m => m.Profesiones.Id); 
+    }) 
+) 
+</div> 

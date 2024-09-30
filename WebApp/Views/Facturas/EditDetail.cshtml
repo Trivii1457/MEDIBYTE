@@ -1,0 +1,128 @@
+@model FacturasModel 
+@{
+    string Prefix = "Facturas"; 
+    string UrlDelete = Url.Action("DeleteDetail", "Facturas", new { Id = Model.Entity.Id }); 
+
+    var toolbarDetailconfig = new ToolbarDetailConfiguration(Prefix).Delete(UrlDelete).Save().Cancel(); 
+} 
+
+<partial name="ViewJS.cshtml" model="Model" view-data="ViewData" /> 
+
+<div>@(Html.DControls().Toolbar(toolbarDetailconfig))</div>
+
+<div> 
+     <form id="@(Prefix)Form" asp-controller="Facturas" asp-action="EditDetail" class="form-horizontal" data-ajax-mode="replace" data-ajax-update="#FacturasMainPanelForm" data-ajax-success="@(Prefix)FormSuccessDetail" data-ajax-failure="@(Prefix)FormFailureDetail" data-ajax="true"> 
+         @(Html.DControls().ValidationSummary().ValidationGroup(Prefix + "ValidationGroup").ElementAttr("class","ErrorValidationSummary")) 
+         @using (Html.DevExtreme().ValidationGroup(Prefix + "ValidationGroupDetail")) 
+         { 
+             @(Html.DControls().CheckBoxFor(m => m.Entity.IsNew).ID(Prefix + "IsNew").Visible(false)) 
+                @(Html.DControls().NumberBoxFor(m => m.Entity.Id).ID(Prefix + "Id").Visible(false)) 
+                @(Html.DControls().TextBoxFor(m => m.Entity.UpdatedBy).ID(Prefix + "UpdatedBy").Visible(false)) 
+                @(Html.DControls().DateBoxFor(m => m.Entity.LastUpdate).ID(Prefix + "LastUpdate").Type(DateBoxType.DateTime).Visible(false)) 
+                @(Html.DControls().TextBoxFor(m => m.Entity.CreatedBy).ID(Prefix + "CreatedBy").Visible(false)) 
+                @(Html.DControls().DateBoxFor(m => m.Entity.CreationDate).ID(Prefix + "CreationDate").Type(DateBoxType.DateTime).Visible(false)) 
+
+                @(Html.DControls().Form<FacturasModel>()
+                    .ID("FacturasModelForm").LabelLocation(FormLabelLocation.Top).ShowValidationSummary(false).FormData(Model)
+                    .Items(items =>
+                    {
+                        items.AddGroup().ColCount(12).Caption(DApp.DefaultLanguage.GetResource("DEFAULT.INFORMATIONGENERAL"))
+                            .Items(groupItems =>{
+                                groupItems.AddSimpleFor(m => m.Entity.SedesId).ColSpan(1)
+                                  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Facturas.SedesId")))
+                                  .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Facturas.SedesId")))
+                                      .Editor(e => e.SelectBox().ID(Prefix + "SedesId")
+                                      .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Facturas").LoadAction("GetSedesId").Key("Id"))
+                                      .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                      .ValueExpr("Id").DisplayExpr("Id").SearchExpr("Id")
+                                      .SearchEnabled(true).ShowClearButton(true)
+                                 );
+                                groupItems.AddSimpleFor(m => m.Entity.Fecha).ColSpan(1)
+                                  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Facturas.Fecha")))
+                                      .Editor(e=>e.DateBox().ID(Prefix + "Fecha")
+                                      .DisplayFormat(DApp.DefaultLanguage.DateFormat).Placeholder(DateTime.Now.ToString(DApp.DefaultLanguage.DateFormat)).ShowClearButton(true).UseMaskBehavior(true));
+                                groupItems.AddSimpleFor(m => m.Entity.DocumentosId).ColSpan(1)
+                                        .Editor(e => e.SelectBox().ID(Prefix + "DocumentosId")
+                                        .DataSource(d => d.Mvc().LoadMethod("POST").Controller("FacturasGeneracion").LoadAction("GetDocumentosId").Key("Id"))
+                                        .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                        .ValueExpr("Id").DisplayExpr("Prefijo").SearchExpr("Prefijo")
+                                        .SearchEnabled(true).ShowClearButton(true)
+                                );
+                                groupItems.AddSimpleFor(m => m.Entity.NroConsecutivo).ColSpan(1)
+                                .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Facturas.NroConsecutivo")))
+                                    .Editor(e=>e.NumberBox().ID(Prefix + "NroConsecutivo").Format("#,##0.##").ShowClearButton(true).ShowSpinButtons(true));
+                                groupItems.AddSimpleFor(m => m.Entity.EntidadesId).ColSpan(1)
+                                  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Facturas.EntidadesId")))
+                                  .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Facturas.EntidadesId")))
+                                      .Editor(e => e.SelectBox().ID(Prefix + "EntidadesId")
+                                      .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Facturas").LoadAction("GetEntidadesId").Key("Id"))
+                                      .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                      .ValueExpr("Id").DisplayExpr("Id").SearchExpr("Id")
+                                      .SearchEnabled(true).ShowClearButton(true)
+                                 );
+                                groupItems.AddSimpleFor(m => m.Entity.ConvenioId).ColSpan(1)
+                                  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Facturas.ConvenioId")))
+                                      .Editor(e=>e.NumberBox().ID(Prefix + "ConvenioId").Format("#,##0.##").ShowClearButton(true).ShowSpinButtons(true));
+                                groupItems.AddSimpleFor(m => m.Entity.ValorSubtotal).ColSpan(1)
+                                  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Facturas.ValorSubtotal")))
+                                      .Editor(e=>e.NumberBox().ID(Prefix + "ValorSubtotal").Format("#,##0.##").ShowClearButton(true).ShowSpinButtons(true));
+                                groupItems.AddSimpleFor(m => m.Entity.ValorDescuentos).ColSpan(1)
+                                  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Facturas.ValorDescuentos")))
+                                      .Editor(e=>e.NumberBox().ID(Prefix + "ValorDescuentos").Format("#,##0.##").ShowClearButton(true).ShowSpinButtons(true));
+                                groupItems.AddSimpleFor(m => m.Entity.ValorImpuestos).ColSpan(1)
+                                  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Facturas.ValorImpuestos")))
+                                      .Editor(e=>e.NumberBox().ID(Prefix + "ValorImpuestos").Format("#,##0.##").ShowClearButton(true).ShowSpinButtons(true));
+                                groupItems.AddSimpleFor(m => m.Entity.ValorTotal).ColSpan(1)
+                                  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Facturas.ValorTotal")))
+                                      .Editor(e=>e.NumberBox().ID(Prefix + "ValorTotal").Format("#,##0.##").ShowClearButton(true).ShowSpinButtons(true));
+                                groupItems.AddSimpleFor(m => m.Entity.Estadosid).ColSpan(1)
+                                  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Facturas.Estadosid")))
+                                  .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Facturas.Estadosid")))
+                                      .Editor(e => e.SelectBox().ID(Prefix + "Estadosid")
+                                      .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Facturas").LoadAction("GetEstadosid").Key("Id"))
+                                      .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                      .ValueExpr("Id").DisplayExpr("Id").SearchExpr("Id")
+                                      .SearchEnabled(true).ShowClearButton(true)
+                                 );
+                                groupItems.AddSimpleFor(m => m.Entity.FehaInicial).ColSpan(1)
+                                  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Facturas.FehaInicial")))
+                                      .Editor(e=>e.DateBox().ID(Prefix + "FehaInicial")
+                                      .DisplayFormat(DApp.DefaultLanguage.DateFormat).Placeholder(DateTime.Now.ToString(DApp.DefaultLanguage.DateFormat)).ShowClearButton(true).UseMaskBehavior(true));
+                                groupItems.AddSimpleFor(m => m.Entity.FechaFinal).ColSpan(1)
+                                  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Facturas.FechaFinal")))
+                                      .Editor(e=>e.DateBox().ID(Prefix + "FechaFinal")
+                                      .DisplayFormat(DApp.DefaultLanguage.DateFormat).Placeholder(DateTime.Now.ToString(DApp.DefaultLanguage.DateFormat)).ShowClearButton(true).UseMaskBehavior(true));
+                                groupItems.AddSimpleFor(m => m.Entity.Saldo).ColSpan(1)
+                                  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Facturas.Saldo")))
+                                      .Editor(e=>e.NumberBox().ID(Prefix + "Saldo").Format("#,##0.##").ShowClearButton(true).ShowSpinButtons(true));
+                                groupItems.AddSimpleFor(m => m.Entity.FilialesId).ColSpan(1)
+                                      .Editor(e => e.SelectBox().ID(Prefix + "FilialesId")
+                                      .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Facturas").LoadAction("GetFilialesId").Key("Id"))
+                                      .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                      .ValueExpr("Id").DisplayExpr("Id").SearchExpr("Id")
+                                      .SearchEnabled(true).ShowClearButton(true)
+                                 );
+                                groupItems.AddSimpleFor(m => m.Entity.EmpresasId).ColSpan(1)
+                                  .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Facturas.EmpresasId")))
+                                  .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("Facturas.EmpresasId")))
+                                      .Editor(e => e.SelectBox().ID(Prefix + "EmpresasId")
+                                      .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Facturas").LoadAction("GetEmpresasId").Key("Id"))
+                                      .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                      .ValueExpr("Id").DisplayExpr("Id").SearchExpr("Id")
+                                      .SearchEnabled(true).ShowClearButton(true)
+                                 );
+                                groupItems.AddSimpleFor(m => m.Entity.PacientesId).ColSpan(1)
+                                      .Editor(e => e.SelectBox().ID(Prefix + "PacientesId")
+                                      .DataSource(d => d.Mvc().LoadMethod("POST").Controller("Facturas").LoadAction("GetPacientesId").Key("Id"))
+                                      .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                      .ValueExpr("Id").DisplayExpr("Id").SearchExpr("Id")
+                                      .SearchEnabled(true).ShowClearButton(true)
+                                 );
+                            });
+                    })
+             ) 
+         } 
+         <div asp-validation-summary="All" class="text-danger" id="@(Prefix)ListError"></div> 
+     </form> 
+</div> 
+

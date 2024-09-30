@@ -1,0 +1,261 @@
+@model RadicacionCuentasModel
+@{
+    string Prefix = "RadicacionCuentas";
+
+    string UrlSave = Url.Action("Edit", "RadicacionCuentas");
+    string UrlNew = Url.Action("New", "RadicacionCuentas");
+    string UrlDelete = Url.Action("Delete", "RadicacionCuentas", new { Id = Model.Entity.Id });
+    string UrlBack = Url.Action("ListPartial", "RadicacionCuentas");
+    string UrlReport = Url.Action("ImprimirRadicacionCuentasPorId", "RadicacionCuentas", new { Id = Model.Entity.Id });
+
+    var ToolbarConfig = new ToolbarConfiguration(Prefix)
+        .Title(DApp.DefaultLanguage.GetResource("RadicacionCuentas"))
+        .Save(DApp.ActionViewSecurity(Context, UrlSave), Model.Entity.IsNew)
+        .New(UrlNew, DApp.ActionViewSecurity(Context, UrlNew))
+        .Delete(UrlDelete, DApp.ActionViewSecurity(Context, UrlDelete), UrlBack, Model.Entity.IsNew)
+        .AddButtons(new List<ButtonToolbar>()
+        {
+            new ButtonToolbar
+            {
+                Action = "ImprimirRadicacionCuentasPorId",
+                Text = @DApp.DefaultLanguage.GetResource("DEFAULT.Imprimir"),
+                Disabled = Model.Entity.IsNew,
+                Location = ToolbarItemLocation.After,
+                LocateInMenu = ToolbarItemLocateInMenuMode.Auto,
+                Icon = "print"
+            }
+        })
+        .Back(UrlBack);
+
+    var DataGridDetailConfig = new DataGridConfiguration<Facturas>(Prefix + "Detalle", Prefix)
+       .AddButtons(new List<ButtonToolbar>() {
+            new ButtonToolbar{
+                Icon = "pdffile",
+                Text = "Radicar",
+                Action = "SetRadicar"
+            }});
+
+    var DataGridDetailConfig1 = new DataGridConfiguration<RadicacionCuentasDetalles>(Prefix)
+        .Exports(true, true);
+
+    //Configuracion necesaria para la carga de archivos
+    if (Model.Entity.RadicacionArchivos == null)
+        Model.Entity.RadicacionArchivos = new Archivos();
+    Model.Entity.RadicacionArchivos.Maestro = Prefix;
+    Model.Entity.RadicacionArchivos.NombreCampoForanea = "RadicacionArchivos";
+    Model.Entity.RadicacionArchivos.EsArchivo = true;
+}
+
+<script>
+
+    function ImprimirRadicacionCuentasPorId() {
+        showLoadIndicator();
+        $.ajax({
+            url: "@UrlReport",
+            type: 'GET',
+            success: function (data) {
+                $("#VisorReporteria").dxPopup("instance").show();
+                $("#ContenidoReporte").html(data);
+                hideLoadIndicator();
+            },
+            error: function (xhr) {
+                console.log(xhr);   
+                hideLoadIndicator();
+                DevExpress.ui.notify("Error inesperado " + xhr.statusText, "error");
+            }
+        });
+    }
+
+</script>
+
+<partial name="ViewJS.cshtml" model="Model" view-data="ViewData" />
+
+@(Html.DControls().Toolbar(ToolbarConfig))
+
+
+<div id="RadicacionCuentasMainPanelForm">
+    <form id="@(Prefix)Form" asp-controller="RadicacionCuentas" asp-action="Edit" class="form-horizontal" data-ajax-mode="replace" data-ajax-update="#mainPanel" data-ajax-success="@(Prefix)FormSuccess" data-ajax-failure="@(Prefix)FormFailure" data-ajax="true">
+        @(Html.DControls().ValidationSummary().ValidationGroup(Prefix + "ValidationGroup").ElementAttr("class", "ErrorValidationSummary"))
+        @using (Html.DevExtreme().ValidationGroup(Prefix + "ValidationGroup"))
+        {
+            @(Html.DControls().CheckBoxFor(m => m.Entity.IsNew).ID(Prefix + "IsNew").Visible(false))
+            @(Html.DControls().NumberBoxFor(m => m.Entity.Id).ID(Prefix + "Id").Visible(false))
+            @(Html.DControls().TextBoxFor(m => m.Entity.UpdatedBy).ID(Prefix + "UpdatedBy").Visible(false))
+            @(Html.DControls().DateBoxFor(m => m.Entity.LastUpdate).ID(Prefix + "LastUpdate").Type(DateBoxType.DateTime).Visible(false))
+            @(Html.DControls().TextBoxFor(m => m.Entity.CreatedBy).ID(Prefix + "CreatedBy").Visible(false))
+            @(Html.DControls().DateBoxFor(m => m.Entity.CreationDate).ID(Prefix + "CreationDate").Type(DateBoxType.DateTime).Visible(false))
+
+            @(Html.DControls().Form<RadicacionCuentasModel>()
+                .ID("RadicacionCuentasModelForm").LabelLocation(FormLabelLocation.Top).ShowValidationSummary(false).FormData(Model)
+                .Items(items =>
+                {
+                    items.AddGroup().ColCount(12).Caption(DApp.DefaultLanguage.GetResource("DEFAULT.INFORMATIONGENERAL"))
+                        .Items(groupItems =>
+                        {
+                            groupItems.AddSimpleFor(m => m.Entity.EmpresasId).ColSpan(6)
+                             .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("RadicacionCuentas.EmpresasId")))
+                             .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("RadicacionCuentas.EmpresasId")))
+                                  .Editor(e => e.SelectBox().ID(Prefix + "EmpresasId")
+                                  .DataSource(d => d.Mvc().LoadMethod("POST").Controller("RadicacionCuentas").LoadAction("GetEmpresasId").Key("Id"))
+                                  .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                  .ValueExpr("Id").DisplayExpr("RazonSocial").SearchExpr("Id")
+                                  .SearchEnabled(true).ShowClearButton(true)
+                             );
+                            groupItems.AddSimpleFor(m => m.Entity.SedesId).ColSpan(6)
+                             .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("RadicacionCuentas.SedesId")))
+                             .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("RadicacionCuentas.SedesId")))
+                                  .Editor(e => e.SelectBox().ID(Prefix + "SedesId")
+                                  .DataSource(d => d.Mvc().LoadMethod("POST").Controller("RadicacionCuentas").LoadAction("GetSedesId").Key("Id"))
+                                  .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                  .ValueExpr("Id").DisplayExpr("Nombre").SearchExpr("Id")
+                                  .SearchEnabled(true).ShowClearButton(true)
+                             );
+                            groupItems.AddSimpleFor(m => m.Entity.EntidadesId).ColSpan(6)
+                             .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("RadicacionCuentas.EntidadesId")))
+                             .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("RadicacionCuentas.EntidadesId")))
+                                  .Editor(e => e.SelectBox().ID(Prefix + "EntidadesId")
+                                  .DataSource(d => d.Mvc().LoadMethod("POST").Controller("RadicacionCuentas").LoadAction("GetEntidadesId").Key("Id"))
+                                  .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                  .ValueExpr("Id").DisplayExpr("Nombre").SearchExpr("NumeroIdentificacion","Nombre")
+                                  .SearchEnabled(true).ShowClearButton(true)
+                             );
+                            groupItems.AddSimpleFor(m => m.Entity.FechaRadicacion).ColSpan(3)
+                                  .Editor(e => e.DateBox().ID(Prefix + "FechaRadicacion")
+                                  .DisplayFormat(DApp.DefaultLanguage.DateFormat).Placeholder(DateTime.Now.ToString(DApp.DefaultLanguage.DateFormat)).ShowClearButton(true).UseMaskBehavior(true));
+
+                            groupItems.AddSimple().ColSpan(3)
+                                 .Template(new TemplateName($"{Model.Entity.RadicacionArchivos.Maestro}{Model.Entity.RadicacionArchivos.NombreCampoForanea}Archivo")
+                                 );
+
+
+
+                            groupItems.AddSimpleFor(m => m.Entity.CreatedBy).ColSpan(3)
+                                .Editor(e => e.TextBox().ReadOnly(true));
+                            groupItems.AddSimpleFor(m => m.Entity.CreationDate).ColSpan(3)
+                                  .Editor(e => e.DateBox().ReadOnly(true)
+                                  .Type(DateBoxType.DateTime)
+                                  .DisplayFormat(DApp.DefaultLanguage.DateTimeFormat));
+
+                            groupItems.AddSimpleFor(m => m.Entity.UpdatedBy).ColSpan(3)
+                                  .Editor(e => e.TextBox().ReadOnly(true));
+                            groupItems.AddSimpleFor(m => m.Entity.LastUpdate).ColSpan(3)
+                                  .Editor(e => e.DateBox().ReadOnly(true)
+                                  .Type(DateBoxType.DateTime)
+                                  .DisplayFormat(DApp.DefaultLanguage.DateTimeFormat));
+
+
+                        });
+                })
+            )
+        }
+    </form>
+
+    @if (Model.Process)
+    {
+        <div>
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active">
+                    <a href="#MAESTRODETALLE" aria-controls="MAESTRODETALLE" role="tab" data-toggle="tab">
+                        @DApp.DefaultLanguage.GetResource("Facturas por Radicar")
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="MAESTRODETALLE">
+                    @(Html.DControls().DataGridSimple<Facturas>(DataGridDetailConfig)
+                     .ID("FacturasRadicacionDetalleDataGrid")
+                     .DataSource(Model.DetalleFacturasPorRadicar, "Id")
+                     .FilterRow(x => x.Visible(true))
+                     .HeaderFilter(headerFilter => headerFilter.Visible(false))
+
+                     .Export(e => e.Enabled(false).FileName("file" + DateTime.Now.ToLongDateString()).AllowExportSelectedData(true))
+                     .SearchPanel(searchPanel => searchPanel
+                        .Visible(false)
+                        .Width(240)
+                        .Placeholder("Buscar")
+                     )
+                     .Columns(columns =>
+                     {
+                         //columns.AddFor(m => m.Id);
+                         columns.AddFor(m => m.Fecha);
+                         columns.AddFor(m => m.Documentos.Prefijo);
+                         columns.AddFor(m => m.NroConsecutivo);
+                         columns.AddFor(m => m.ValorSubtotal).Width(150);
+                         columns.AddFor(m => m.ValorDescuentos).Width(150);
+                         columns.AddFor(m => m.ValorImpuestos).Width(150);
+                         columns.AddFor(m => m.ValorTotal).Width(150);
+
+
+                     })
+                    )
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (!Model.Process)
+    {
+        <div>
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active">
+                    <a href="#MAESTRODETALLE" aria-controls="MAESTRODETALLE" role="tab" data-toggle="tab">
+                        @DApp.DefaultLanguage.GetResource("Facturas Radicadas")
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="MAESTRODETALLE">
+                    <script>
+
+     function @(Prefix)OnInitNewRowDetalleDataGrid(model) {
+         model = GetAuditoryData(model);
+         model.data.IdFather = "@Model.Entity.Id"; // Cambiar IdFather por el campo foraneo hacia el padre
+     }
+                    </script>
+
+                    @*@(Html.DControls().DataGridSimple<RadicacionCuentasDetalles>(DataGridDetailConfig1)
+                                .ID("RadicacionCuentasDetallesDetalleDataGrid")
+                                .DataSource(d => d.Mvc().LoadMethod("POST").Controller("RadicacionCuentasDetalles").LoadAction("Get").Key("Id")
+                                    .InsertAction("AddInGrid").InsertMethod("POST").UpdateAction("ModifyInGrid").UpdateMethod("POST").DeleteAction("DeleteInGrid").DeleteMethod("POST")
+                                )
+                                .DataSourceOptions(x=>x.Filter("['RadicacionCuentasId','=','" + @Model.Entity.Id+"']")) // Cambiar IdFather por el campo foraneo hacia el padre
+                                .Editing(editing => editing.Mode(GridEditMode.Batch).AllowAdding(!Model.Entity.IsNew).AllowUpdating(true).AllowDeleting(true))
+                                .OnInitNewRow(Prefix + "OnInitNewRowDetalleDataGrid")
+                                .OnRowInserted("OnRowInsertedDetalleDataGrid").OnRowUpdated("OnRowUpdatedDetalleDataGrid").OnRowRemoved("OnRowRemovedDetalleDataGrid").OnDataErrorOccurred("OnDataErrorOccurredDetalleDataGrid")
+                                .Columns(columns =>
+                                {
+
+                                    columns.AddFor(m => m.FacurasId)
+                                        .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("RadicacionCuentasDetalles.FacurasId")))
+                                        .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("RadicacionCuentasDetalles.FacurasId")))
+                                            .Lookup(lookup => lookup
+                                            .DataSource(d => d.Mvc().LoadMethod("POST").Controller("RadicacionCuentasDetalles").LoadAction("GetFacurasId").Key("Id"))
+                                            .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                            .ValueExpr("Id").DisplayExpr(new JS(Prefix + "DisplayExprFacturaId")));
+                                })
+                        )*@
+                    @(Html.DControls().DataGridSimple<RadicacionCuentasDetalles>(DataGridDetailConfig1)
+                        .ID("RadicacionCuentasDetallesDataGrid")
+                        .DataSource(d => d.Mvc().LoadMethod("POST").Controller("RadicacionCuentasDetalles").LoadAction("Get").Key("Id"))
+                        .DataSourceOptions(x => x.Filter("['RadicacionCuentasId','=','" + @Model.Entity.Id + "']"))
+                        .Columns(columns =>
+                        {
+                            columns.AddFor(m => m.FacurasId)
+                                                         .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("RadicacionCuentasDetalles.FacurasId")))
+                                                         .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("RadicacionCuentasDetalles.FacurasId")))
+                                                             .Lookup(lookup => lookup
+                                                             .DataSource(d => d.Mvc().LoadMethod("POST").Controller("RadicacionCuentasDetalles").LoadAction("GetFacurasId").Key("Id"))
+                                                             .DataSourceOptions(o => o.Paginate(true).PageSize(10))
+                                                             .ValueExpr("Id").DisplayExpr(new JS(Prefix + "DisplayExprFacturaId")));
+                        })
+                    )
+
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+
+
+<partial name="../Archivos/Archivo.cshtml" model=Model.Entity.RadicacionArchivos view-data="ViewData" />

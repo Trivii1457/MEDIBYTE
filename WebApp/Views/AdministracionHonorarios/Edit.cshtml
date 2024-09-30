@@ -1,0 +1,170 @@
+@model AdministracionHonorariosModel
+@{
+    string Prefix = "AdministracionHonorarios";
+
+    string UrlSave = Url.Action("Edit", "AdministracionHonorarios");
+    string UrlNew = Url.Action("New", "AdministracionHonorarios");
+    string UrlDelete = Url.Action("Delete", "AdministracionHonorarios", new { Id = Model.Entity.Id });
+    string UrlBack = Url.Action("ListPartial", "AdministracionHonorarios");
+
+    var ToolbarConfig = new ToolbarConfiguration(Prefix)
+        .Title(DApp.DefaultLanguage.GetResource("AdministracionHonorarios"))
+        .Save(DApp.ActionViewSecurity(Context, UrlSave), Model.Entity.IsNew)
+        .New(UrlNew, DApp.ActionViewSecurity(Context, UrlNew))
+        .Delete(UrlDelete, DApp.ActionViewSecurity(Context, UrlDelete), UrlBack, Model.Entity.IsNew)
+        .Back(UrlBack);
+
+    ViewData["DetailNew"] = DApp.ActionViewSecurity(Context, UrlNew);
+    ViewData["DetailModify"] = DApp.ActionViewSecurity(Context, UrlSave);
+    ViewData["DetailDelete"] = DApp.ActionViewSecurity(Context, UrlNew);
+
+}
+
+<partial name="ViewJS.cshtml" model="Model" view-data="ViewData" />
+
+@(Html.DControls().Toolbar(ToolbarConfig))
+
+<div>
+    <div id="AdministracionHonorariosMainPanelForm">
+        <form id="@(Prefix)Form" asp-controller="AdministracionHonorarios" asp-action="Edit" class="form-horizontal" data-ajax-mode="replace" data-ajax-update="#mainPanel" data-ajax-success="@(Prefix)FormSuccess" data-ajax-failure="@(Prefix)FormFailure" data-ajax="true">
+            @(Html.DControls().ValidationSummary().ValidationGroup(Prefix + "ValidationGroup").ElementAttr("class", "ErrorValidationSummary"))
+            @using (Html.DevExtreme().ValidationGroup(Prefix + "ValidationGroup"))
+            {
+                @(Html.DControls().CheckBoxFor(m => m.Entity.IsNew).ID(Prefix + "IsNew").Visible(false))
+                @(Html.DControls().NumberBoxFor(m => m.Entity.Id).ID(Prefix + "Id").Visible(false))
+                @(Html.DControls().TextBoxFor(m => m.Entity.UpdatedBy).ID(Prefix + "UpdatedBy").Visible(false))
+                @(Html.DControls().DateBoxFor(m => m.Entity.LastUpdate).ID(Prefix + "LastUpdate").Type(DateBoxType.DateTime).Visible(false))
+                @(Html.DControls().TextBoxFor(m => m.Entity.CreatedBy).ID(Prefix + "CreatedBy").Visible(false))
+                @(Html.DControls().DateBoxFor(m => m.Entity.CreationDate).ID(Prefix + "CreationDate").Type(DateBoxType.DateTime).Visible(false))
+                @(Html.DControls().NumberBoxFor(m => m.Entity.EmpresasId).ID(Prefix + "EmpresasId").Visible(false))
+
+                @(Html.DControls().Form<AdministracionHonorariosModel>()
+                    .ID("AdministracionHonorariosModelForm").LabelLocation(FormLabelLocation.Top).ShowValidationSummary(false).FormData(Model)
+                    .Items(items =>
+                    {
+                        items.AddGroup().ColCount(12).Caption(DApp.DefaultLanguage.GetResource("DEFAULT.INFORMATIONGENERAL"))
+                            .Items(groupItems =>
+                            {
+                                groupItems.AddSimpleFor(m => m.Entity.EmpleadosId).ColSpan(12)
+                                 .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("AdministracionHonorarios.EmpleadosId")))
+                                 .ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("AdministracionHonorarios.EmpleadosId")))
+                                      .Editor(e => e.SelectBox().ID(Prefix + "EmpleadosId")
+                                      .DataSource(d => d.Mvc().LoadMethod("POST").Controller("AdministracionHonorarios").LoadAction("GetEmpleadosId").Key("Id"))
+                                      .DataSourceOptions(o => o.Paginate(true).PageSize(10).Filter("['TipoEmplead.Nombre','=','Profesional']"))
+                                      .ValueExpr("Id").DisplayExpr("NombreCompleto").SearchExpr("PrimerNombre", "SegundoNombre","PrimerApellido", "SegundoApellido" )
+                                      .SearchEnabled(true).ShowClearButton(true)
+                                 );
+
+
+                                //groupItems.AddSimpleFor(m => m.Entity.TipoAtencionEstadosId).ColSpan(3)
+                                //.ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("AdministracionHonorarios.TipoAtencionEstadosId")))
+                                //.ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("AdministracionHonorarios.TipoAtencionEstadosId")))
+                                //     .Editor(e => e.SelectBox().ID(Prefix + "TipoAtencionEstadosId")
+                                //     .DataSource(d => d.Mvc().LoadMethod("POST").Controller("AdministracionHonorarios").LoadAction("GetTipoHonorarioEstadosId").Key("Id"))
+                                //     .DataSourceOptions(o => o.Paginate(true).PageSize(10).Filter("['Tipo','=','TIPOHONORARIO']"))
+                                //     .ValueExpr("Id").DisplayExpr("Nombre").SearchExpr("Nombre")
+                                //     .SearchEnabled(true).ShowClearButton(true).ReadOnly(true)
+                                //     .OnValueChanged($"{Prefix}OnValueChangedTipoAtencionEstadosId")
+                                //);
+
+                                //groupItems.AddEmpty().ColSpan(3);
+
+                                //groupItems.AddSimpleFor(m => m.Entity.TipoLecturaEstadosId).ColSpan(3)
+                                //.ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("AdministracionHonorarios.TipoLecturaEstadosId")))
+                                //.ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("AdministracionHonorarios.TipoLecturaEstadosId")))
+                                //     .Editor(e => e.SelectBox().ID(Prefix + "TipoLecturaEstadosId")
+                                //     .DataSource(d => d.Mvc().LoadMethod("POST").Controller("AdministracionHonorarios").LoadAction("GetTipoHonorarioEstadosId").Key("Id"))
+                                //     .DataSourceOptions(o => o.Paginate(true).PageSize(10).Filter("['Tipo','=','TIPOHONORARIO']"))
+                                //     .ValueExpr("Id").DisplayExpr("Nombre").SearchExpr("Nombre")
+                                //     .SearchEnabled(true).ShowClearButton(true)
+                                //     .ReadOnly(true)
+                                //);
+
+                                //groupItems.AddEmpty().ColSpan(3);
+
+                                //groupItems.AddSimpleFor(m => m.Entity.TipoDatoConvenioEstadosId).ColSpan(3)
+                                //.ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("AdministracionHonorarios.TipoDatoConvenioEstadosId")))
+                                //.ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("AdministracionHonorarios.TipoDatoConvenioEstadosId")))
+                                //     .Editor(e => e.SelectBox().ID(Prefix + "TipoDatoConvenioEstadosId")
+                                //     .DataSource(d => d.Mvc().LoadMethod("POST").Controller("AdministracionHonorarios").LoadAction("GetTipoHonorarioEstadosId").Key("Id"))
+                                //     .DataSourceOptions(o => o.Paginate(true).PageSize(10).Filter("['Tipo','=','TIPODATOHONORARIO']"))
+                                //     .ValueExpr("Id").DisplayExpr("Nombre").SearchExpr("Nombre")
+                                //     .SearchEnabled(true).ShowClearButton(true)
+                                //     .ReadOnly(true)
+                                //);
+
+                                //groupItems.AddSimpleFor(m => m.Entity.TipoDatoParticularEstadosId).ColSpan(3)
+                                //.ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("AdministracionHonorarios.TipoDatoParticularEstadosId")))
+                                //.ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("AdministracionHonorarios.TipoDatoParticularEstadosId")))
+                                //     .Editor(e => e.SelectBox().ID(Prefix + "TipoDatoParticularEstadosId")
+                                //     .DataSource(d => d.Mvc().LoadMethod("POST").Controller("AdministracionHonorarios").LoadAction("GetTipoHonorarioEstadosId").Key("Id"))
+                                //     .DataSourceOptions(o => o.Paginate(true).PageSize(10).Filter("['Tipo','=','TIPODATOHONORARIO']"))
+                                //     .ValueExpr("Id").DisplayExpr("Nombre").SearchExpr("Nombre")
+                                //     .SearchEnabled(true).ShowClearButton(true)
+                                //     .ReadOnly(true)
+                                //);
+
+                                //groupItems.AddSimpleFor(m => m.Entity.TipoDatoLecturaEstadosId).ColSpan(3)
+                                //.ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("AdministracionHonorarios.TipoDatoLecturaEstadosId")))
+                                //.ValidationRules(rules => rules.AddRange().Min(1).Message(DApp.GetRequiredResource("AdministracionHonorarios.TipoDatoLecturaEstadosId")))
+                                //     .Editor(e => e.SelectBox().ID(Prefix + "TipoDatoLecturaEstadosId")
+                                //     .DataSource(d => d.Mvc().LoadMethod("POST").Controller("AdministracionHonorarios").LoadAction("GetTipoHonorarioEstadosId").Key("Id"))
+                                //     .DataSourceOptions(o => o.Paginate(true).PageSize(10).Filter("['Tipo','=','TIPODATOHONORARIO']"))
+                                //     .ValueExpr("Id").DisplayExpr("Nombre").SearchExpr("Nombre")
+                                //     .SearchEnabled(true).ShowClearButton(true).ReadOnly(true)
+                                //);
+
+                                //groupItems.AddEmpty().ColSpan(3);
+
+                                //groupItems.AddSimpleFor(m => m.Entity.ValorHonorarioConvenio).ColSpan(3)
+                                //     .Editor(e => e.NumberBox().ID(Prefix + "ValorHonorarioConvenio").Format("#,##0").Min(0)
+                                //     .ShowClearButton(true).ShowSpinButtons(true).ReadOnly(true)
+                                //);
+
+                                //groupItems.AddSimpleFor(m => m.Entity.ValorHonorarioParticular).ColSpan(3)
+                                //     .Editor(e => e.NumberBox().ID(Prefix + "ValorHonorarioParticular").Format("#,##0").Min(0)
+                                //     .ShowClearButton(true).ShowSpinButtons(true).ReadOnly(true)
+                                //);
+
+
+
+                                //groupItems.AddSimpleFor(m => m.Entity.ValorHonorarioLectura).ColSpan(3)
+                                //     .Editor(e => e.NumberBox().ID(Prefix + "ValorHonorarioLectura").Format("#,##0").Min(0)
+                                //     .ShowClearButton(true).ShowSpinButtons(true).ReadOnly(true)
+                                //);
+
+                            });
+                    })
+                )
+            }
+        </form>
+
+        @* Si el maestro maneja detalle descomentar el siguiente codigo y remplazar la palabra "MAESTRODETALLE" *@
+
+        <div>
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active">
+                    <a href="#AdministracionHonorariosServicios" aria-controls="AdministracionHonorariosServicios" role="tab" data-toggle="tab">
+                        @DApp.DefaultLanguage.GetResource("AdministracionHonorariosServicios")
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a href="#AdministracionHonorariosLecturas" aria-controls="AdministracionHonorariosLecturas" role="tab" data-toggle="tab">
+                        @DApp.DefaultLanguage.GetResource("AdministracionHonorariosLecturas")
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="AdministracionHonorariosServicios">
+                    <partial name="../AdministracionHonorariosServicios/ListDetail.cshtml" model=Model view-data="ViewData" />
+                </div>
+                <div role="tabpanel" class="tab-pane" id="AdministracionHonorariosLecturas">
+                    <partial name="../AdministracionHonorariosLecturas/ListDetail.cshtml" model=Model view-data="ViewData" />
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+

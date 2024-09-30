@@ -1,0 +1,70 @@
+﻿@*  Remplazar FATHERModel por el modelo del padre al que pertenece   *@
+@model ProfileModel
+@{
+    string Prefix = "ProfileUser";
+    string UrlOnClick = Url.Action("EditDetail", "ProfileUser");
+    string UrlNew = Url.Action("NewDetail", "ProfileUser", new { IdFather = Model.Entity.Id });
+
+    var DataGridDetailConfig = new DataGridConfiguration<ProfileUser>(Prefix)
+        //.OnClick(UrlOnClick, new { Id = "Id" }, Prefix + "MainPanelForm")
+        //.New(UrlNew,Model.Entity.IsNew,Prefix + "MainPanelForm")
+        .Exports(true, true);
+}
+
+<script>
+    function OnInitNewRowDetalleDataGrid(model) {
+        model = GetAuditoryData(model);
+        model.data.ProfileId = "@Model.Entity.Id";
+    }
+
+    function @(Prefix)DisplayExprNombre(data) {
+        if (data)
+            return data.UserName + " | C.C: " + data.IdentificationNumber + " - Nombres: " +  data.Names + " " + data.LastNames;
+        else
+            return null;
+    }
+
+</script>
+
+<div class="card">
+    <div class="card-body">
+        <div class="box-body table-responsive no-padding">
+            @(Html.DControls().DataGridSimple<ProfileUser>
+    (DataGridDetailConfig)
+    .ID("DetalleDataGrid")
+    .DataSource(d => d.Mvc().LoadMethod("POST").Controller("ProfileUser").LoadAction("Get").Key("Id")
+    .InsertAction("AddInGrid").InsertMethod("POST")
+    .UpdateAction("ModifyInGrid").UpdateMethod("POST")
+    .DeleteAction("DeleteInGrid").DeleteMethod("POST")
+    )
+    .Editing(editing => {
+    editing.Mode(GridEditMode.Batch);
+    editing.AllowAdding(!Model.Entity.IsNew);
+    editing.AllowUpdating(false);
+    editing.AllowDeleting(true);
+    editing.SelectTextOnEditStart(true);
+    editing.StartEditAction(GridStartEditAction.Click);
+    })
+    .OnInitNewRow("OnInitNewRowDetalleDataGrid")
+    .DataSourceOptions(x=>x.Filter("[['ProfileId','=','"+@Model.Entity.Id+ "'],'and',['UserId', '<>',  1]]")) // Cambiar IdFather por el campo foraneo hacia el padre
+    .RemoteOperations(true)
+    .Columns(columns =>
+    {
+    columns.AddFor(m => m.Id).Visible(false);
+    columns.AddFor(m => m.ProfileId).Visible(false);
+    columns.AddFor(m => m.UserId).Lookup(lookup => lookup
+        .DataSource(d => d.Mvc().LoadMethod("POST").Controller("ProfileUser").LoadAction("GetUserId").Key("Id"))
+        .DataSourceOptions(o => o.Filter("['Id', '<>',  1]").Paginate(true).PageSize(10))
+        .DisplayExpr(new JS($"{Prefix}DisplayExprNombre")).ValueExpr("Id"));
+    columns.AddFor(m => m.UpdatedBy).Visible(false);
+    columns.AddFor(m => m.LastUpdate).Visible(false);
+    columns.AddFor(m => m.CreatedBy).Visible(false);
+    columns.AddFor(m => m.CreationDate).Visible(false);
+    })
+    )
+        </div>
+        <div>
+            <div id="ProfileUserMainPanelForm"></div>
+        </div>
+    </div>
+</div>

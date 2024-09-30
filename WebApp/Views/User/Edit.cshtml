@@ -1,0 +1,215 @@
+﻿@model UserModel 
+@{
+    string Prefix = "User"; 
+
+    string UrlSave = Url.Action("Edit", "User"); 
+    string UrlNew = Url.Action("New", "User"); 
+    string UrlDelete = Url.Action("Delete", "User", new { Id = Model.Entity.Id }); 
+    string UrlBack = Url.Action("ListPartial", "User"); 
+
+    var ToolbarConfig = new ToolbarConfiguration(Prefix) 
+        .Title(DApp.DefaultLanguage.GetResource("Users")) 
+        .New(UrlNew, DApp.ActionViewSecurity(Context, UrlNew)) 
+        .Save(DApp.ActionViewSecurity(Context, UrlSave),Model.Entity.IsNew)
+        .Delete(UrlDelete,DApp.ActionViewSecurity(Context,UrlDelete),UrlBack,Model.Entity.IsNew) 
+        .Back(UrlBack); 
+}
+
+@(Html.DControls().Toolbar(ToolbarConfig)) 
+
+<script>
+
+    function ConfirmingPassword(params) {
+
+        var PasswordReal = $("#PasswordReal").dxTextBox("instance").option("value");
+        var ConfirmPassword = params.value;
+
+        if (PasswordReal != ConfirmPassword) {
+            params.rule.isValid = false;
+            params.rule.message = "La contraseña y su confirmación no coinciden";
+            params.validator.validate();
+            return false;
+        } else {
+            params.rule.isValid = true;
+            params.rule.message = "";
+            params.validator.validate();
+            return true;
+        }
+        return true;
+    }
+
+    function OnValueChangedPassword(input) {
+        console.log(input);
+        if (input.previousValue != input.value) {
+            $("#UserModifyPassword").dxCheckBox("instance").option("value", true);
+        }
+    }
+
+    function @(Prefix)OnClickBotonCambiarModoPassword() {
+        var passwordEditor = $("#PasswordReal").dxTextBox("instance");
+        passwordEditor.option("mode", passwordEditor.option("mode") === "text" ? "password" : "text");
+    }
+
+    function @(Prefix)OnClickBotonCambiarModoConfirmarPassword() {
+        var passwordEditor = $("#ConfirmPassword").dxTextBox("instance");
+        passwordEditor.option("mode", passwordEditor.option("mode") === "text" ? "password" : "text");
+    }
+
+</script>
+
+<div> 
+    <div id = "UserMainPanelForm"> 
+        <form id="@(Prefix)Form" asp-controller="User" asp-action="Edit" class="form-horizontal" data-ajax-mode="replace" data-ajax-update="#mainPanel" data-ajax-success="@(Prefix)FormSuccess" data-ajax-failure="@(Prefix)FormFailure" data-ajax-begin="@(Prefix)FormBegin" data-ajax="true">
+            @(Html.DControls().ValidationSummary().ValidationGroup(Prefix + "ValidationGroup").ElementAttr("class", "ErrorValidationSummary"))
+            @using (Html.DevExtreme().ValidationGroup(Prefix + "ValidationGroup"))
+            {
+                @(Html.DControls().CheckBoxFor(m => m.Entity.IsNew).ID(Prefix + "IsNew").Visible(false))
+                @(Html.DControls().NumberBoxFor(m => m.Entity.Id).ID(Prefix + "Id").Visible(false))
+                @(Html.DControls().TextBoxFor(m => m.Entity.UpdatedBy).ID(Prefix + "UpdatedBy").Visible(false))
+                @(Html.DControls().DateBoxFor(m => m.Entity.LastUpdate).ID(Prefix + "LastUpdate").Type(DateBoxType.DateTime).Visible(false))
+                @(Html.DControls().TextBoxFor(m => m.Entity.CreatedBy).ID(Prefix + "CreatedBy").Visible(false))
+                @(Html.DControls().DateBoxFor(m => m.Entity.CreationDate).ID(Prefix + "CreationDate").Type(DateBoxType.DateTime).Visible(false))
+                @(Html.DControls().CheckBoxFor(m => m.ModifyPassword).ID(Prefix + "ModifyPassword").Visible(false))
+
+                @(Html.DControls().Form<UserModel>()
+                    .ID("UserModelForm").ColCount(1).ShowValidationSummary(false).FormData(Model)
+                    .Items(items =>
+                    {
+                        items.AddGroup()
+                            .Caption("Incio de Sesión")
+                            .ColCount(3)
+                            .Items(groupItems =>
+                            {
+                                groupItems.AddSimpleFor(m => m.Entity.UserName)
+                                    .Editor(e => e.TextBox().ShowClearButton(true))
+                                    .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Users.UserName")))
+                                    .ValidationRules(rules => rules.AddStringLength().Min(1).Max(50).Message(DApp.GetStringLengthResource("Users.UserName", 50)));
+                                groupItems.AddSimpleFor(m => m.Entity.Password)
+                                    .Editor(e => e.TextBox().Mode(TextBoxMode.Password).ID("PasswordReal").ShowClearButton(true)
+                                        .OnValueChanged("OnValueChangedPassword")
+                                        .Buttons(buttons =>
+                                        {
+                                            buttons.Add()
+                                                .Name($"{Prefix}BotonCambiarModoPassword")
+                                                .Location(TextEditorButtonLocation.After)
+                                                .Widget(w => w.Button()
+                                                    .Type(ButtonType.Normal)
+                                                    .Icon(Url.Content("~/images/eye_open_icon.png"))
+                                                    .OnClick($"{Prefix}OnClickBotonCambiarModoPassword")
+                                                );
+                                        })
+                                    )
+                                    .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Users.Password")))
+                                    .ValidationRules(rules => rules.AddStringLength().Min(1).Max(255).Message(DApp.GetStringLengthResource("Users.Password", 255)));
+                                groupItems.AddSimple().Label(l => l.Text("Confirmar Contraseña"))
+                                    .Editor(e => e.TextBox().ShowClearButton(true).Mode(TextBoxMode.Password).ID("ConfirmPassword").Value(Model.Entity.Password)
+                                        .Buttons(buttons =>
+                                        {
+                                            buttons.Add()
+                                                .Name($"{Prefix}BotonCambiarModoConfirmarPassword")
+                                                .Location(TextEditorButtonLocation.After)
+                                                .Widget(w => w.Button()
+                                                    .Type(ButtonType.Normal)
+                                                    .Icon(Url.Content("~/images/eye_open_icon.png"))
+                                                    .OnClick($"{Prefix}OnClickBotonCambiarModoConfirmarPassword")
+                                                );
+                                        })
+                                    )
+                                    .ValidationRules(rules => rules.AddCustom().ValidationCallback("ConfirmingPassword"));
+                            });
+                        items.AddGroup()
+                            .Caption("Información Adicional")
+                            .ColCount(2)
+                            .Items(groupItems =>
+                            {
+                                groupItems.AddSimpleFor(m => m.Entity.Email)
+                                    .Editor(e => e.TextBox().Mode(TextBoxMode.Email).ShowClearButton(true))
+                                    .ValidationRules(rules => rules.AddRequired().Message(DApp.GetRequiredResource("Users.Email")))
+                                    .ValidationRules(rules => rules.AddEmail().Message("Correo electronico no valido"))
+                                    .ValidationRules(rules => rules.AddStringLength().Min(1).Max(255).Message(DApp.GetStringLengthResource("Users.Email", 255)));
+                                groupItems.AddEmpty();
+                                groupItems.AddSimpleFor(m => m.Entity.Names)
+                                    .Editor(e => e.TextBox().ShowClearButton(true))
+                                    .ValidationRules(rules => rules.AddStringLength().Min(1).Max(60).Message(DApp.GetStringLengthResource("Users.Names", 60)));
+                                groupItems.AddSimpleFor(m => m.Entity.LastNames)
+                                    .Editor(e => e.TextBox().ShowClearButton(true))
+                                    .ValidationRules(rules => rules.AddStringLength().Min(1).Max(60).Message(DApp.GetStringLengthResource("Users.LastNames", 60)));
+                                groupItems.AddSimpleFor(m => m.Entity.IdentificationTypeId)
+                                    .Editor(e => e.SelectBox().SearchEnabled(true).ShowClearButton(true)
+                                        .DataSource(d => d.Mvc().LoadMethod("GET").Controller("User").LoadAction("GetIdentificationTypes").Key("Id"))
+                                        .DisplayExpr("Value").ValueExpr("Id"))
+                                    .ValidationRules(rules => rules.AddStringLength().Min(1).Max(3).Message(DApp.GetStringLengthResource("Users.IdentificationTypeId", 3)));
+                                groupItems.AddSimpleFor(m => m.Entity.IdentificationNumber)
+                                    .Editor(e => e.TextBox().ShowClearButton(true))
+                                    .ValidationRules(rules => rules.AddStringLength().Min(1).Max(20).Message(DApp.GetStringLengthResource("Users.IdentificationNumber", 20)));
+                                groupItems.AddSimpleFor(m => m.Entity.GenderId)
+                                    .Editor(e => e.SelectBox().SearchEnabled(true).ShowClearButton(true)
+                                        .DataSource(d => d.Mvc().LoadMethod("GET").Controller("User").LoadAction("GetGenders").Key("Id"))
+                                        .DisplayExpr("Value").ValueExpr("Id"))
+                                    .ValidationRules(rules => rules.AddStringLength().Min(1).Max(1).Message(DApp.GetStringLengthResource("Users.GenderId", 1)));
+                                groupItems.AddSimpleFor(m => m.Entity.IsActive)
+                                        .Editor(e=>e.CheckBox().Text(DApp.GetResource("Users.IsActive")))
+                                        .Label(x=>x.Visible(false));
+                            });
+                    })
+                )
+            }
+            
+        </form> 
+
+        @* Si el maestro maneja detalle descomentar el siguiente codigo y remplazar la palabra "VISTADETALLE" y "RECURSODETALLE" *@
+        @*<nav> 
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <a class="nav-item nav-link active" id="nav-Offices-tab" data-toggle="tab" href="#nav-Offices" role="tab" aria-controls="nav-Offices" aria-selected="true">
+                    Dispensarios
+                </a>
+                <a class="nav-item nav-link" id="nav-Users-tab" data-toggle="tab" href="#nav-Users" role="tab" aria-controls="nav-Users" aria-selected="true">
+                    @DApp.DefaultLanguage.GetResource("Profiles")
+                </a>
+            </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-Offices" role="tabpanel" aria-labelledby="nav-Offices-tab">
+                <partial name="../UserOffice/ListDetailUser.cshtml" model=Model view-data="ViewData" />
+            </div>
+            <div class="tab-pane fade show" id="nav-Users" role="tabpanel" aria-labelledby="nav-Users-tab">
+                <partial name="../ProfileUser/ListDetailUser.cshtml" model=Model view-data="ViewData" />
+            </div>
+        </div>*@
+
+    </div> 
+</div> 
+
+<script lang = "javascript"> 
+
+    function @(Prefix)FormSuccess(data) 
+    { 
+        hideLoadIndicator(); 
+        if ('@ViewData.ModelState.IsValid' == 'True') 
+        { 
+            if ("@ViewBag.Accion" == "Delete") {
+                DevExpress.ui.notify("Registro eliminado correctamente.","info"); 
+            } else if ("@ViewBag.Accion" == "Save") {
+                DevExpress.ui.notify("Registro guardado correctamente.","info"); 
+            } else {
+                DevExpress.ui.notify("Error no accion en submit.","info"); 
+            }
+        } 
+    } 
+
+    function @(Prefix)FormFailure(data) 
+    { 
+        hideLoadIndicator(); 
+        DevExpress.ui.notify("Error en el formulario","error"); 
+    } 
+
+    function @(Prefix)FormBegin(data) 
+    { 
+        //var PasswordReal = $("#PasswordReal").dxTextBox("instance").option("value");
+        //if (PassActual != PasswordReal) {
+        //    $("#UserModifyPassword").dxCheckBox("instance").option("value",true);
+        //}
+        return true;
+    }
+
+</script>

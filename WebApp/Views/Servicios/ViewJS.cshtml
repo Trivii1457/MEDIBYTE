@@ -1,0 +1,84 @@
+@model ServiciosModel 
+@{
+    string Prefix = "Servicios"; 
+}
+
+<script>
+
+    function @(Prefix)OnValueChangedTiposServiciosId() {
+        var selectedItem = $("#TiposServiciosId").dxSelectBox("instance").option("selectedItem");
+        if (selectedItem != null && selectedItem.Nombre == "Consulta") {
+            $("#@(Prefix)RequiereProfesional").dxCheckBox("instance").option("value",true);
+            $("#@(Prefix)RequiereProfesional").dxCheckBox("instance").option("readOnly",true);
+        } else {
+            $("#@(Prefix)RequiereProfesional").dxCheckBox("instance").option("value",false);
+            $("#@(Prefix)RequiereProfesional").dxCheckBox("instance").option("readOnly",false);
+        }
+
+    }
+
+    function @(Prefix)OnValueChangedCupsId(data) {
+        var selectedItem = $("#CupsId").dxSelectBox("instance").option("selectedItem");
+        if (selectedItem != null && selectedItem.Descripcion != undefined) {
+            $("#@(Prefix)Codigo").dxTextBox("instance").option("readOnly", true);
+            $("#@(Prefix)Nombre").dxTextBox("instance").option("readOnly", true);
+            $("#@(Prefix)Codigo").dxTextBox("instance").option("value", selectedItem.Codigo);
+            $("#@(Prefix)Nombre").dxTextBox("instance").option("value", selectedItem.Descripcion);
+        } else {
+            $("#@(Prefix)Codigo").dxTextBox("instance").option("value", null);
+            $("#@(Prefix)Nombre").dxTextBox("instance").option("value", null);
+            $("#@(Prefix)Codigo").dxTextBox("instance").option("readOnly", false);
+            $("#@(Prefix)Nombre").dxTextBox("instance").option("readOnly", false);
+        }
+
+    }
+
+    function @(Prefix)DisplayExprCupsId(data) {
+        if(data)
+            return data.Codigo + " | " + data.Descripcion;
+    }
+
+    function @(Prefix)FormSuccess(data)
+    {
+        hideLoadIndicator();
+        if ('@ViewData.ModelState.IsValid' == 'True')
+        {
+            if ("@ViewBag.Accion" == "Delete") {
+                DevExpress.ui.notify("Registro eliminado correctamente.","info");
+            } else if ("@ViewBag.Accion" == "Save") {
+                DevExpress.ui.notify("Registro guardado correctamente.","info");
+            } else {
+                DevExpress.ui.notify("Error no accion en submit.","info");
+            }
+        }
+    }
+
+    function @(Prefix)FormFailure(data)
+    {
+        hideLoadIndicator();
+        DevExpress.ui.notify("Error en el formulario","error");
+    }
+
+    function @(Prefix)FormSuccessDetail(data)
+    {
+        hideLoadIndicator();
+        if ('@ViewData.ModelState.IsValid' == 'True')
+        {
+            $("#ServiciosDetalleDataGrid").dxDataGrid("instance").refresh();
+            if ("@ViewBag.Accion" == "Delete") {
+                DevExpress.ui.notify("Registro eliminado correctamente.","info");
+            } else if ("@ViewBag.Accion" == "Save") {
+                DevExpress.ui.notify("Registro guardado correctamente.","info");
+            } else {
+                DevExpress.ui.notify("Error no accion en submit.","info");
+            }
+        }
+    }
+
+    function @(Prefix)FormFailureDetail(data)
+    {
+        hideLoadIndicator();
+        DevExpress.ui.notify("Error en el formulario","error");
+    }
+
+</script>
